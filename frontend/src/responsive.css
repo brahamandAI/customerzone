@@ -1,0 +1,489 @@
+/* ===== RESPONSIVE DESIGN FOR RAKSHAK EXPENSE MANAGEMENT SYSTEM ===== */
+
+/* ===== GLOBAL RESPONSIVE SETTINGS ===== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+/* Mobile: 320px - 767px */
+/* Tablet: 768px - 1023px */
+/* Desktop: 1024px+ */
+
+/* ===== NAVBAR RESPONSIVE ===== */
+@media (max-width: 1023px) {
+  .MuiAppBar-root .MuiToolbar-root {
+    padding: 0 16px !important;
+  }
+  
+  .MuiAppBar-root .MuiTypography-h6 {
+    font-size: 1.1rem !important;
+    letter-spacing: 0.5px !important;
+  }
+  
+  .MuiAppBar-root img {
+    width: 32px !important;
+    height: 32px !important;
+    margin-right: 8px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .MuiAppBar-root .MuiToolbar-root {
+    padding: 0 12px !important;
+    min-height: 56px !important;
+  }
+  
+  .MuiAppBar-root .MuiTypography-h6 {
+    font-size: 0.9rem !important;
+    letter-spacing: 0.3px !important;
+  }
+  
+  .MuiAppBar-root img {
+    width: 28px !important;
+    height: 28px !important;
+    margin-right: 6px !important;
+  }
+  
+  /* Hide navigation buttons on mobile, show in menu */
+  .MuiAppBar-root .MuiButton-root {
+    display: none !important;
+  }
+  
+  /* Show hamburger menu on mobile */
+  .mobile-menu-button {
+    display: block !important;
+  }
+}
+
+/* ===== DASHBOARD RESPONSIVE ===== */
+@media (max-width: 1023px) {
+  .dashboard-container {
+    padding: 24px !important;
+  }
+  
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+  
+  .dashboard-card {
+    padding: 16px !important;
+  }
+  
+  .dashboard-card .MuiTypography-h4 {
+    font-size: 1.5rem !important;
+  }
+  
+  .dashboard-card .MuiTypography-h6 {
+    font-size: 1rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard-container {
+    padding: 16px !important;
+  }
+  
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  .dashboard-card {
+    padding: 12px !important;
+  }
+  
+  .dashboard-card .MuiTypography-h4 {
+    font-size: 1.25rem !important;
+  }
+  
+  .dashboard-card .MuiTypography-h6 {
+    font-size: 0.9rem !important;
+  }
+  
+  .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+}
+
+/* ===== FORMS RESPONSIVE ===== */
+@media (max-width: 1023px) {
+  .form-container {
+    max-width: 90% !important;
+    margin: 16px auto !important;
+    padding: 20px !important;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  
+  .form-section {
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .form-container {
+    max-width: 95% !important;
+    margin: 12px auto !important;
+    padding: 16px !important;
+  }
+  
+  .form-grid {
+    gap: 12px !important;
+  }
+  
+  .form-section {
+    padding: 12px !important;
+  }
+  
+  .MuiTextField-root {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+  
+  .MuiButton-root {
+    width: 100% !important;
+    margin: 8px 0 !important;
+  }
+}
+
+/* ===== TABLES RESPONSIVE ===== */
+@media (max-width: 1023px) {
+  .table-container {
+    overflow-x: auto !important;
+    margin: 0 -16px !important;
+    padding: 0 16px !important;
+  }
+  
+  .MuiTable-root {
+    min-width: 600px !important;
+  }
+  
+  .table-cell {
+    padding: 8px 4px !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .table-container {
+    margin: 0 -12px !important;
+    padding: 0 12px !important;
+  }
+  
+  .MuiTable-root {
+    min-width: 500px !important;
+  }
+  
+  .table-cell {
+    padding: 6px 2px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  /* Stack table data vertically on mobile */
+  .mobile-table .MuiTableRow-root {
+    display: block !important;
+    border: 1px solid #e0e0e0 !important;
+    margin-bottom: 8px !important;
+    padding: 8px !important;
+  }
+  
+  .mobile-table .MuiTableCell-root {
+    display: block !important;
+    border: none !important;
+    padding: 4px 0 !important;
+  }
+}
+
+/* ===== CARDS RESPONSIVE ===== */
+@media (max-width: 1023px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 16px !important;
+  }
+  
+  .MuiCard-root {
+    margin: 8px 0 !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  .MuiCard-root {
+    margin: 6px 0 !important;
+  }
+  
+  .MuiCardContent-root {
+    padding: 12px !important;
+  }
+}
+
+/* ===== MODALS RESPONSIVE ===== */
+@media (max-width: 1023px) {
+  .MuiDialog-paper {
+    margin: 16px !important;
+    max-width: calc(100% - 32px) !important;
+    max-height: calc(100% - 32px) !important;
+  }
+  
+  .MuiDialogContent-root {
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .MuiDialog-paper {
+    margin: 8px !important;
+    max-width: calc(100% - 16px) !important;
+    max-height: calc(100% - 16px) !important;
+  }
+  
+  .MuiDialogContent-root {
+    padding: 12px !important;
+  }
+  
+  .MuiDialogActions-root {
+    padding: 8px 12px !important;
+    flex-direction: column !important;
+  }
+  
+  .MuiDialogActions-root .MuiButton-root {
+    width: 100% !important;
+    margin: 4px 0 !important;
+  }
+}
+
+/* ===== SIDEBAR RESPONSIVE ===== */
+@media (max-width: 1023px) {
+  .sidebar {
+    width: 240px !important;
+  }
+  
+  .sidebar.collapsed {
+    width: 60px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .sidebar {
+    width: 100% !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: -100% !important;
+    height: 100vh !important;
+    z-index: 1200 !important;
+    transition: left 0.3s ease !important;
+  }
+  
+  .sidebar.open {
+    left: 0 !important;
+  }
+  
+  .sidebar-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    z-index: 1199 !important;
+  }
+}
+
+/* ===== NOTIFICATIONS RESPONSIVE ===== */
+@media (max-width: 767px) {
+  .notification-bell {
+    margin-left: 8px !important;
+  }
+  
+  .notification-menu {
+    width: 300px !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+  
+  .notification-item {
+    padding: 8px 12px !important;
+  }
+}
+
+/* ===== CHARTS RESPONSIVE ===== */
+@media (max-width: 1023px) {
+  .chart-container {
+    height: 300px !important;
+  }
+  
+  .chart-container canvas {
+    max-height: 280px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .chart-container {
+    height: 250px !important;
+  }
+  
+  .chart-container canvas {
+    max-height: 230px !important;
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+.hide-on-mobile {
+  display: block !important;
+}
+
+.show-on-mobile {
+  display: none !important;
+}
+
+@media (max-width: 767px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  
+  .show-on-mobile {
+    display: block !important;
+  }
+}
+
+/* ===== TOUCH FRIENDLY ELEMENTS ===== */
+@media (max-width: 767px) {
+  .MuiButton-root {
+    min-height: 44px !important; /* iOS touch target */
+  }
+  
+  .MuiIconButton-root {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+  
+  .MuiChip-root {
+    min-height: 32px !important;
+  }
+  
+  .MuiListItem-root {
+    min-height: 48px !important;
+  }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .MuiAppBar-root,
+  .MuiDrawer-root,
+  .MuiFab-root,
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* ===== DARK MODE RESPONSIVE ===== */
+@media (prefers-color-scheme: dark) {
+  .auto-dark-mode {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+  }
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+@media (prefers-contrast: high) {
+  .MuiButton-root {
+    border: 2px solid currentColor !important;
+  }
+  
+  .MuiCard-root {
+    border: 2px solid currentColor !important;
+  }
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== ACCESSIBILITY IMPROVEMENTS ===== */
+@media (max-width: 767px) {
+  /* Ensure focus indicators are visible */
+  .MuiButton-root:focus,
+  .MuiIconButton-root:focus,
+  .MuiTextField-root:focus-within {
+    outline: 2px solid #1976d2 !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* Improve text readability */
+  .MuiTypography-root {
+    line-height: 1.5 !important;
+  }
+  
+  /* Ensure sufficient color contrast */
+  .MuiChip-root {
+    border: 1px solid currentColor !important;
+  }
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+@media (max-width: 767px) {
+  /* Reduce animations on mobile for better performance */
+  .MuiFade-root,
+  .MuiZoom-root {
+    transition-duration: 0.2s !important;
+  }
+  
+  /* Optimize images for mobile */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* ===== CUSTOM SCROLLBAR FOR MOBILE ===== */
+@media (max-width: 767px) {
+  ::-webkit-scrollbar {
+    width: 6px !important;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888 !important;
+    border-radius: 3px !important;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555 !important;
+  }
+} 

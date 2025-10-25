@@ -1,0 +1,25 @@
+{
+  "short_name": "Rakshak Securitas",
+  "name": "Rakshak Securitas - Expense Management System",
+  "icons": [
+    {
+      "src": "rakshak-logo.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "rakshak-logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "rakshak-logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#004D4D",
+  "background_color": "#ffffff"
+}
