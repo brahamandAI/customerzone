@@ -46,6 +46,14 @@ for (const envFile of envFiles) {
             cwd: process.cwd()
         });
         console.log(`✅ ${envFile} encrypted successfully`);
+        
+        // Stage the encrypted file so it's included in the commit
+        const encryptedFile = envFile + '.encrypted';
+        execSync(`git add ${encryptedFile}`, {
+            cwd: process.cwd(),
+            stdio: 'inherit'
+        });
+        console.log(`✅ ${encryptedFile} staged for commit`);
     } catch (error) {
         console.error(`❌ Error: Failed to encrypt ${envFile}`);
         console.error('Encryption error:', error.message);
