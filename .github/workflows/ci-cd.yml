@@ -43,7 +43,7 @@ jobs:
          
         # Deploy on server
         echo "🚀 Deploying to server..."
-        ssh -o StrictHostKeyChecking=no -p $SSH_PORT $HOST "cd $DEPLOY_PATH && echo 'ENCRYPTION_KEY=$ENCRYPTION_KEY' > .env.git && echo '✅ .env.git file created/updated' && chmod +x deploy.sh && ./deploy.sh"
+        ssh -o StrictHostKeyChecking=no -p $SSH_PORT $HOST "cd /home/customerzone/htdocs/www.customerzone.in/customerzone && echo 'ENCRYPTION_KEY=$ENCRYPTION_KEY' > .env.git && echo '✅ .env.git file created/updated' && chmod +x deploy.sh && ./deploy.sh"
 
     - name: Deployment Status
       run: |
