@@ -1,0 +1,5648 @@
+{
+  "timestamp": "2025-08-06T11:15:59.731Z",
+  "collections": {
+    "users": [
+      {
+        "_id": "68734479e57bbdf8c878b82f",
+        "name": "Super Admin",
+        "email": "admin@rakshak.com",
+        "role": "l3_approver",
+        "employeeId": "EMP1001",
+        "department": "Administration",
+        "siteId": null,
+        "phone": "+919999999999",
+        "profilePicture": "default-avatar.png",
+        "isActive": true,
+        "isEmailVerified": true,
+        "createdAt": "2024-07-12T12:10:00.000Z",
+        "updatedAt": "2025-08-05T03:43:03.018Z",
+        "preferences": {
+          "darkMode": true,
+          "notifications": {
+            "email": true,
+            "push": true,
+            "sms": false
+          },
+          "language": "en",
+          "timezone": "Asia/Kolkata",
+          "currency": "INR"
+        },
+        "notifications": {
+          "email": true,
+          "push": true,
+          "sms": true
+        },
+        "permissions": {
+          "canCreateExpenses": true,
+          "canApproveExpenses": true,
+          "canManageUsers": true,
+          "canManageSites": true,
+          "canViewReports": true,
+          "canManageBudgets": true
+        },
+        "address": {
+          "country": "India"
+        },
+        "lastLogin": "2025-08-05T03:43:03.017Z",
+        "loginAttempts": 0
+      },
+      {
+        "_id": "6874fd6a18f6927399a77f63",
+        "name": "Rajat Kumar",
+        "email": "rajatkumar22@gmail.com",
+        "role": "submitter",
+        "employeeId": "RASI-2025-004",
+        "department": "Operations",
+        "site": "6869327d000f12bc5de0f327",
+        "phone": "7206577124",
+        "address": {
+          "street": "Sector-17",
+          "city": "Dwarka",
+          "state": "Delhi",
+          "zipCode": "122108",
+          "country": "India"
+        },
+        "profilePicture": "default-avatar.png",
+        "isActive": true,
+        "isEmailVerified": false,
+        "preferences": {
+          "notifications": {
+            "email": false,
+            "push": true,
+            "sms": false
+          },
+          "language": "en",
+          "timezone": "Asia/Kolkata",
+          "currency": "INR"
+        },
+        "permissions": {
+          "canCreateExpenses": true,
+          "canApproveExpenses": false,
+          "canManageUsers": false,
+          "canManageSites": false,
+          "canViewReports": false,
+          "canManageBudgets": false
+        },
+        "createdAt": "2025-07-14T12:51:54.691Z",
+        "updatedAt": "2025-07-30T05:09:20.219Z",
+        "__v": 0,
+        "lastLogin": "2025-07-30T05:09:20.213Z"
+      },
+      {
+        "_id": "6874fe8918f6927399a77f7d",
+        "name": "Amit Kumar",
+        "email": "amitkumar22@gmail.com",
+        "role": "l1_approver",
+        "employeeId": "RASI-2025-005",
+        "department": "Operations",
+        "site": "6869327d000f12bc5de0f327",
+        "phone": "9812237388",
+        "address": {
+          "street": "Indri",
+          "city": "Gurugram",
+          "state": "Haryana",
+          "zipCode": "122104",
+          "country": "India"
+        },
+        "profilePicture": "default-avatar.png",
+        "isActive": true,
+        "isEmailVerified": false,
+        "preferences": {
+          "darkMode": true,
+          "notifications": {
+            "email": true,
+            "push": true,
+            "sms": false
+          },
+          "language": "en",
+          "timezone": "Asia/Kolkata",
+          "currency": "INR"
+        },
+        "permissions": {
+          "canCreateExpenses": true,
+          "canApproveExpenses": true,
+          "canManageUsers": false,
+          "canManageSites": false,
+          "canViewReports": true,
+          "canManageBudgets": false
+        },
+        "createdAt": "2025-07-14T12:56:41.092Z",
+        "updatedAt": "2025-08-05T03:42:52.480Z",
+        "__v": 0,
+        "lastLogin": "2025-08-05T03:42:52.479Z"
+      },
+      {
+        "_id": "6874ff7718f6927399a77f99",
+        "name": "Abhishek Kumar",
+        "email": "abhishek22@gmail.com",
+        "role": "l2_approver",
+        "employeeId": "RASI-2025-007",
+        "department": "Finance",
+        "site": "6869327d000f12bc5de0f327",
+        "phone": "9517281094",
+        "address": {
+          "street": "Rohin",
+          "city": "Gurugram",
+          "state": "Haryana",
+          "zipCode": "122106",
+          "country": "India"
+        },
+        "profilePicture": "default-avatar.png",
+        "isActive": true,
+        "isEmailVerified": false,
+        "preferences": {
+          "darkMode": true,
+          "notifications": {
+            "email": true,
+            "push": true,
+            "sms": false
+          },
+          "language": "en",
+          "timezone": "Asia/Kolkata",
+          "currency": "INR"
+        },
+        "permissions": {
+          "canCreateExpenses": true,
+          "canApproveExpenses": true,
+          "canManageUsers": false,
+          "canManageSites": false,
+          "canViewReports": true,
+          "canManageBudgets": true
+        },
+        "createdAt": "2025-07-14T13:00:39.858Z",
+        "updatedAt": "2025-08-05T03:42:57.333Z",
+        "__v": 0,
+        "lastLogin": "2025-08-05T03:42:57.332Z"
+      },
+      {
+        "_id": "688510b6742c12f0345a34dc",
+        "name": "Anshu",
+        "email": "anshu22@gmail.com",
+        "role": "finance",
+        "employeeId": "RASI-2025-012",
+        "department": "Operations",
+        "site": "6869327d000f12bc5de0f327",
+        "phone": "9812237388",
+        "address": {
+          "street": "Pathan wara , Sohna ",
+          "city": "Gurugram",
+          "state": "Haryana",
+          "zipCode": "122103",
+          "country": "India"
+        },
+        "bankDetails": {
+          "accountNumber": "00600350000429",
+          "ifscCode": "HDFC0000069",
+          "bankName": "HDFC BANK",
+          "accountHolderName": "Anshu"
+        },
+        "profilePicture": "default-avatar.png",
+        "isActive": true,
+        "isEmailVerified": false,
+        "preferences": {
+          "darkMode": true,
+          "notifications": {
+            "email": true,
+            "push": true,
+            "sms": false
+          },
+          "language": "en",
+          "timezone": "Asia/Kolkata",
+          "currency": "INR"
+        },
+        "permissions": {
+          "canCreateExpenses": false,
+          "canApproveExpenses": false,
+          "canManageUsers": false,
+          "canManageSites": false,
+          "canViewReports": true,
+          "canManageBudgets": false
+        },
+        "createdAt": "2025-07-26T17:30:30.247Z",
+        "updatedAt": "2025-08-04T16:51:58.955Z",
+        "__v": 0,
+        "lastLogin": "2025-08-04T16:51:58.946Z",
+        "loginAttempts": 0
+      },
+      {
+        "_id": "68907bd9dd9d9c9ab1bb9c2d",
+        "name": "Avinash Gupta",
+        "email": "avinash123@gmail.com",
+        "role": "submitter",
+        "employeeId": "RASI-2025-111",
+        "department": "Operations",
+        "site": "6869327d000f12bc5de0f327",
+        "phone": "9812237389",
+        "address": {
+          "street": "Pathan wara , Sohna",
+          "city": "Gurugram",
+          "state": "Haryana",
+          "zipCode": "122103",
+          "country": "India"
+        },
+        "bankDetails": {
+          "accountNumber": "00600350000400",
+          "ifscCode": "HDFC0000055",
+          "bankName": "HDFC BANK",
+          "accountHolderName": "Avinash"
+        },
+        "profilePicture": "default-avatar.png",
+        "isActive": true,
+        "isEmailVerified": false,
+        "preferences": {
+          "darkMode": false,
+          "notifications": {},
+          "language": "en",
+          "timezone": "Asia/Kolkata",
+          "currency": "INR"
+        },
+        "permissions": {
+          "canCreateExpenses": true,
+          "canApproveExpenses": false,
+          "canManageUsers": false,
+          "canManageSites": false,
+          "canViewReports": false,
+          "canManageBudgets": false
+        },
+        "createdAt": "2025-08-04T09:22:33.809Z",
+        "updatedAt": "2025-08-06T10:22:35.490Z",
+        "__v": 0,
+        "lastLogin": "2025-08-05T06:58:42.531Z",
+        "loginAttempts": 0
+      },
+      {
+        "_id": "68909f62c99fe8cc9e10f931",
+        "name": "Ashta",
+        "email": "ashta123@gmail.com",
+        "role": "l3_approver",
+        "employeeId": "RASI-2025-115",
+        "department": "Administration",
+        "phone": "9812237389",
+        "address": {
+          "street": "sector-18, Maruti kunj",
+          "city": "Dwarka",
+          "state": "Delhi",
+          "zipCode": "122105",
+          "country": "India"
+        },
+        "bankDetails": {
+          "accountNumber": "00600350000402",
+          "ifscCode": "HDFC0000058",
+          "bankName": "HDFC BANK",
+          "accountHolderName": "Ashta"
+        },
+        "profilePicture": "default-avatar.png",
+        "isActive": true,
+        "isEmailVerified": false,
+        "preferences": {
+          "darkMode": false,
+          "notifications": {
+            "email": true,
+            "push": true,
+            "sms": false
+          },
+          "language": "en",
+          "timezone": "Asia/Kolkata",
+          "currency": "INR"
+        },
+        "permissions": {
+          "canCreateExpenses": true,
+          "canApproveExpenses": true,
+          "canManageUsers": true,
+          "canManageSites": true,
+          "canViewReports": true,
+          "canManageBudgets": true
+        },
+        "createdAt": "2025-08-04T11:54:10.825Z",
+        "updatedAt": "2025-08-06T10:42:00.666Z",
+        "__v": 0,
+        "lastLogin": "2025-08-06T10:42:00.662Z"
+      }
+    ],
+    "expenses": [
+      {
+        "_id": "6868e7452396774193cd0a1f",
+        "expenseNumber": "EXP001",
+        "title": "Business Trip",
+        "description": "Trip to Mumbai for client meeting",
+        "amount": 15000,
+        "currency": "INR",
+        "category": "TRAVEL",
+        "expenseDate": "2025-07-05T08:50:12.991Z",
+        "submissionDate": "2025-07-05T08:50:12.999Z",
+        "submittedById": "6868e7442396774193cd0a1e",
+        "siteId": "6868e7442396774193cd0a1d",
+        "department": "Finance",
+        "status": "SUBMITTED",
+        "currentApprovalLevel": 0,
+        "requiredApprovalLevel": 1,
+        "createdAt": "2025-07-05T08:50:12.999Z",
+        "updatedAt": "2025-07-05T08:50:12.999Z",
+        "travel": {
+          "from": "Bangalore",
+          "to": "Mumbai",
+          "travelDate": "2025-07-05T08:50:12.991Z",
+          "returnDate": "2025-07-06T08:50:12.991Z",
+          "mode": "FLIGHT",
+          "bookingReference": "FL123",
+          "passengerName": "John Doe"
+        }
+      },
+      {
+        "_id": "6874e67f39cae27d6491e02e",
+        "expenseNumber": "EXP-9278",
+        "title": "Vehicle KM Expense - 7/14/2025",
+        "description": "food expense",
+        "amount": 7088,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-07-14T11:14:06.909Z",
+        "submissionDate": "2025-07-14T11:14:07.168Z",
+        "submittedBy": "68738b69d7fb8d67b15a29eb",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "rejected",
+        "currentApprovalLevel": 0,
+        "requiredApprovalLevel": 1,
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "68738b69d7fb8d67b15a29eb",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6874e67f39cae27d6491e02f",
+            "timestamp": "2025-07-14T11:14:07.180Z"
+          }
+        ],
+        "createdAt": "2025-07-14T11:14:07.177Z",
+        "updatedAt": "2025-07-30T05:41:21.424Z",
+        "__v": 0
+      },
+      {
+        "_id": "6874fdf118f6927399a77f6c",
+        "expenseNumber": "EXP-3774",
+        "title": "Vehicle KM Expense - 7/14/2025",
+        "description": "Food Expense details here",
+        "amount": 3433,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-07-14T12:54:08.946Z",
+        "submissionDate": "2025-07-14T12:54:09.324Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "rejected",
+        "currentApprovalLevel": 0,
+        "requiredApprovalLevel": 1,
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6874fdf118f6927399a77f6d",
+            "timestamp": "2025-07-14T12:54:09.344Z"
+          }
+        ],
+        "createdAt": "2025-07-14T12:54:09.329Z",
+        "updatedAt": "2025-07-30T05:41:21.507Z",
+        "__v": 0
+      },
+      {
+        "_id": "6875dc9f469892e07be320b9",
+        "expenseNumber": "EXP-3819",
+        "title": "Vehicle KM Expense - 7/15/2025",
+        "description": "Food Expense details",
+        "amount": 6001,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-07-15T04:44:15.180Z",
+        "submissionDate": "2025-07-15T04:44:15.557Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l3",
+        "currentApprovalLevel": 3,
+        "requiredApprovalLevel": 1,
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6875dc9f469892e07be320ba",
+            "timestamp": "2025-07-15T04:44:15.576Z"
+          }
+        ],
+        "createdAt": "2025-07-15T04:44:15.565Z",
+        "updatedAt": "2025-07-30T05:41:21.959Z",
+        "__v": 0
+      },
+      {
+        "_id": "6875ebd7e48a91ef2eef4a30",
+        "expenseNumber": "EXP-5751",
+        "title": "Electrical Items",
+        "description": "Power Supply connection",
+        "amount": 5005,
+        "currency": "INR",
+        "category": "Maintenance",
+        "expenseDate": "2025-07-15T05:49:11.220Z",
+        "submissionDate": "2025-07-15T05:49:11.450Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "rejected",
+        "currentApprovalLevel": 0,
+        "requiredApprovalLevel": 1,
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6875ebd7e48a91ef2eef4a31",
+            "timestamp": "2025-07-15T05:49:11.473Z"
+          }
+        ],
+        "createdAt": "2025-07-15T05:49:11.465Z",
+        "updatedAt": "2025-07-30T05:41:22.017Z",
+        "__v": 0
+      },
+      {
+        "_id": "6875fb954087deacf4302b8b",
+        "expenseNumber": "EXP-4641",
+        "title": "Travel for Delhi",
+        "description": "Travel expense for delhi details",
+        "amount": 4000,
+        "currency": "INR",
+        "category": "Travel",
+        "expenseDate": "2025-07-15T06:56:20.951Z",
+        "submissionDate": "2025-07-15T06:56:21.336Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6875fb954087deacf4302b8c",
+            "timestamp": "2025-07-15T06:56:21.354Z"
+          }
+        ],
+        "createdAt": "2025-07-15T06:56:21.345Z",
+        "updatedAt": "2025-07-30T05:41:22.078Z",
+        "__v": 0
+      },
+      {
+        "_id": "68760576c1d94a6a34a745ca",
+        "expenseNumber": "EXP-1776",
+        "title": "Recharge",
+        "description": "Recharge on office phone",
+        "amount": 300,
+        "currency": "INR",
+        "category": "Miscellaneous",
+        "expenseDate": "2025-07-15T07:38:30.257Z",
+        "submissionDate": "2025-07-15T07:38:30.595Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l3",
+        "currentApprovalLevel": 3,
+        "requiredApprovalLevel": 1,
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "68760576c1d94a6a34a745cb",
+            "timestamp": "2025-07-15T07:38:30.613Z"
+          }
+        ],
+        "createdAt": "2025-07-15T07:38:30.600Z",
+        "updatedAt": "2025-07-30T05:41:22.141Z",
+        "__v": 0
+      },
+      {
+        "_id": "68761292eddef48e235bbe29",
+        "expenseNumber": "EXP-9096",
+        "title": "Cloth for empolyee",
+        "description": "for employee cloths",
+        "amount": 2000,
+        "currency": "INR",
+        "category": "Miscellaneous",
+        "expenseDate": "2025-07-15T08:34:25.939Z",
+        "submissionDate": "2025-07-15T08:34:26.204Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "68761292eddef48e235bbe2a",
+            "timestamp": "2025-07-15T08:34:26.217Z"
+          }
+        ],
+        "createdAt": "2025-07-15T08:34:26.213Z",
+        "updatedAt": "2025-07-30T05:41:22.199Z",
+        "__v": 0
+      },
+      {
+        "_id": "6876151d6908558fa2b1d927",
+        "expenseNumber": "EXP-5647",
+        "title": "Batter for vehicle",
+        "description": "For all employee car",
+        "amount": 5000,
+        "currency": "INR",
+        "category": "Equipment",
+        "expenseDate": "2025-07-15T08:45:17.409Z",
+        "submissionDate": "2025-07-15T08:45:17.677Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l3",
+        "currentApprovalLevel": 3,
+        "requiredApprovalLevel": 1,
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6876151d6908558fa2b1d928",
+            "timestamp": "2025-07-15T08:45:17.690Z"
+          }
+        ],
+        "createdAt": "2025-07-15T08:45:17.682Z",
+        "updatedAt": "2025-07-30T05:41:22.259Z",
+        "__v": 0
+      },
+      {
+        "_id": "687686082f57897d8058086c",
+        "expenseNumber": "EXP-5420",
+        "title": "Cloth for empolyes",
+        "description": "cloths expense",
+        "amount": 5001,
+        "currency": "INR",
+        "category": "Miscellaneous",
+        "expenseDate": "2025-07-15T16:47:04.629Z",
+        "submissionDate": "2025-07-15T16:47:04.909Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l3",
+        "currentApprovalLevel": 3,
+        "requiredApprovalLevel": 1,
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "687686082f57897d8058086d",
+            "timestamp": "2025-07-15T16:47:04.935Z"
+          }
+        ],
+        "createdAt": "2025-07-15T16:47:04.919Z",
+        "updatedAt": "2025-07-30T05:41:22.340Z",
+        "__v": 0
+      },
+      {
+        "_id": "6877f6152165ce507be9f946",
+        "expenseNumber": "EXP-4855",
+        "title": "Travel to Gujarat",
+        "description": "Travel Expense",
+        "amount": 30000,
+        "currency": "INR",
+        "category": "Travel",
+        "expenseDate": "2025-07-16T18:57:24.672Z",
+        "submissionDate": "2025-07-16T18:57:25.380Z",
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l3",
+        "currentApprovalLevel": 3,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6877f6152165ce507be9f947",
+            "timestamp": "2025-07-16T18:57:25.398Z"
+          }
+        ],
+        "createdAt": "2025-07-16T18:57:25.389Z",
+        "updatedAt": "2025-07-30T05:41:22.396Z",
+        "__v": 0
+      },
+      {
+        "_id": "6877fc49834ce0251f982fbf",
+        "expenseNumber": "EXP-5735",
+        "title": "food for lunch",
+        "description": "for employee food",
+        "amount": 2000,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-07-16T19:23:53.239Z",
+        "submissionDate": "2025-07-16T19:23:53.623Z",
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6877fc49834ce0251f982fc0",
+            "timestamp": "2025-07-16T19:23:53.658Z"
+          }
+        ],
+        "createdAt": "2025-07-16T19:23:53.645Z",
+        "updatedAt": "2025-07-30T05:41:22.453Z",
+        "__v": 0
+      },
+      {
+        "_id": "687b6e552210c50d05771edd",
+        "expenseNumber": "EXP-8833",
+        "title": "Recharge",
+        "description": "hows",
+        "amount": 2002,
+        "currency": "INR",
+        "category": "Miscellaneous",
+        "expenseDate": "2025-07-19T10:07:17.013Z",
+        "submissionDate": "2025-07-19T10:07:17.537Z",
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l3",
+        "currentApprovalLevel": 3,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "687b6e552210c50d05771ede",
+            "timestamp": "2025-07-19T10:07:17.553Z"
+          }
+        ],
+        "createdAt": "2025-07-19T10:07:17.545Z",
+        "updatedAt": "2025-07-30T05:41:22.540Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882e88b46be3fc06dacc217",
+        "expenseNumber": "EXP-8557",
+        "title": "Fuel for vehicle",
+        "description": "checking fuel",
+        "amount": 222,
+        "currency": "INR",
+        "category": "Fuel",
+        "expenseDate": "2025-07-25T02:14:35.734Z",
+        "submissionDate": "2025-07-25T02:14:35.960Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000422",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6882e88b46be3fc06dacc218",
+            "timestamp": "2025-07-25T02:14:35.989Z"
+          }
+        ],
+        "createdAt": "2025-07-25T02:14:35.974Z",
+        "updatedAt": "2025-07-30T05:41:22.618Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882ea5334c52f7d8636f307",
+        "expenseNumber": "EXP-8498",
+        "title": "travel",
+        "description": "fff",
+        "amount": 333,
+        "currency": "INR",
+        "category": "Travel",
+        "expenseDate": "2025-07-25T02:22:10.946Z",
+        "submissionDate": "2025-07-25T02:22:11.137Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000425",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6882ea5334c52f7d8636f308",
+            "timestamp": "2025-07-25T02:22:11.146Z"
+          }
+        ],
+        "createdAt": "2025-07-25T02:22:11.142Z",
+        "updatedAt": "2025-07-30T05:41:22.676Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882ed8f15e8ea4faaf4e4dd",
+        "expenseNumber": "EXP-9440",
+        "title": "fuel",
+        "description": "checking",
+        "amount": 333,
+        "currency": "INR",
+        "category": "Fuel",
+        "expenseDate": "2025-07-25T02:35:59.441Z",
+        "submissionDate": "2025-07-25T02:35:59.635Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000422",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6882ed8f15e8ea4faaf4e4de",
+            "timestamp": "2025-07-25T02:35:59.656Z"
+          }
+        ],
+        "createdAt": "2025-07-25T02:35:59.646Z",
+        "updatedAt": "2025-07-30T05:41:22.732Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882eff7b9f1a7c8f93cabff",
+        "expenseNumber": "EXP-3090",
+        "title": "fuel",
+        "description": "dfgh",
+        "amount": 555,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-07-25T02:46:15.019Z",
+        "submissionDate": "2025-07-25T02:46:15.295Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6882eff7b9f1a7c8f93cac00",
+            "timestamp": "2025-07-25T02:46:15.314Z"
+          }
+        ],
+        "createdAt": "2025-07-25T02:46:15.303Z",
+        "updatedAt": "2025-07-30T05:41:22.790Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882fea9080f849827051106",
+        "expenseNumber": "EXP-7269",
+        "title": "fuel",
+        "description": "fhj",
+        "amount": 666,
+        "currency": "INR",
+        "category": "Fuel",
+        "expenseDate": "2025-07-25T03:48:57.087Z",
+        "submissionDate": "2025-07-25T03:48:57.373Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6882fea9080f849827051107",
+            "timestamp": "2025-07-25T03:48:57.392Z"
+          }
+        ],
+        "createdAt": "2025-07-25T03:48:57.383Z",
+        "updatedAt": "2025-07-30T05:41:22.857Z",
+        "__v": 0
+      },
+      {
+        "_id": "6883008c1b79a7f86843ed99",
+        "expenseNumber": "EXP-8293",
+        "title": "Durga Garments",
+        "description": "ppi",
+        "amount": 777,
+        "currency": "INR",
+        "category": "Miscellaneous",
+        "expenseDate": "2025-07-25T03:57:00.451Z",
+        "submissionDate": "2025-07-25T03:57:00.686Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000422",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6883008c1b79a7f86843ed9a",
+            "timestamp": "2025-07-25T03:57:00.708Z"
+          }
+        ],
+        "createdAt": "2025-07-25T03:57:00.697Z",
+        "updatedAt": "2025-07-30T05:41:22.908Z",
+        "__v": 0
+      },
+      {
+        "_id": "68830e2f89c888026b830acd",
+        "expenseNumber": "EXP-2050",
+        "title": "Recharge",
+        "description": "kljkk",
+        "amount": 1000,
+        "currency": "INR",
+        "category": "Miscellaneous",
+        "expenseDate": "2025-07-25T04:55:11.377Z",
+        "submissionDate": "2025-07-25T04:55:11.580Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "68830e2f89c888026b830ace",
+            "timestamp": "2025-07-25T04:55:11.587Z"
+          }
+        ],
+        "createdAt": "2025-07-25T04:55:11.583Z",
+        "updatedAt": "2025-07-30T05:41:22.974Z",
+        "__v": 0
+      },
+      {
+        "_id": "6883111774e71832c9cb7c98",
+        "expenseNumber": "EXP-4998",
+        "title": "Recharge",
+        "description": "asdfg",
+        "amount": 800,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-07-25T05:07:35.592Z",
+        "submissionDate": "2025-07-25T05:07:35.810Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l2",
+        "currentApprovalLevel": 2,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6883111774e71832c9cb7c99",
+            "timestamp": "2025-07-25T05:07:35.822Z"
+          }
+        ],
+        "createdAt": "2025-07-25T05:07:35.813Z",
+        "updatedAt": "2025-07-30T05:41:23.040Z",
+        "__v": 0
+      },
+      {
+        "_id": "68834266b8855f39a43d0fd8",
+        "expenseNumber": "EXP-5409",
+        "title": "tatu",
+        "description": "house",
+        "amount": 5000,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-07-25T08:37:58.062Z",
+        "submissionDate": "2025-07-25T08:37:58.216Z",
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "68834266b8855f39a43d0fd9",
+            "timestamp": "2025-07-25T08:37:58.238Z"
+          }
+        ],
+        "createdAt": "2025-07-25T08:37:58.230Z",
+        "updatedAt": "2025-08-01T10:32:08.934Z",
+        "__v": 0
+      },
+      {
+        "_id": "68834769b8855f39a43d1001",
+        "expenseNumber": "EXP-1229",
+        "title": "fuel",
+        "description": "jhio",
+        "amount": 777,
+        "currency": "INR",
+        "category": "Travel",
+        "expenseDate": "2025-07-25T08:59:20.907Z",
+        "submissionDate": "2025-07-25T08:59:21.066Z",
+        "submittedBy": "6874fd6a18f6927399a77f63",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "rejected",
+        "currentApprovalLevel": 0,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6874fd6a18f6927399a77f63",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "68834769b8855f39a43d1002",
+            "timestamp": "2025-07-25T08:59:21.069Z"
+          }
+        ],
+        "createdAt": "2025-07-25T08:59:21.068Z",
+        "updatedAt": "2025-07-30T05:41:23.197Z",
+        "__v": 0
+      },
+      {
+        "_id": "6885dd7b7202918013d79f73",
+        "expenseNumber": "EXP-6638",
+        "title": "fuel",
+        "description": "show me expense",
+        "amount": 909,
+        "currency": "INR",
+        "category": "Fuel",
+        "expenseDate": "2025-07-27T08:04:10.719Z",
+        "submissionDate": "2025-07-27T08:04:11.678Z",
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "payment_processed",
+        "currentApprovalLevel": 3,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6885dd7b7202918013d79f74",
+            "timestamp": "2025-07-27T08:04:11.695Z"
+          }
+        ],
+        "createdAt": "2025-07-27T08:04:11.684Z",
+        "updatedAt": "2025-07-30T05:41:23.261Z",
+        "__v": 0,
+        "paymentAmount": 909,
+        "paymentDate": "2025-07-27T08:07:22.674Z",
+        "paymentProcessedBy": "68734479e57bbdf8c878b82f"
+      },
+      {
+        "_id": "68863f1e19389810c5038258",
+        "expenseNumber": "EXP-3488",
+        "title": "fuel",
+        "description": "just",
+        "amount": 3000,
+        "currency": "INR",
+        "category": "Travel",
+        "expenseDate": "2025-07-27T15:00:46.108Z",
+        "submissionDate": "2025-07-27T15:00:46.815Z",
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l2",
+        "currentApprovalLevel": 2,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "68863f1e19389810c5038259",
+            "timestamp": "2025-07-27T15:00:46.856Z"
+          }
+        ],
+        "createdAt": "2025-07-27T15:00:46.836Z",
+        "updatedAt": "2025-07-30T05:41:23.315Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c940400b4c14244306d19",
+        "expenseNumber": "EXP-9460",
+        "title": "fuel",
+        "description": "cjek",
+        "amount": 4999,
+        "currency": "INR",
+        "category": "Fuel",
+        "expenseDate": "2025-08-01T10:16:36.354Z",
+        "submissionDate": "2025-08-01T10:16:36.585Z",
+        "reservationExpiry": null,
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "688c940400b4c14244306d1b",
+            "timestamp": "2025-08-01T10:16:36.623Z"
+          }
+        ],
+        "createdAt": "2025-08-01T10:16:36.588Z",
+        "updatedAt": "2025-08-01T10:17:46.730Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c99f255640f2e4c7c7db8",
+        "expenseNumber": "EXP-9466",
+        "title": "fuel",
+        "description": "nkak",
+        "amount": 7000,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-08-01T10:41:54.267Z",
+        "submissionDate": "2025-08-01T10:41:54.428Z",
+        "reservationExpiry": null,
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "rejected",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [
+          {
+            "level": 2,
+            "approver": "6874ff7718f6927399a77f99",
+            "action": "rejected",
+            "comments": "dd",
+            "date": "2025-08-01T17:12:32.340Z",
+            "_id": "688cf5803df6cc95740da967"
+          }
+        ],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "688c99f255640f2e4c7c7dba",
+            "timestamp": "2025-08-01T10:41:54.467Z"
+          }
+        ],
+        "createdAt": "2025-08-01T10:41:54.433Z",
+        "updatedAt": "2025-08-01T17:12:32.342Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c9ecf18d57460a9f302c3",
+        "expenseNumber": "EXP-9469",
+        "title": "tata",
+        "description": "chedkin",
+        "amount": 8999,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-08-01T11:02:39.199Z",
+        "submissionDate": "2025-08-01T11:02:39.433Z",
+        "reservationExpiry": null,
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "rejected",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [
+          {
+            "level": 2,
+            "approver": "6874ff7718f6927399a77f99",
+            "action": "rejected",
+            "comments": "hdj",
+            "date": "2025-08-01T16:08:22.878Z",
+            "_id": "688ce67664876cf1aed23ca7"
+          },
+          {
+            "level": 2,
+            "approver": "6874ff7718f6927399a77f99",
+            "action": "rejected",
+            "comments": "hdj",
+            "date": "2025-08-01T16:08:52.164Z",
+            "_id": "688ce69464876cf1aed23cb7"
+          },
+          {
+            "level": 2,
+            "approver": "6874ff7718f6927399a77f99",
+            "action": "rejected",
+            "comments": "hdj",
+            "date": "2025-08-01T16:10:28.985Z",
+            "_id": "688ce6f464876cf1aed23cc9"
+          }
+        ],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "688c9ecf18d57460a9f302c5",
+            "timestamp": "2025-08-01T11:02:39.476Z"
+          }
+        ],
+        "createdAt": "2025-08-01T11:02:39.438Z",
+        "updatedAt": "2025-08-01T16:10:28.986Z",
+        "__v": 0
+      },
+      {
+        "_id": "688ca38c6b8ea096f2cd7430",
+        "expenseNumber": "EXP-9472",
+        "title": "fuel",
+        "description": "cheki",
+        "amount": 5001,
+        "currency": "INR",
+        "category": "Accommodation",
+        "expenseDate": "2025-08-01T11:22:51.914Z",
+        "submissionDate": "2025-08-01T11:22:52.098Z",
+        "reservationExpiry": null,
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "approved_l3",
+        "currentApprovalLevel": 3,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [
+          {
+            "level": 1,
+            "approver": "6874fe8918f6927399a77f7d",
+            "action": "approved",
+            "comments": "fkfk",
+            "date": "2025-08-01T11:24:10.852Z",
+            "_id": "688ca3da6b8ea096f2cd74b9"
+          },
+          {
+            "level": 2,
+            "approver": "6874ff7718f6927399a77f99",
+            "action": "approved",
+            "comments": "check",
+            "date": "2025-08-01T16:07:56.971Z",
+            "_id": "688ce65c64876cf1aed23bfe"
+          },
+          {
+            "level": 3,
+            "approver": "68734479e57bbdf8c878b82f",
+            "action": "approved",
+            "comments": "ff",
+            "date": "2025-08-03T14:58:48.390Z",
+            "_id": "688f7928e3b6bc1839809d2e"
+          }
+        ],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "688ca38c6b8ea096f2cd7432",
+            "timestamp": "2025-08-01T11:22:52.148Z"
+          }
+        ],
+        "createdAt": "2025-08-01T11:22:52.113Z",
+        "updatedAt": "2025-08-03T14:58:48.394Z",
+        "__v": 0
+      },
+      {
+        "_id": "688f8084c79fa50823ba0d47",
+        "expenseNumber": "EXP-9497",
+        "title": "Food",
+        "description": "demo",
+        "amount": 1000,
+        "currency": "INR",
+        "category": "Vehicle KM",
+        "expenseDate": "2025-08-03T15:30:11.946Z",
+        "submissionDate": "2025-08-03T15:30:12.404Z",
+        "reservationExpiry": null,
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "submitted",
+        "currentApprovalLevel": 0,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "688f8084c79fa50823ba0d49",
+            "timestamp": "2025-08-03T15:30:12.461Z"
+          }
+        ],
+        "createdAt": "2025-08-03T15:30:12.409Z",
+        "updatedAt": "2025-08-03T15:30:12.455Z",
+        "__v": 0
+      },
+      {
+        "_id": "688f9990972dfbe20d9e4a41",
+        "expenseNumber": "EXP-9999",
+        "title": "Test Expense with Attachments",
+        "description": "This is a test expense to verify attachment functionality",
+        "amount": 5000,
+        "currency": "INR",
+        "category": "Fuel",
+        "expenseDate": "2025-08-03T17:17:04.285Z",
+        "submissionDate": "2025-08-03T17:17:04.285Z",
+        "reservationExpiry": null,
+        "submittedBy": "68738b69d7fb8d67b15a29eb",
+        "site": "6868e7442396774193cd0a1d",
+        "department": "Operations",
+        "vehicleKm": {
+          "route": {
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [
+          {
+            "filename": "test_receipt_1.pdf",
+            "originalName": "fuel_receipt.pdf",
+            "path": "expenses/2024/01/1703123456789_uuid1.pdf",
+            "size": 1024000,
+            "mimetype": "application/pdf",
+            "uploadDate": "2025-08-03T17:17:04.285Z",
+            "isReceipt": true,
+            "_id": "688f9990972dfbe20d9e4a42"
+          },
+          {
+            "filename": "test_invoice_1.pdf",
+            "originalName": "service_invoice.pdf",
+            "path": "expenses/2024/01/1703123456790_uuid2.pdf",
+            "size": 2048000,
+            "mimetype": "application/pdf",
+            "uploadDate": "2025-08-03T17:17:04.285Z",
+            "isReceipt": false,
+            "_id": "688f9990972dfbe20d9e4a43"
+          }
+        ],
+        "status": "submitted",
+        "currentApprovalLevel": 0,
+        "requiredApprovalLevel": 1,
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "68738b69d7fb8d67b15a29eb",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "688f9990972dfbe20d9e4a44",
+            "timestamp": "2025-08-03T17:17:04.304Z"
+          }
+        ],
+        "createdAt": "2025-08-03T17:17:04.297Z",
+        "updatedAt": "2025-08-03T17:17:04.303Z",
+        "__v": 0
+      },
+      {
+        "_id": "688f9a70089a5cad777f746e",
+        "expenseNumber": "EXP-0003",
+        "title": "Fuel",
+        "description": "demo check",
+        "amount": 999,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-08-03T17:20:48.454Z",
+        "submissionDate": "2025-08-03T17:20:48.620Z",
+        "reservationExpiry": null,
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [],
+        "status": "submitted",
+        "currentApprovalLevel": 0,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "688f9a70089a5cad777f7470",
+            "timestamp": "2025-08-03T17:20:48.665Z"
+          }
+        ],
+        "createdAt": "2025-08-03T17:20:48.627Z",
+        "updatedAt": "2025-08-03T17:20:48.664Z",
+        "__v": 0
+      },
+      {
+        "_id": "688f9c79001ea2d940203e39",
+        "expenseNumber": "EXP-2258",
+        "title": "Food",
+        "description": "demo check",
+        "amount": 2000,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-08-03T17:29:29.169Z",
+        "submissionDate": "2025-08-03T17:29:29.291Z",
+        "reservationExpiry": null,
+        "submittedBy": "6877d26920e095aa2f2eb266",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [
+          {
+            "filename": "1754242169156_6302df23-f598-49e7-a98b-2a3960d05fb6.pdf",
+            "originalName": "Expense_Management_System_Overview_Final.pdf",
+            "path": "expenses\\2025\\08\\1754242169156_6302df23-f598-49e7-a98b-2a3960d05fb6.pdf",
+            "size": 3535,
+            "mimetype": "application/pdf",
+            "isReceipt": false,
+            "_id": "688f9c79001ea2d940203e3a",
+            "uploadDate": "2025-08-03T17:29:29.296Z"
+          }
+        ],
+        "status": "submitted",
+        "currentApprovalLevel": 0,
+        "requiredApprovalLevel": 1,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000426",
+            "ifscCode": "HDFC0000060",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Zaid Khan"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6877d26920e095aa2f2eb266",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "688f9c79001ea2d940203e3c",
+            "timestamp": "2025-08-03T17:29:29.331Z"
+          }
+        ],
+        "createdAt": "2025-08-03T17:29:29.297Z",
+        "updatedAt": "2025-08-03T17:29:29.330Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890ac385b759646d37db619",
+        "expenseNumber": "EXP-0004",
+        "title": "Food",
+        "description": "check",
+        "amount": 1000,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-08-04T12:48:56.147Z",
+        "submissionDate": "2025-08-04T12:48:56.272Z",
+        "reservationExpiry": null,
+        "submittedBy": "68907bd9dd9d9c9ab1bb9c2d",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [
+          {
+            "filename": "1754311736136_77c079a9-a093-45c8-9711-f872133c2d09.pdf",
+            "originalName": "Expense_Management_System_Overview_Final (1).pdf",
+            "path": "expenses\\2025\\08\\1754311736136_77c079a9-a093-45c8-9711-f872133c2d09.pdf",
+            "size": 3535,
+            "mimetype": "application/pdf",
+            "isReceipt": false,
+            "_id": "6890ac385b759646d37db61a",
+            "uploadDate": "2025-08-04T12:48:56.289Z"
+          }
+        ],
+        "status": "approved_l3",
+        "currentApprovalLevel": 3,
+        "requiredApprovalLevel": 4,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000400",
+            "ifscCode": "HDFC0000055",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Avinash"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [
+          {
+            "level": 1,
+            "approver": "68909821bb37585fa3cbc076",
+            "action": "approved",
+            "comments": "check demo",
+            "date": "2025-08-04T12:49:49.682Z",
+            "_id": "6890ac6d5b759646d37db6e5"
+          },
+          {
+            "level": 2,
+            "approver": "689099a0e00dba689e8e533e",
+            "action": "approved",
+            "comments": "check",
+            "date": "2025-08-04T13:13:57.460Z",
+            "_id": "6890b21525161d6ca832adf6"
+          },
+          {
+            "level": 3,
+            "approver": "68909f62c99fe8cc9e10f931",
+            "action": "approved",
+            "comments": "check",
+            "date": "2025-08-04T13:21:44.036Z",
+            "_id": "6890b3e857f2ab026fe40548"
+          }
+        ],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "68907bd9dd9d9c9ab1bb9c2d",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6890ac385b759646d37db61c",
+            "timestamp": "2025-08-04T12:48:56.344Z"
+          }
+        ],
+        "createdAt": "2025-08-04T12:48:56.294Z",
+        "updatedAt": "2025-08-04T13:21:44.072Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919d748a04bc0cff628571",
+        "expenseNumber": "EXP-1126",
+        "title": "Cloths",
+        "description": "checking live",
+        "amount": 1000,
+        "currency": "INR",
+        "category": "Food",
+        "expenseDate": "2025-08-05T05:58:10.599Z",
+        "submissionDate": "2025-08-05T05:58:12.756Z",
+        "reservationExpiry": null,
+        "submittedBy": "68907bd9dd9d9c9ab1bb9c2d",
+        "site": "6869327d000f12bc5de0f327",
+        "department": "Operations",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [
+          {
+            "filename": "1754373492685_f8aa3329-3252-4216-9105-c7d62378c827.pdf",
+            "originalName": "Expense_Management_System_Overview_Final (1).pdf",
+            "path": "expenses/2025/08/1754373492685_f8aa3329-3252-4216-9105-c7d62378c827.pdf",
+            "size": 3535,
+            "mimetype": "application/pdf",
+            "isReceipt": false,
+            "_id": "68919d748a04bc0cff628572",
+            "uploadDate": "2025-08-05T05:58:12.758Z"
+          }
+        ],
+        "status": "approved_l3",
+        "currentApprovalLevel": 3,
+        "requiredApprovalLevel": 4,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "00600350000400",
+            "ifscCode": "HDFC0000055",
+            "bankName": "HDFC BANK",
+            "accountHolderName": "Avinash"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [
+          {
+            "level": 1,
+            "approver": "68909821bb37585fa3cbc076",
+            "action": "approved",
+            "comments": "live check",
+            "date": "2025-08-05T05:58:52.815Z",
+            "_id": "68919d9c8a04bc0cff628604"
+          },
+          {
+            "level": 2,
+            "approver": "689099a0e00dba689e8e533e",
+            "action": "approved",
+            "comments": "live check",
+            "date": "2025-08-05T06:00:27.947Z",
+            "_id": "68919dfb8a04bc0cff628697"
+          },
+          {
+            "level": 3,
+            "approver": "68909f62c99fe8cc9e10f931",
+            "action": "approved",
+            "comments": "live check",
+            "date": "2025-08-05T06:01:15.378Z",
+            "_id": "68919e2b8a04bc0cff6287ca"
+          }
+        ],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "68907bd9dd9d9c9ab1bb9c2d",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "68919d748a04bc0cff628574",
+            "timestamp": "2025-08-05T05:58:12.769Z"
+          }
+        ],
+        "createdAt": "2025-08-05T05:58:12.759Z",
+        "updatedAt": "2025-08-05T06:01:15.379Z",
+        "__v": 0
+      },
+      {
+        "_id": "6891c3808a04bc0cff62b139",
+        "expenseNumber": "EXP-1409",
+        "title": "July Month stipend",
+        "description": "All five interns July month stipend",
+        "amount": 70000,
+        "currency": "INR",
+        "category": "Miscellaneous",
+        "expenseDate": "2025-08-05T08:40:31.098Z",
+        "submissionDate": "2025-08-05T08:40:32.014Z",
+        "reservationExpiry": null,
+        "submittedBy": "6891bf2a8a04bc0cff62ac21",
+        "site": "6891ab898a04bc0cff629ea3",
+        "department": "IT",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [
+          {
+            "filename": "1754383231881_720afbac-0d29-465c-a441-40518694a7ad.pdf",
+            "originalName": "Attendance_Report_1July_to_1Aug.pdf",
+            "path": "expenses/2025/08/1754383231881_720afbac-0d29-465c-a441-40518694a7ad.pdf",
+            "size": 3368,
+            "mimetype": "application/pdf",
+            "isReceipt": false,
+            "_id": "6891c3808a04bc0cff62b13a",
+            "uploadDate": "2025-08-05T08:40:32.017Z"
+          }
+        ],
+        "status": "rejected",
+        "currentApprovalLevel": 0,
+        "requiredApprovalLevel": 4,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "Na",
+            "ifscCode": "Na",
+            "bankName": "Na",
+            "accountHolderName": "Na"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [
+          {
+            "level": 1,
+            "approver": "6891c3188a04bc0cff62b0a1",
+            "action": "rejected",
+            "comments": "",
+            "date": "2025-08-05T09:01:42.616Z",
+            "_id": "6891c8768a04bc0cff62b1aa"
+          }
+        ],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6891bf2a8a04bc0cff62ac21",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6891c3808a04bc0cff62b13c",
+            "timestamp": "2025-08-05T08:40:32.031Z"
+          }
+        ],
+        "createdAt": "2025-08-05T08:40:32.018Z",
+        "updatedAt": "2025-08-05T09:01:42.618Z",
+        "__v": 0
+      },
+      {
+        "_id": "6891cb7c8a04bc0cff62b34e",
+        "expenseNumber": "EXP-1201",
+        "title": "July Month stipend",
+        "description": "All five interns July month stipend.",
+        "amount": 72000,
+        "currency": "INR",
+        "category": "Miscellaneous",
+        "expenseDate": "2025-08-05T09:14:35.442Z",
+        "submissionDate": "2025-08-05T09:14:36.345Z",
+        "reservationExpiry": null,
+        "submittedBy": "6891bf2a8a04bc0cff62ac21",
+        "site": "6891ab898a04bc0cff629ea3",
+        "department": "IT",
+        "vehicleKm": {
+          "startKm": 0,
+          "endKm": 0,
+          "totalKm": 0,
+          "vehicleNumber": "UNKNOWN",
+          "purpose": "Business Travel",
+          "route": {
+            "from": "Start",
+            "to": "End",
+            "via": []
+          },
+          "ratePerKm": 10,
+          "exceedsLimit": false
+        },
+        "attachments": [
+          {
+            "filename": "1754385276226_b26fcaef-2eb5-4b11-98fe-7477a68f7237.pdf",
+            "originalName": "Attendance_Report_1July_to_1Aug (1).pdf",
+            "path": "expenses/2025/08/1754385276226_b26fcaef-2eb5-4b11-98fe-7477a68f7237.pdf",
+            "size": 3368,
+            "mimetype": "application/pdf",
+            "isReceipt": false,
+            "_id": "6891cb7c8a04bc0cff62b34f",
+            "uploadDate": "2025-08-05T09:14:36.346Z"
+          }
+        ],
+        "status": "approved_l1",
+        "currentApprovalLevel": 1,
+        "requiredApprovalLevel": 4,
+        "reimbursement": {
+          "bankDetails": {
+            "accountNumber": "Na",
+            "ifscCode": "Na",
+            "bankName": "Na",
+            "accountHolderName": "Na"
+          }
+        },
+        "tags": [],
+        "priority": "medium",
+        "isRecurring": false,
+        "policyCompliance": {
+          "isCompliant": true,
+          "violations": []
+        },
+        "isActive": true,
+        "isDeleted": false,
+        "approvalHistory": [
+          {
+            "level": 1,
+            "approver": "6891c3188a04bc0cff62b0a1",
+            "action": "approved",
+            "comments": "Ok",
+            "date": "2025-08-05T09:50:20.683Z",
+            "_id": "6891d3dc8a04bc0cff62b6dd"
+          }
+        ],
+        "pendingApprovers": [],
+        "comments": [],
+        "auditTrail": [
+          {
+            "action": "created",
+            "performedBy": "6891bf2a8a04bc0cff62ac21",
+            "details": {
+              "status": "submitted"
+            },
+            "_id": "6891cb7c8a04bc0cff62b351",
+            "timestamp": "2025-08-05T09:14:36.355Z"
+          }
+        ],
+        "createdAt": "2025-08-05T09:14:36.346Z",
+        "updatedAt": "2025-08-05T09:50:20.684Z",
+        "__v": 0
+      }
+    ],
+    "notifications": [],
+    "comments": [],
+    "approvalHistory": [
+      {
+        "_id": "6875e3b3ced06a39a80d182e",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6875dc9f469892e07be320b9",
+        "action": "approved",
+        "comments": "Valid Expense",
+        "date": "2025-07-15T05:14:27.438Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T05:14:27.444Z",
+        "updatedAt": "2025-07-15T05:14:27.444Z",
+        "__v": 0
+      },
+      {
+        "_id": "6875e453ced06a39a80d1850",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6875dc9f469892e07be320b9",
+        "action": "approved",
+        "comments": "L2 verified expene",
+        "date": "2025-07-15T05:17:07.994Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T05:17:07.995Z",
+        "updatedAt": "2025-07-15T05:17:07.995Z",
+        "__v": 0
+      },
+      {
+        "_id": "6875e4abced06a39a80d1871",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "6875dc9f469892e07be320b9",
+        "action": "approved",
+        "comments": "final approve",
+        "date": "2025-07-15T05:18:35.669Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T05:18:35.670Z",
+        "updatedAt": "2025-07-15T05:18:35.670Z",
+        "__v": 0
+      },
+      {
+        "_id": "6875e56cced06a39a80d1891",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6874fdf118f6927399a77f6c",
+        "action": "rejected",
+        "comments": "reject not valid",
+        "date": "2025-07-15T05:21:48.873Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T05:21:48.874Z",
+        "updatedAt": "2025-07-15T05:21:48.874Z",
+        "__v": 0
+      },
+      {
+        "_id": "6875eea20cac46986e7803bc",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6875ebd7e48a91ef2eef4a30",
+        "action": "rejected",
+        "comments": "not valid details",
+        "date": "2025-07-15T06:01:06.023Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T06:01:06.025Z",
+        "updatedAt": "2025-07-15T06:01:06.025Z",
+        "__v": 0
+      },
+      {
+        "_id": "6875eead0cac46986e7803c8",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6874e67f39cae27d6491e02e",
+        "action": "rejected",
+        "comments": "reject",
+        "date": "2025-07-15T06:01:17.941Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T06:01:17.942Z",
+        "updatedAt": "2025-07-15T06:01:17.942Z",
+        "__v": 0
+      },
+      {
+        "_id": "687605e0c1d94a6a34a74619",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "68760576c1d94a6a34a745ca",
+        "action": "approved",
+        "comments": "check",
+        "date": "2025-07-15T07:40:16.829Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T07:40:16.830Z",
+        "updatedAt": "2025-07-15T07:40:16.830Z",
+        "__v": 0
+      },
+      {
+        "_id": "6876062ec1d94a6a34a74645",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "68760576c1d94a6a34a745ca",
+        "action": "approved",
+        "comments": "l2 approver checking",
+        "date": "2025-07-15T07:41:34.305Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T07:41:34.308Z",
+        "updatedAt": "2025-07-15T07:41:34.308Z",
+        "__v": 0
+      },
+      {
+        "_id": "6876065ec1d94a6a34a74662",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "68760576c1d94a6a34a745ca",
+        "action": "approved",
+        "comments": "final test",
+        "date": "2025-07-15T07:42:22.448Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T07:42:22.448Z",
+        "updatedAt": "2025-07-15T07:42:22.448Z",
+        "__v": 0
+      },
+      {
+        "_id": "68760c359ddf591b7a28b22f",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6875fb954087deacf4302b8b",
+        "action": "approved",
+        "comments": "check aprroval page",
+        "date": "2025-07-15T08:07:17.870Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T08:07:17.872Z",
+        "updatedAt": "2025-07-15T08:07:17.872Z",
+        "__v": 0
+      },
+      {
+        "_id": "687612c5eddef48e235bbe7a",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "68761292eddef48e235bbe29",
+        "action": "approved",
+        "comments": "aproval page check",
+        "date": "2025-07-15T08:35:17.730Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T08:35:17.731Z",
+        "updatedAt": "2025-07-15T08:35:17.731Z",
+        "__v": 0
+      },
+      {
+        "_id": "687615616908558fa2b1d97c",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6876151d6908558fa2b1d927",
+        "action": "approved",
+        "comments": "checking error",
+        "date": "2025-07-15T08:46:25.477Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T08:46:25.480Z",
+        "updatedAt": "2025-07-15T08:46:25.480Z",
+        "__v": 0
+      },
+      {
+        "_id": "687615956908558fa2b1d9be",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6876151d6908558fa2b1d927",
+        "action": "approved",
+        "comments": "checking error",
+        "date": "2025-07-15T08:47:17.428Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T08:47:17.430Z",
+        "updatedAt": "2025-07-15T08:47:17.430Z",
+        "__v": 0
+      },
+      {
+        "_id": "687615bc6908558fa2b1d9e5",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "6876151d6908558fa2b1d927",
+        "action": "approved",
+        "comments": "check",
+        "date": "2025-07-15T08:47:56.537Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T08:47:56.538Z",
+        "updatedAt": "2025-07-15T08:47:56.538Z",
+        "__v": 0
+      },
+      {
+        "_id": "687686472f57897d805808c3",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "687686082f57897d8058086c",
+        "action": "approved",
+        "comments": "checking the cloth expense",
+        "date": "2025-07-15T16:48:07.650Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T16:48:07.653Z",
+        "updatedAt": "2025-07-15T16:48:07.653Z",
+        "__v": 0
+      },
+      {
+        "_id": "687686822f57897d805808f9",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "687686082f57897d8058086c",
+        "action": "approved",
+        "comments": "checking cloths l2",
+        "date": "2025-07-15T16:49:06.261Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T16:49:06.264Z",
+        "updatedAt": "2025-07-15T16:49:06.264Z",
+        "__v": 0
+      },
+      {
+        "_id": "687686b62f57897d80580920",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "687686082f57897d8058086c",
+        "action": "approved",
+        "comments": "final approve",
+        "date": "2025-07-15T16:49:58.476Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-15T16:49:58.480Z",
+        "updatedAt": "2025-07-15T16:49:58.480Z",
+        "__v": 0
+      },
+      {
+        "_id": "687804251ba9023b0856f0d8",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6877fc49834ce0251f982fbf",
+        "action": "approved",
+        "comments": "check",
+        "date": "2025-07-16T19:57:25.855Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-16T19:57:25.857Z",
+        "updatedAt": "2025-07-16T19:57:25.857Z",
+        "__v": 0
+      },
+      {
+        "_id": "687b5fe315864f4020d16b80",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6877f6152165ce507be9f946",
+        "action": "approved",
+        "comments": "approved",
+        "date": "2025-07-19T09:05:39.508Z",
+        "ipAddress": "::ffff:172.18.0.1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modifiedAmount": 30000,
+        "modificationReason": "costly",
+        "createdAt": "2025-07-19T09:05:39.509Z",
+        "updatedAt": "2025-07-19T09:05:39.509Z",
+        "__v": 0
+      },
+      {
+        "_id": "687b607a15864f4020d16bb0",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6877f6152165ce507be9f946",
+        "action": "approved",
+        "comments": "",
+        "date": "2025-07-19T09:08:10.596Z",
+        "ipAddress": "::ffff:172.18.0.1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-19T09:08:10.597Z",
+        "updatedAt": "2025-07-19T09:08:10.597Z",
+        "__v": 0
+      },
+      {
+        "_id": "687b60b615864f4020d16bd7",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "6877f6152165ce507be9f946",
+        "action": "approved",
+        "comments": "",
+        "date": "2025-07-19T09:09:10.735Z",
+        "ipAddress": "::ffff:172.18.0.1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-19T09:09:10.736Z",
+        "updatedAt": "2025-07-19T09:09:10.736Z",
+        "__v": 0
+      },
+      {
+        "_id": "687b6e802210c50d05771f35",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "687b6e552210c50d05771edd",
+        "action": "approved",
+        "comments": "approvel",
+        "date": "2025-07-19T10:08:00.153Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-19T10:08:00.154Z",
+        "updatedAt": "2025-07-19T10:08:00.154Z",
+        "__v": 0
+      },
+      {
+        "_id": "687b6ecf2210c50d05771f7b",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "687b6e552210c50d05771edd",
+        "action": "approved",
+        "comments": "l2 approve check",
+        "date": "2025-07-19T10:09:19.395Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-19T10:09:19.397Z",
+        "updatedAt": "2025-07-19T10:09:19.397Z",
+        "__v": 0
+      },
+      {
+        "_id": "687b6efb2210c50d05771fae",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "687b6e552210c50d05771edd",
+        "action": "approved",
+        "comments": "finaliza",
+        "date": "2025-07-19T10:10:03.754Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-19T10:10:03.754Z",
+        "updatedAt": "2025-07-19T10:10:03.754Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882e8b846be3fc06dacc27b",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6882e88b46be3fc06dacc217",
+        "action": "approved",
+        "comments": "dd",
+        "date": "2025-07-25T02:15:20.212Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-25T02:15:20.215Z",
+        "updatedAt": "2025-07-25T02:15:20.215Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882ede715e8ea4faaf4e567",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6882ed8f15e8ea4faaf4e4dd",
+        "action": "approved",
+        "comments": "dd",
+        "date": "2025-07-25T02:37:27.220Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-25T02:37:27.223Z",
+        "updatedAt": "2025-07-25T02:37:27.223Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882eeece8326b773a2cb5e5",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6882ea5334c52f7d8636f307",
+        "action": "approved",
+        "comments": "fgh",
+        "date": "2025-07-25T02:41:48.550Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-25T02:41:48.561Z",
+        "updatedAt": "2025-07-25T02:41:48.561Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882f046b9f1a7c8f93cac69",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6882eff7b9f1a7c8f93cabff",
+        "action": "approved",
+        "comments": "jkl",
+        "date": "2025-07-25T02:47:34.603Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-25T02:47:34.607Z",
+        "updatedAt": "2025-07-25T02:47:34.607Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882fee1080f84982705118e",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6882fea9080f849827051106",
+        "action": "approved",
+        "comments": "fg",
+        "date": "2025-07-25T03:49:53.530Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-25T03:49:53.533Z",
+        "updatedAt": "2025-07-25T03:49:53.533Z",
+        "__v": 0
+      },
+      {
+        "_id": "68830bb693038aa774fdd140",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6883008c1b79a7f86843ed99",
+        "action": "approved",
+        "comments": "checkin",
+        "date": "2025-07-25T04:44:38.853Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-25T04:44:38.855Z",
+        "updatedAt": "2025-07-25T04:44:38.855Z",
+        "__v": 0
+      },
+      {
+        "_id": "68830e7889c888026b830b3d",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "68830e2f89c888026b830acd",
+        "action": "approved",
+        "comments": "king",
+        "date": "2025-07-25T04:56:24.475Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-25T04:56:24.477Z",
+        "updatedAt": "2025-07-25T04:56:24.477Z",
+        "__v": 0
+      },
+      {
+        "_id": "688311e274e71832c9cb7d26",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6883111774e71832c9cb7c98",
+        "action": "approved",
+        "comments": "njiu",
+        "date": "2025-07-25T05:10:58.352Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-25T05:10:58.355Z",
+        "updatedAt": "2025-07-25T05:10:58.355Z",
+        "__v": 0
+      },
+      {
+        "_id": "6885beff88167a22b7e40925",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6883111774e71832c9cb7c98",
+        "action": "approved",
+        "comments": "hj",
+        "date": "2025-07-27T05:54:07.961Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-27T05:54:07.970Z",
+        "updatedAt": "2025-07-27T05:54:07.970Z",
+        "__v": 0
+      },
+      {
+        "_id": "6885ddbc7202918013d79fd5",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6885dd7b7202918013d79f73",
+        "action": "approved",
+        "comments": "l3 checkin",
+        "date": "2025-07-27T08:05:16.707Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-27T08:05:16.710Z",
+        "updatedAt": "2025-07-27T08:05:16.710Z",
+        "__v": 0
+      },
+      {
+        "_id": "6885ddee7202918013d7a027",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6885dd7b7202918013d79f73",
+        "action": "approved",
+        "comments": "l3 check",
+        "date": "2025-07-27T08:06:06.891Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-27T08:06:06.894Z",
+        "updatedAt": "2025-07-27T08:06:06.894Z",
+        "__v": 0
+      },
+      {
+        "_id": "6885de3a7202918013d7a08d",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "6885dd7b7202918013d79f73",
+        "action": "payment_processed",
+        "comments": "checking",
+        "date": "2025-07-27T08:07:22.981Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "paymentAmount": 909,
+        "paymentDate": "2025-07-27T08:07:22.674Z",
+        "createdAt": "2025-07-27T08:07:22.984Z",
+        "updatedAt": "2025-07-27T08:07:22.984Z",
+        "__v": 0
+      },
+      {
+        "_id": "68863f7319389810c50382de",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "68863f1e19389810c5038258",
+        "action": "approved",
+        "comments": "checkig",
+        "date": "2025-07-27T15:02:11.755Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-27T15:02:11.757Z",
+        "updatedAt": "2025-07-27T15:02:11.757Z",
+        "__v": 0
+      },
+      {
+        "_id": "68863fac19389810c50382f8",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "68834769b8855f39a43d1001",
+        "action": "rejected",
+        "comments": "reject",
+        "date": "2025-07-27T15:03:08.445Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-27T15:03:08.447Z",
+        "updatedAt": "2025-07-27T15:03:08.447Z",
+        "__v": 0
+      },
+      {
+        "_id": "68863ff819389810c503833c",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "68863f1e19389810c5038258",
+        "action": "approved",
+        "comments": "checking l2",
+        "date": "2025-07-27T15:04:24.268Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-07-27T15:04:24.271Z",
+        "updatedAt": "2025-07-27T15:04:24.271Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c944a00b4c14244306d94",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "688c940400b4c14244306d19",
+        "action": "approved",
+        "comments": "chek",
+        "date": "2025-08-01T10:17:46.686Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-01T10:17:46.689Z",
+        "updatedAt": "2025-08-01T10:17:46.689Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c97a89faa5ec9fe040cc6",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "68834266b8855f39a43d0fd8",
+        "action": "approved",
+        "comments": "card chevck",
+        "date": "2025-08-01T10:32:08.887Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-01T10:32:08.890Z",
+        "updatedAt": "2025-08-01T10:32:08.890Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c9a2e55640f2e4c7c7e35",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "688c99f255640f2e4c7c7db8",
+        "action": "approved",
+        "comments": "hi",
+        "date": "2025-08-01T10:42:54.224Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-01T10:42:54.228Z",
+        "updatedAt": "2025-08-01T10:42:54.228Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c9f7218d57460a9f303b8",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "688c9ecf18d57460a9f302c3",
+        "action": "approved",
+        "comments": "ddd",
+        "date": "2025-08-01T11:05:22.333Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-01T11:05:22.334Z",
+        "updatedAt": "2025-08-01T11:05:22.334Z",
+        "__v": 0
+      },
+      {
+        "_id": "688ca3da6b8ea096f2cd74b7",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "688ca38c6b8ea096f2cd7430",
+        "action": "approved",
+        "comments": "fkfk",
+        "date": "2025-08-01T11:24:10.800Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-01T11:24:10.801Z",
+        "updatedAt": "2025-08-01T11:24:10.801Z",
+        "__v": 0
+      },
+      {
+        "_id": "688ce65c64876cf1aed23bfc",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "688ca38c6b8ea096f2cd7430",
+        "action": "approved",
+        "comments": "check",
+        "date": "2025-08-01T16:07:56.870Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-01T16:07:56.875Z",
+        "updatedAt": "2025-08-01T16:07:56.875Z",
+        "__v": 0
+      },
+      {
+        "_id": "688ce67664876cf1aed23ca5",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "688c9ecf18d57460a9f302c3",
+        "action": "rejected",
+        "comments": "hdj",
+        "date": "2025-08-01T16:08:22.778Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-01T16:08:22.779Z",
+        "updatedAt": "2025-08-01T16:08:22.779Z",
+        "__v": 0
+      },
+      {
+        "_id": "688ce69464876cf1aed23cb5",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "688c9ecf18d57460a9f302c3",
+        "action": "rejected",
+        "comments": "hdj",
+        "date": "2025-08-01T16:08:52.065Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-01T16:08:52.066Z",
+        "updatedAt": "2025-08-01T16:08:52.066Z",
+        "__v": 0
+      },
+      {
+        "_id": "688ce6f464876cf1aed23cc7",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "688c9ecf18d57460a9f302c3",
+        "action": "rejected",
+        "comments": "hdj",
+        "date": "2025-08-01T16:10:28.935Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-01T16:10:28.936Z",
+        "updatedAt": "2025-08-01T16:10:28.936Z",
+        "__v": 0
+      },
+      {
+        "_id": "688cf5803df6cc95740da965",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "688c99f255640f2e4c7c7db8",
+        "action": "rejected",
+        "comments": "dd",
+        "date": "2025-08-01T17:12:32.299Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-01T17:12:32.301Z",
+        "updatedAt": "2025-08-01T17:12:32.301Z",
+        "__v": 0
+      },
+      {
+        "_id": "688f7928e3b6bc1839809d2c",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "688ca38c6b8ea096f2cd7430",
+        "action": "approved",
+        "comments": "ff",
+        "date": "2025-08-03T14:58:48.335Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-03T14:58:48.343Z",
+        "updatedAt": "2025-08-03T14:58:48.343Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890ac6d5b759646d37db6e3",
+        "level": 1,
+        "approver": "68909821bb37585fa3cbc076",
+        "expense": "6890ac385b759646d37db619",
+        "action": "approved",
+        "comments": "check demo",
+        "date": "2025-08-04T12:49:49.642Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-04T12:49:49.643Z",
+        "updatedAt": "2025-08-04T12:49:49.643Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890b21525161d6ca832adf4",
+        "level": 2,
+        "approver": "689099a0e00dba689e8e533e",
+        "expense": "6890ac385b759646d37db619",
+        "action": "approved",
+        "comments": "check",
+        "date": "2025-08-04T13:13:57.416Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-04T13:13:57.420Z",
+        "updatedAt": "2025-08-04T13:13:57.420Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890b3e757f2ab026fe40546",
+        "level": 3,
+        "approver": "68909f62c99fe8cc9e10f931",
+        "expense": "6890ac385b759646d37db619",
+        "action": "approved",
+        "comments": "check",
+        "date": "2025-08-04T13:21:43.973Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-04T13:21:43.987Z",
+        "updatedAt": "2025-08-04T13:21:43.987Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919d9c8a04bc0cff628602",
+        "level": 1,
+        "approver": "68909821bb37585fa3cbc076",
+        "expense": "68919d748a04bc0cff628571",
+        "action": "approved",
+        "comments": "live check",
+        "date": "2025-08-05T05:58:52.800Z",
+        "ipAddress": "::ffff:127.0.0.1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-05T05:58:52.801Z",
+        "updatedAt": "2025-08-05T05:58:52.801Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919dfb8a04bc0cff628695",
+        "level": 2,
+        "approver": "689099a0e00dba689e8e533e",
+        "expense": "68919d748a04bc0cff628571",
+        "action": "approved",
+        "comments": "live check",
+        "date": "2025-08-05T06:00:27.936Z",
+        "ipAddress": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-05T06:00:27.937Z",
+        "updatedAt": "2025-08-05T06:00:27.937Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919e2b8a04bc0cff6287c8",
+        "level": 3,
+        "approver": "68909f62c99fe8cc9e10f931",
+        "expense": "68919d748a04bc0cff628571",
+        "action": "approved",
+        "comments": "live check",
+        "date": "2025-08-05T06:01:15.367Z",
+        "ipAddress": "::ffff:127.0.0.1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-05T06:01:15.369Z",
+        "updatedAt": "2025-08-05T06:01:15.369Z",
+        "__v": 0
+      },
+      {
+        "_id": "6891c8768a04bc0cff62b1a8",
+        "level": 1,
+        "approver": "6891c3188a04bc0cff62b0a1",
+        "expense": "6891c3808a04bc0cff62b139",
+        "action": "rejected",
+        "comments": "",
+        "date": "2025-08-05T09:01:42.578Z",
+        "ipAddress": "::ffff:127.0.0.1",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-05T09:01:42.580Z",
+        "updatedAt": "2025-08-05T09:01:42.580Z",
+        "__v": 0
+      },
+      {
+        "_id": "6891d3dc8a04bc0cff62b6db",
+        "level": 1,
+        "approver": "6891c3188a04bc0cff62b0a1",
+        "expense": "6891cb7c8a04bc0cff62b34e",
+        "action": "approved",
+        "comments": "Ok",
+        "date": "2025-08-05T09:50:20.668Z",
+        "ipAddress": "::ffff:127.0.0.1",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        "modificationReason": "",
+        "createdAt": "2025-08-05T09:50:20.669Z",
+        "updatedAt": "2025-08-05T09:50:20.669Z",
+        "__v": 0
+      }
+    ],
+    "pendingApprovers": [
+      {
+        "_id": "6868e7452396774193cd0a21",
+        "level": 2,
+        "approverId": "6868e7442396774193cd0a1e",
+        "expenseId": "6868e7452396774193cd0a1f"
+      },
+      {
+        "_id": "686a021de7116b499f6cf6f0",
+        "level": 1,
+        "approverId": "686a021ce7116b499f6cf6ed",
+        "expenseId": "686a021de7116b499f6cf6ef"
+      },
+      {
+        "_id": "686a055fbdf293915173061c",
+        "level": 1,
+        "approverId": "6868e7442396774193cd0a1e",
+        "expenseId": "686a055fbdf293915173061b"
+      },
+      {
+        "_id": "6877fc49834ce0251f982fc3",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "6877fc49834ce0251f982fbf",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-16T19:23:53.760Z",
+        "createdAt": "2025-07-16T19:23:53.760Z",
+        "updatedAt": "2025-07-16T19:23:53.760Z",
+        "__v": 0
+      },
+      {
+        "_id": "687804261ba9023b0856f0e0",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "6877fc49834ce0251f982fbf",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-16T19:57:26.059Z",
+        "createdAt": "2025-07-16T19:57:26.059Z",
+        "updatedAt": "2025-07-16T19:57:26.059Z",
+        "__v": 0
+      },
+      {
+        "_id": "687804261ba9023b0856f0e2",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6877fc49834ce0251f982fbf",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-16T19:57:26.092Z",
+        "createdAt": "2025-07-16T19:57:26.093Z",
+        "updatedAt": "2025-07-16T19:57:26.093Z",
+        "__v": 0
+      },
+      {
+        "_id": "687b5fe315864f4020d16b88",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "6877f6152165ce507be9f946",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-19T09:05:39.573Z",
+        "createdAt": "2025-07-19T09:05:39.574Z",
+        "updatedAt": "2025-07-19T09:05:39.574Z",
+        "__v": 0
+      },
+      {
+        "_id": "687b6e552210c50d05771ee1",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "687b6e552210c50d05771edd",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-19T10:07:17.625Z",
+        "createdAt": "2025-07-19T10:07:17.625Z",
+        "updatedAt": "2025-07-19T10:07:17.625Z",
+        "__v": 0
+      },
+      {
+        "_id": "687b6e802210c50d05771f3d",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "687b6e552210c50d05771edd",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-19T10:08:00.321Z",
+        "createdAt": "2025-07-19T10:08:00.321Z",
+        "updatedAt": "2025-07-19T10:08:00.321Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882e88c46be3fc06dacc21b",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "6882e88b46be3fc06dacc217",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:14:36.119Z",
+        "createdAt": "2025-07-25T02:14:36.120Z",
+        "updatedAt": "2025-07-25T02:14:36.120Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882e8b846be3fc06dacc283",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "6882e88b46be3fc06dacc217",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:15:20.671Z",
+        "createdAt": "2025-07-25T02:15:20.671Z",
+        "updatedAt": "2025-07-25T02:15:20.671Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882e8b846be3fc06dacc285",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6882e88b46be3fc06dacc217",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:15:20.733Z",
+        "createdAt": "2025-07-25T02:15:20.734Z",
+        "updatedAt": "2025-07-25T02:15:20.734Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882ea5334c52f7d8636f30b",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "6882ea5334c52f7d8636f307",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:22:11.272Z",
+        "createdAt": "2025-07-25T02:22:11.272Z",
+        "updatedAt": "2025-07-25T02:22:11.272Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882ed8f15e8ea4faaf4e4e1",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "6882ed8f15e8ea4faaf4e4dd",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:35:59.801Z",
+        "createdAt": "2025-07-25T02:35:59.804Z",
+        "updatedAt": "2025-07-25T02:35:59.804Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882ede715e8ea4faaf4e56f",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "6882ed8f15e8ea4faaf4e4dd",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:37:27.527Z",
+        "createdAt": "2025-07-25T02:37:27.528Z",
+        "updatedAt": "2025-07-25T02:37:27.528Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882ede715e8ea4faaf4e571",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6882ed8f15e8ea4faaf4e4dd",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:37:27.580Z",
+        "createdAt": "2025-07-25T02:37:27.581Z",
+        "updatedAt": "2025-07-25T02:37:27.581Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882eeede8326b773a2cb5ed",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "6882ea5334c52f7d8636f307",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:41:49.016Z",
+        "createdAt": "2025-07-25T02:41:49.018Z",
+        "updatedAt": "2025-07-25T02:41:49.018Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882eeede8326b773a2cb5ef",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6882ea5334c52f7d8636f307",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:41:49.108Z",
+        "createdAt": "2025-07-25T02:41:49.110Z",
+        "updatedAt": "2025-07-25T02:41:49.110Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882eff7b9f1a7c8f93cac03",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "6882eff7b9f1a7c8f93cabff",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:46:15.491Z",
+        "createdAt": "2025-07-25T02:46:15.494Z",
+        "updatedAt": "2025-07-25T02:46:15.494Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882f047b9f1a7c8f93cac71",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "6882eff7b9f1a7c8f93cabff",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:47:35.018Z",
+        "createdAt": "2025-07-25T02:47:35.020Z",
+        "updatedAt": "2025-07-25T02:47:35.020Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882f047b9f1a7c8f93cac73",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6882eff7b9f1a7c8f93cabff",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T02:47:35.090Z",
+        "createdAt": "2025-07-25T02:47:35.091Z",
+        "updatedAt": "2025-07-25T02:47:35.091Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882fea9080f84982705110a",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "6882fea9080f849827051106",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T03:48:57.539Z",
+        "createdAt": "2025-07-25T03:48:57.541Z",
+        "updatedAt": "2025-07-25T03:48:57.541Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882fee1080f849827051196",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "6882fea9080f849827051106",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T03:49:53.921Z",
+        "createdAt": "2025-07-25T03:49:53.922Z",
+        "updatedAt": "2025-07-25T03:49:53.922Z",
+        "__v": 0
+      },
+      {
+        "_id": "6882fee2080f849827051198",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6882fea9080f849827051106",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T03:49:54.124Z",
+        "createdAt": "2025-07-25T03:49:54.125Z",
+        "updatedAt": "2025-07-25T03:49:54.125Z",
+        "__v": 0
+      },
+      {
+        "_id": "6883008c1b79a7f86843ed9d",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "6883008c1b79a7f86843ed99",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T03:57:00.857Z",
+        "createdAt": "2025-07-25T03:57:00.860Z",
+        "updatedAt": "2025-07-25T03:57:00.860Z",
+        "__v": 0
+      },
+      {
+        "_id": "68830bb793038aa774fdd148",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "6883008c1b79a7f86843ed99",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T04:44:39.235Z",
+        "createdAt": "2025-07-25T04:44:39.236Z",
+        "updatedAt": "2025-07-25T04:44:39.236Z",
+        "__v": 0
+      },
+      {
+        "_id": "68830bb793038aa774fdd14a",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6883008c1b79a7f86843ed99",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T04:44:39.290Z",
+        "createdAt": "2025-07-25T04:44:39.290Z",
+        "updatedAt": "2025-07-25T04:44:39.290Z",
+        "__v": 0
+      },
+      {
+        "_id": "68830e2f89c888026b830ad1",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "68830e2f89c888026b830acd",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T04:55:11.762Z",
+        "createdAt": "2025-07-25T04:55:11.764Z",
+        "updatedAt": "2025-07-25T04:55:11.764Z",
+        "__v": 0
+      },
+      {
+        "_id": "68830e7889c888026b830b45",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "68830e2f89c888026b830acd",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T04:56:24.862Z",
+        "createdAt": "2025-07-25T04:56:24.863Z",
+        "updatedAt": "2025-07-25T04:56:24.863Z",
+        "__v": 0
+      },
+      {
+        "_id": "68830e7889c888026b830b47",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "68830e2f89c888026b830acd",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T04:56:24.941Z",
+        "createdAt": "2025-07-25T04:56:24.943Z",
+        "updatedAt": "2025-07-25T04:56:24.943Z",
+        "__v": 0
+      },
+      {
+        "_id": "6883111874e71832c9cb7c9c",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "6883111774e71832c9cb7c98",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T05:07:36.006Z",
+        "createdAt": "2025-07-25T05:07:36.007Z",
+        "updatedAt": "2025-07-25T05:07:36.007Z",
+        "__v": 0
+      },
+      {
+        "_id": "688311e274e71832c9cb7d2e",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "6883111774e71832c9cb7c98",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T05:10:58.852Z",
+        "createdAt": "2025-07-25T05:10:58.853Z",
+        "updatedAt": "2025-07-25T05:10:58.853Z",
+        "__v": 0
+      },
+      {
+        "_id": "68834266b8855f39a43d0fdc",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "68834266b8855f39a43d0fd8",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T08:37:58.398Z",
+        "createdAt": "2025-07-25T08:37:58.399Z",
+        "updatedAt": "2025-07-25T08:37:58.399Z",
+        "__v": 0
+      },
+      {
+        "_id": "68834769b8855f39a43d1005",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "68834769b8855f39a43d1001",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T08:59:21.196Z",
+        "createdAt": "2025-07-25T08:59:21.197Z",
+        "updatedAt": "2025-07-25T08:59:21.197Z",
+        "__v": 0
+      },
+      {
+        "_id": "68834769b8855f39a43d1007",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "68834769b8855f39a43d1001",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-25T08:59:21.250Z",
+        "createdAt": "2025-07-25T08:59:21.251Z",
+        "updatedAt": "2025-07-25T08:59:21.251Z",
+        "__v": 0
+      },
+      {
+        "_id": "6885bf0088167a22b7e4092d",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "6883111774e71832c9cb7c98",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-27T05:54:08.343Z",
+        "createdAt": "2025-07-27T05:54:08.345Z",
+        "updatedAt": "2025-07-27T05:54:08.345Z",
+        "__v": 0
+      },
+      {
+        "_id": "6885dd7b7202918013d79f77",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "6885dd7b7202918013d79f73",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-27T08:04:11.832Z",
+        "createdAt": "2025-07-27T08:04:11.833Z",
+        "updatedAt": "2025-07-27T08:04:11.833Z",
+        "__v": 0
+      },
+      {
+        "_id": "6885ddbd7202918013d79fdd",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "6885dd7b7202918013d79f73",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-27T08:05:17.133Z",
+        "createdAt": "2025-07-27T08:05:17.135Z",
+        "updatedAt": "2025-07-27T08:05:17.135Z",
+        "__v": 0
+      },
+      {
+        "_id": "68863f1f19389810c503825c",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "68863f1e19389810c5038258",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-27T15:00:47.342Z",
+        "createdAt": "2025-07-27T15:00:47.344Z",
+        "updatedAt": "2025-07-27T15:00:47.344Z",
+        "__v": 0
+      },
+      {
+        "_id": "68863f7419389810c50382e6",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "68863f1e19389810c5038258",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-27T15:02:12.051Z",
+        "createdAt": "2025-07-27T15:02:12.052Z",
+        "updatedAt": "2025-07-27T15:02:12.052Z",
+        "__v": 0
+      },
+      {
+        "_id": "68863ff819389810c5038344",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "68863f1e19389810c5038258",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-07-27T15:04:24.775Z",
+        "createdAt": "2025-07-27T15:04:24.776Z",
+        "updatedAt": "2025-07-27T15:04:24.776Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c940400b4c14244306d1e",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "688c940400b4c14244306d19",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-01T10:16:36.716Z",
+        "createdAt": "2025-08-01T10:16:36.718Z",
+        "updatedAt": "2025-08-01T10:16:36.718Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c944a00b4c14244306d9c",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "688c940400b4c14244306d19",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-01T10:17:46.898Z",
+        "createdAt": "2025-08-01T10:17:46.900Z",
+        "updatedAt": "2025-08-01T10:17:46.900Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c944a00b4c14244306d9e",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "688c940400b4c14244306d19",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-01T10:17:46.937Z",
+        "createdAt": "2025-08-01T10:17:46.938Z",
+        "updatedAt": "2025-08-01T10:17:46.938Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c97a99faa5ec9fe040cce",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "68834266b8855f39a43d0fd8",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-01T10:32:09.129Z",
+        "createdAt": "2025-08-01T10:32:09.130Z",
+        "updatedAt": "2025-08-01T10:32:09.130Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c97a99faa5ec9fe040cd0",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "68834266b8855f39a43d0fd8",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-01T10:32:09.160Z",
+        "createdAt": "2025-08-01T10:32:09.161Z",
+        "updatedAt": "2025-08-01T10:32:09.161Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c9ecf18d57460a9f302c8",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "688c9ecf18d57460a9f302c3",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-01T11:02:39.543Z",
+        "createdAt": "2025-08-01T11:02:39.543Z",
+        "updatedAt": "2025-08-01T11:02:39.543Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c9f7218d57460a9f303c0",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "688c9ecf18d57460a9f302c3",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-01T11:05:22.536Z",
+        "createdAt": "2025-08-01T11:05:22.536Z",
+        "updatedAt": "2025-08-01T11:05:22.536Z",
+        "__v": 0
+      },
+      {
+        "_id": "688c9f7218d57460a9f303c2",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "688c9ecf18d57460a9f302c3",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-01T11:05:22.569Z",
+        "createdAt": "2025-08-01T11:05:22.570Z",
+        "updatedAt": "2025-08-01T11:05:22.570Z",
+        "__v": 0
+      },
+      {
+        "_id": "688ca38c6b8ea096f2cd7435",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "688ca38c6b8ea096f2cd7430",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-01T11:22:52.245Z",
+        "createdAt": "2025-08-01T11:22:52.246Z",
+        "updatedAt": "2025-08-01T11:22:52.246Z",
+        "__v": 0
+      },
+      {
+        "_id": "688ca3db6b8ea096f2cd74c2",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "688ca38c6b8ea096f2cd7430",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-01T11:24:11.076Z",
+        "createdAt": "2025-08-01T11:24:11.080Z",
+        "updatedAt": "2025-08-01T11:24:11.080Z",
+        "__v": 0
+      },
+      {
+        "_id": "688f8084c79fa50823ba0d4c",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "688f8084c79fa50823ba0d47",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-03T15:30:12.567Z",
+        "createdAt": "2025-08-03T15:30:12.573Z",
+        "updatedAt": "2025-08-03T15:30:12.573Z",
+        "__v": 0
+      },
+      {
+        "_id": "688f8084c79fa50823ba0d4e",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "688f8084c79fa50823ba0d47",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-03T15:30:12.622Z",
+        "createdAt": "2025-08-03T15:30:12.623Z",
+        "updatedAt": "2025-08-03T15:30:12.623Z",
+        "__v": 0
+      },
+      {
+        "_id": "688f9a70089a5cad777f7473",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "688f9a70089a5cad777f746e",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-03T17:20:48.752Z",
+        "createdAt": "2025-08-03T17:20:48.755Z",
+        "updatedAt": "2025-08-03T17:20:48.755Z",
+        "__v": 0
+      },
+      {
+        "_id": "688f9a70089a5cad777f7475",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "688f9a70089a5cad777f746e",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-03T17:20:48.791Z",
+        "createdAt": "2025-08-03T17:20:48.792Z",
+        "updatedAt": "2025-08-03T17:20:48.792Z",
+        "__v": 0
+      },
+      {
+        "_id": "688f9c79001ea2d940203e3f",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "688f9c79001ea2d940203e39",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-03T17:29:29.405Z",
+        "createdAt": "2025-08-03T17:29:29.408Z",
+        "updatedAt": "2025-08-03T17:29:29.408Z",
+        "__v": 0
+      },
+      {
+        "_id": "688f9c79001ea2d940203e41",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "688f9c79001ea2d940203e39",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-03T17:29:29.443Z",
+        "createdAt": "2025-08-03T17:29:29.445Z",
+        "updatedAt": "2025-08-03T17:29:29.445Z",
+        "__v": 0
+      },
+      {
+        "_id": "689054ff14cc5e2171483a8e",
+        "level": 4,
+        "approver": "688510b6742c12f0345a34dc",
+        "expense": "68863f1e19389810c5038258",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-04T06:36:47.221Z",
+        "createdAt": "2025-08-04T06:36:47.227Z",
+        "updatedAt": "2025-08-04T06:36:47.227Z",
+        "__v": 0
+      },
+      {
+        "_id": "689054ff14cc5e2171483a95",
+        "level": 4,
+        "approver": "688510b6742c12f0345a34dc",
+        "expense": "6883111774e71832c9cb7c98",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-04T06:36:47.316Z",
+        "createdAt": "2025-08-04T06:36:47.318Z",
+        "updatedAt": "2025-08-04T06:36:47.318Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890ac385b759646d37db61f",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "6890ac385b759646d37db619",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-04T12:48:56.447Z",
+        "createdAt": "2025-08-04T12:48:56.449Z",
+        "updatedAt": "2025-08-04T12:48:56.449Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890ac385b759646d37db621",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "6890ac385b759646d37db619",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-04T12:48:56.496Z",
+        "createdAt": "2025-08-04T12:48:56.497Z",
+        "updatedAt": "2025-08-04T12:48:56.497Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890ac6d5b759646d37db6ef",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "6890ac385b759646d37db619",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-04T12:49:49.864Z",
+        "createdAt": "2025-08-04T12:49:49.865Z",
+        "updatedAt": "2025-08-04T12:49:49.865Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890ac6d5b759646d37db6f1",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "6890ac385b759646d37db619",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-04T12:49:49.906Z",
+        "createdAt": "2025-08-04T12:49:49.907Z",
+        "updatedAt": "2025-08-04T12:49:49.907Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890b21525161d6ca832ae01",
+        "level": 3,
+        "approver": "6869327e000f12bc5de0f32b",
+        "expense": "6890ac385b759646d37db619",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-04T13:13:57.751Z",
+        "createdAt": "2025-08-04T13:13:57.752Z",
+        "updatedAt": "2025-08-04T13:13:57.752Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890b21525161d6ca832ae03",
+        "level": 3,
+        "approver": "686f3dc950fc6ad6a2f29914",
+        "expense": "6890ac385b759646d37db619",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-04T13:13:57.786Z",
+        "createdAt": "2025-08-04T13:13:57.787Z",
+        "updatedAt": "2025-08-04T13:13:57.787Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890b21525161d6ca832ae05",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "6890ac385b759646d37db619",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-04T13:13:57.821Z",
+        "createdAt": "2025-08-04T13:13:57.822Z",
+        "updatedAt": "2025-08-04T13:13:57.822Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890b3e857f2ab026fe4055e",
+        "level": 4,
+        "approver": "688510b6742c12f0345a34dc",
+        "expense": "6890ac385b759646d37db619",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-04T13:21:44.329Z",
+        "createdAt": "2025-08-04T13:21:44.330Z",
+        "updatedAt": "2025-08-04T13:21:44.330Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890b3e857f2ab026fe40560",
+        "level": 4,
+        "approver": "6890a03ec99fe8cc9e10fc0c",
+        "expense": "6890ac385b759646d37db619",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-04T13:21:44.370Z",
+        "createdAt": "2025-08-04T13:21:44.370Z",
+        "updatedAt": "2025-08-04T13:21:44.370Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919d748a04bc0cff628577",
+        "level": 1,
+        "approver": "6874eb3039cae27d6491e03f",
+        "expense": "68919d748a04bc0cff628571",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T05:58:12.788Z",
+        "createdAt": "2025-08-05T05:58:12.789Z",
+        "updatedAt": "2025-08-05T05:58:12.789Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919d748a04bc0cff628579",
+        "level": 1,
+        "approver": "6874fe8918f6927399a77f7d",
+        "expense": "68919d748a04bc0cff628571",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T05:58:12.802Z",
+        "createdAt": "2025-08-05T05:58:12.803Z",
+        "updatedAt": "2025-08-05T05:58:12.803Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919d748a04bc0cff62857d",
+        "level": 1,
+        "approver": "68919baf8a04bc0cff628048",
+        "expense": "68919d748a04bc0cff628571",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T05:58:12.821Z",
+        "createdAt": "2025-08-05T05:58:12.822Z",
+        "updatedAt": "2025-08-05T05:58:12.822Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919d9c8a04bc0cff62860e",
+        "level": 2,
+        "approver": "6874ee0ab79c619b0791ca01",
+        "expense": "68919d748a04bc0cff628571",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T05:58:52.862Z",
+        "createdAt": "2025-08-05T05:58:52.862Z",
+        "updatedAt": "2025-08-05T05:58:52.862Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919d9c8a04bc0cff628610",
+        "level": 2,
+        "approver": "6874ff7718f6927399a77f99",
+        "expense": "68919d748a04bc0cff628571",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T05:58:52.872Z",
+        "createdAt": "2025-08-05T05:58:52.872Z",
+        "updatedAt": "2025-08-05T05:58:52.872Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919dfb8a04bc0cff6286a2",
+        "level": 3,
+        "approver": "6869327e000f12bc5de0f32b",
+        "expense": "68919d748a04bc0cff628571",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T06:00:27.997Z",
+        "createdAt": "2025-08-05T06:00:27.998Z",
+        "updatedAt": "2025-08-05T06:00:27.998Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919dfc8a04bc0cff6286a4",
+        "level": 3,
+        "approver": "686f3dc950fc6ad6a2f29914",
+        "expense": "68919d748a04bc0cff628571",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T06:00:28.012Z",
+        "createdAt": "2025-08-05T06:00:28.018Z",
+        "updatedAt": "2025-08-05T06:00:28.018Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919dfc8a04bc0cff6286a6",
+        "level": 3,
+        "approver": "68734479e57bbdf8c878b82f",
+        "expense": "68919d748a04bc0cff628571",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T06:00:28.044Z",
+        "createdAt": "2025-08-05T06:00:28.045Z",
+        "updatedAt": "2025-08-05T06:00:28.045Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919e2b8a04bc0cff6287e0",
+        "level": 4,
+        "approver": "688510b6742c12f0345a34dc",
+        "expense": "68919d748a04bc0cff628571",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T06:01:15.444Z",
+        "createdAt": "2025-08-05T06:01:15.444Z",
+        "updatedAt": "2025-08-05T06:01:15.444Z",
+        "__v": 0
+      },
+      {
+        "_id": "68919e2b8a04bc0cff6287e2",
+        "level": 4,
+        "approver": "6890a03ec99fe8cc9e10fc0c",
+        "expense": "68919d748a04bc0cff628571",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T06:01:15.453Z",
+        "createdAt": "2025-08-05T06:01:15.454Z",
+        "updatedAt": "2025-08-05T06:01:15.454Z",
+        "__v": 0
+      },
+      {
+        "_id": "6891cb7c8a04bc0cff62b354",
+        "level": 1,
+        "approver": "6891b2488a04bc0cff62a1e0",
+        "expense": "6891cb7c8a04bc0cff62b34e",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T09:14:36.398Z",
+        "createdAt": "2025-08-05T09:14:36.398Z",
+        "updatedAt": "2025-08-05T09:14:36.398Z",
+        "__v": 0
+      },
+      {
+        "_id": "6891d3dc8a04bc0cff62b6e7",
+        "level": 2,
+        "approver": "6891b2d98a04bc0cff62a311",
+        "expense": "6891cb7c8a04bc0cff62b34e",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T09:50:20.731Z",
+        "createdAt": "2025-08-05T09:50:20.731Z",
+        "updatedAt": "2025-08-05T09:50:20.731Z",
+        "__v": 0
+      },
+      {
+        "_id": "6891d3dc8a04bc0cff62b6e9",
+        "level": 2,
+        "approver": "6891ccdf8a04bc0cff62b61d",
+        "expense": "6891cb7c8a04bc0cff62b34e",
+        "reminderSent": false,
+        "reminderCount": 0,
+        "priority": "normal",
+        "status": "pending",
+        "assignedDate": "2025-08-05T09:50:20.741Z",
+        "createdAt": "2025-08-05T09:50:20.741Z",
+        "updatedAt": "2025-08-05T09:50:20.741Z",
+        "__v": 0
+      }
+    ],
+    "reports": [
+      {
+        "_id": "68692a69e7bef0ea89ced518",
+        "title": "Test Report",
+        "type": "EXPENSE",
+        "generatedBy": "68692a68e7bef0ea89ced516",
+        "siteId": "68692a68e7bef0ea89ced515",
+        "format": "PDF",
+        "status": "COMPLETED",
+        "createdAt": "2025-07-05T13:36:41.232Z",
+        "updatedAt": "2025-07-05T13:36:41.232Z",
+        "dateRange": {
+          "start": "2025-07-05T13:36:41.230Z",
+          "end": "2025-07-05T13:36:41.230Z"
+        }
+      },
+      {
+        "_id": "68692ae9befcf23fecf56fd3",
+        "title": "Test Report",
+        "type": "EXPENSE",
+        "generatedBy": "68692ae9befcf23fecf56fd1",
+        "siteId": "68692ae8befcf23fecf56fd0",
+        "format": "PDF",
+        "status": "COMPLETED",
+        "createdAt": "2025-07-05T13:38:49.685Z",
+        "updatedAt": "2025-07-05T13:38:49.685Z",
+        "dateRange": {
+          "start": "2025-07-05T13:38:49.683Z",
+          "end": "2025-07-05T13:38:49.683Z"
+        }
+      }
+    ],
+    "sites": [
+      {
+        "_id": "6868e7442396774193cd0a1d",
+        "name": "Rakshak HQ",
+        "code": "RHQ-001",
+        "isActive": true,
+        "createdAt": "2025-07-05T08:50:11.942Z",
+        "updatedAt": "2025-08-01T20:46:06.854Z",
+        "address": {
+          "street": "Tech Park",
+          "city": "Bangalore",
+          "state": "Karnataka",
+          "zipCode": "560001",
+          "country": "India"
+        },
+        "budget": {
+          "alertThreshold": 80,
+          "monthly": 100000,
+          "yearly": 1200000
+        },
+        "expenseCategories": [
+          {
+            "name": "Travel",
+            "description": "Transportation and travel expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b100fd"
+          },
+          {
+            "name": "Food",
+            "description": "Meals and refreshments",
+            "requiresApproval": true,
+            "approvalLimit": 500,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b100fe"
+          },
+          {
+            "name": "Accommodation",
+            "description": "Hotel and lodging expenses",
+            "requiresApproval": true,
+            "approvalLimit": 3000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b100ff"
+          },
+          {
+            "name": "Vehicle KM",
+            "description": "Vehicle kilometer expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1500,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10100"
+          },
+          {
+            "name": "Fuel",
+            "description": "Vehicle fuel expenses",
+            "requiresApproval": true,
+            "approvalLimit": 2000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10101"
+          },
+          {
+            "name": "Equipment",
+            "description": "Tools and equipment purchases",
+            "requiresApproval": true,
+            "approvalLimit": 5000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10102"
+          },
+          {
+            "name": "Maintenance",
+            "description": "Repair and maintenance costs",
+            "requiresApproval": true,
+            "approvalLimit": 3000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10103"
+          },
+          {
+            "name": "Office Supplies",
+            "description": "Stationery and office materials",
+            "requiresApproval": true,
+            "approvalLimit": 300,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10104"
+          },
+          {
+            "name": "Miscellaneous",
+            "description": "Other expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10105"
+          }
+        ]
+      },
+      {
+        "_id": "6869327d000f12bc5de0f327",
+        "name": "Mumbai Site A",
+        "code": "MSA-001",
+        "isActive": true,
+        "createdAt": "2025-07-05T14:11:08.587Z",
+        "updatedAt": "2025-08-01T20:46:06.902Z",
+        "address": {
+          "street": "Main Street",
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "zipCode": "400001",
+          "country": "India"
+        },
+        "budget": {
+          "alertThreshold": 80,
+          "monthly": 75000,
+          "yearly": 900000
+        },
+        "expenseCategories": [
+          {
+            "name": "Travel",
+            "description": "Transportation and travel expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10108"
+          },
+          {
+            "name": "Food",
+            "description": "Meals and refreshments",
+            "requiresApproval": true,
+            "approvalLimit": 500,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10109"
+          },
+          {
+            "name": "Accommodation",
+            "description": "Hotel and lodging expenses",
+            "requiresApproval": true,
+            "approvalLimit": 3000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b1010a"
+          },
+          {
+            "name": "Vehicle KM",
+            "description": "Vehicle kilometer expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1500,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b1010b"
+          },
+          {
+            "name": "Fuel",
+            "description": "Vehicle fuel expenses",
+            "requiresApproval": true,
+            "approvalLimit": 2000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b1010c"
+          },
+          {
+            "name": "Equipment",
+            "description": "Tools and equipment purchases",
+            "requiresApproval": true,
+            "approvalLimit": 5000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b1010d"
+          },
+          {
+            "name": "Maintenance",
+            "description": "Repair and maintenance costs",
+            "requiresApproval": true,
+            "approvalLimit": 3000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b1010e"
+          },
+          {
+            "name": "Office Supplies",
+            "description": "Stationery and office materials",
+            "requiresApproval": true,
+            "approvalLimit": 300,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b1010f"
+          },
+          {
+            "name": "Miscellaneous",
+            "description": "Other expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10110"
+          }
+        ]
+      },
+      {
+        "_id": "686cae98419147e6dd528d68",
+        "name": "Mumbai HQ",
+        "code": "MHQ-001",
+        "isActive": true,
+        "createdAt": "2025-07-08T05:37:27.769Z",
+        "updatedAt": "2025-08-01T20:46:06.936Z",
+        "address": {
+          "street": "Business District",
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "zipCode": "400001",
+          "country": "India"
+        },
+        "budget": {
+          "alertThreshold": 80,
+          "monthly": 150000,
+          "yearly": 1800000
+        },
+        "expenseCategories": [
+          {
+            "name": "Travel",
+            "description": "Transportation and travel expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10112"
+          },
+          {
+            "name": "Food",
+            "description": "Meals and refreshments",
+            "requiresApproval": true,
+            "approvalLimit": 500,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10113"
+          },
+          {
+            "name": "Accommodation",
+            "description": "Hotel and lodging expenses",
+            "requiresApproval": true,
+            "approvalLimit": 3000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10114"
+          },
+          {
+            "name": "Vehicle KM",
+            "description": "Vehicle kilometer expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1500,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10115"
+          },
+          {
+            "name": "Fuel",
+            "description": "Vehicle fuel expenses",
+            "requiresApproval": true,
+            "approvalLimit": 2000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10116"
+          },
+          {
+            "name": "Equipment",
+            "description": "Tools and equipment purchases",
+            "requiresApproval": true,
+            "approvalLimit": 5000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10117"
+          },
+          {
+            "name": "Maintenance",
+            "description": "Repair and maintenance costs",
+            "requiresApproval": true,
+            "approvalLimit": 3000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10118"
+          },
+          {
+            "name": "Office Supplies",
+            "description": "Stationery and office materials",
+            "requiresApproval": true,
+            "approvalLimit": 300,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10119"
+          },
+          {
+            "name": "Miscellaneous",
+            "description": "Other expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b1011a"
+          }
+        ]
+      },
+      {
+        "_id": "687b6739fc7067a3d1066929",
+        "name": "Mumbai Site B",
+        "code": "MSB-002",
+        "location": {
+          "address": "panvel, mumbai, maharastra",
+          "city": "panvel",
+          "state": "Maharastra",
+          "pincode": "122101",
+          "country": "India"
+        },
+        "budget": {
+          "monthly": 20000,
+          "yearly": 240000,
+          "alertThreshold": 80,
+          "categories": {
+            "travel": 0,
+            "food": 0,
+            "accommodation": 0,
+            "vehicleKm": 0,
+            "miscellaneous": 0
+          }
+        },
+        "vehicleKmLimit": 1000,
+        "operatingHours": {
+          "start": "09:00",
+          "end": "18:00",
+          "timezone": "Asia/Kolkata"
+        },
+        "workingDays": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "approvalWorkflow": {
+          "l1Threshold": 1000,
+          "l2Threshold": 5000,
+          "l3Threshold": 10000,
+          "autoApprovalLimit": 500
+        },
+        "settings": {
+          "allowWeekendExpenses": false,
+          "allowHolidayExpenses": false,
+          "requireReceiptForAmount": 100,
+          "maxExpenseAmount": 50000,
+          "expenseRetentionPeriod": 7
+        },
+        "statistics": {
+          "totalExpenses": 0,
+          "totalAmount": 0,
+          "monthlySpend": 0,
+          "yearlySpend": 0,
+          "averageExpenseAmount": 0
+        },
+        "isActive": true,
+        "createdBy": "68734479e57bbdf8c878b82f",
+        "departments": [],
+        "expenseCategories": [
+          {
+            "name": "Travel",
+            "description": "Transportation and travel expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b1011c"
+          },
+          {
+            "name": "Food",
+            "description": "Meals and refreshments",
+            "requiresApproval": true,
+            "approvalLimit": 500,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b1011d"
+          },
+          {
+            "name": "Accommodation",
+            "description": "Hotel and lodging expenses",
+            "requiresApproval": true,
+            "approvalLimit": 3000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b1011e"
+          },
+          {
+            "name": "Vehicle KM",
+            "description": "Vehicle kilometer expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1500,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b1011f"
+          },
+          {
+            "name": "Fuel",
+            "description": "Vehicle fuel expenses",
+            "requiresApproval": true,
+            "approvalLimit": 2000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10120"
+          },
+          {
+            "name": "Equipment",
+            "description": "Tools and equipment purchases",
+            "requiresApproval": true,
+            "approvalLimit": 5000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10121"
+          },
+          {
+            "name": "Maintenance",
+            "description": "Repair and maintenance costs",
+            "requiresApproval": true,
+            "approvalLimit": 3000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10122"
+          },
+          {
+            "name": "Office Supplies",
+            "description": "Stationery and office materials",
+            "requiresApproval": true,
+            "approvalLimit": 300,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10123"
+          },
+          {
+            "name": "Miscellaneous",
+            "description": "Other expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1000,
+            "isActive": true,
+            "_id": "688d278e78ba3fcbf1b10124"
+          }
+        ],
+        "createdAt": "2025-07-19T09:36:57.964Z",
+        "updatedAt": "2025-08-01T20:46:06.969Z",
+        "__v": 0
+      },
+      {
+        "_id": "6885bc4dcac699df06aec7c9",
+        "name": "Mumbai Site D",
+        "code": "MSD-004",
+        "location": {
+          "address": "Preet Vihar",
+          "city": "Roorkee",
+          "state": "Uttarakhand",
+          "pincode": "247667",
+          "country": "India"
+        },
+        "budget": {
+          "monthly": 50000,
+          "yearly": 600000,
+          "alertThreshold": 80,
+          "categories": {
+            "travel": 0,
+            "food": 0,
+            "accommodation": 0,
+            "vehicleKm": 0,
+            "miscellaneous": 0
+          }
+        },
+        "vehicleKmLimit": 1000,
+        "operatingHours": {
+          "start": "09:00",
+          "end": "18:00",
+          "timezone": "Asia/Kolkata"
+        },
+        "workingDays": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "approvalWorkflow": {
+          "l1Threshold": 1000,
+          "l2Threshold": 5000,
+          "l3Threshold": 10000,
+          "autoApprovalLimit": 500
+        },
+        "settings": {
+          "allowWeekendExpenses": false,
+          "allowHolidayExpenses": false,
+          "requireReceiptForAmount": 100,
+          "maxExpenseAmount": 50000,
+          "expenseRetentionPeriod": 7
+        },
+        "statistics": {
+          "totalExpenses": 0,
+          "totalAmount": 0,
+          "monthlySpend": 0,
+          "yearlySpend": 0,
+          "averageExpenseAmount": 0
+        },
+        "isActive": true,
+        "createdBy": "688510b6742c12f0345a34dc",
+        "departments": [],
+        "expenseCategories": [
+          {
+            "name": "Travel",
+            "description": "Transportation and travel expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1000,
+            "isActive": true,
+            "_id": "688d278f78ba3fcbf1b10127"
+          },
+          {
+            "name": "Food",
+            "description": "Meals and refreshments",
+            "requiresApproval": true,
+            "approvalLimit": 500,
+            "isActive": true,
+            "_id": "688d278f78ba3fcbf1b10128"
+          },
+          {
+            "name": "Accommodation",
+            "description": "Hotel and lodging expenses",
+            "requiresApproval": true,
+            "approvalLimit": 3000,
+            "isActive": true,
+            "_id": "688d278f78ba3fcbf1b10129"
+          },
+          {
+            "name": "Vehicle KM",
+            "description": "Vehicle kilometer expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1500,
+            "isActive": true,
+            "_id": "688d278f78ba3fcbf1b1012a"
+          },
+          {
+            "name": "Fuel",
+            "description": "Vehicle fuel expenses",
+            "requiresApproval": true,
+            "approvalLimit": 2000,
+            "isActive": true,
+            "_id": "688d278f78ba3fcbf1b1012b"
+          },
+          {
+            "name": "Equipment",
+            "description": "Tools and equipment purchases",
+            "requiresApproval": true,
+            "approvalLimit": 5000,
+            "isActive": true,
+            "_id": "688d278f78ba3fcbf1b1012c"
+          },
+          {
+            "name": "Maintenance",
+            "description": "Repair and maintenance costs",
+            "requiresApproval": true,
+            "approvalLimit": 3000,
+            "isActive": true,
+            "_id": "688d278f78ba3fcbf1b1012d"
+          },
+          {
+            "name": "Office Supplies",
+            "description": "Stationery and office materials",
+            "requiresApproval": true,
+            "approvalLimit": 300,
+            "isActive": true,
+            "_id": "688d278f78ba3fcbf1b1012e"
+          },
+          {
+            "name": "Miscellaneous",
+            "description": "Other expenses",
+            "requiresApproval": true,
+            "approvalLimit": 1000,
+            "isActive": true,
+            "_id": "688d278f78ba3fcbf1b1012f"
+          }
+        ],
+        "createdAt": "2025-07-27T05:42:37.017Z",
+        "updatedAt": "2025-08-01T20:46:07.007Z",
+        "__v": 0
+      },
+      {
+        "_id": "6890a5ca21dec810bef89785",
+        "name": "Gurugram",
+        "code": "SITE A",
+        "location": {
+          "address": "pathan wara , sohna",
+          "city": "Gurugram",
+          "state": "Haryana",
+          "pincode": "122103",
+          "country": "India"
+        },
+        "budget": {
+          "monthly": 10000,
+          "yearly": 100000,
+          "alertThreshold": 80,
+          "categories": {
+            "travel": 0,
+            "food": 0,
+            "accommodation": 0,
+            "vehicleKm": 0,
+            "miscellaneous": 0
+          }
+        },
+        "vehicleKmLimit": 1000,
+        "operatingHours": {
+          "start": "09:00",
+          "end": "18:00",
+          "timezone": "Asia/Kolkata"
+        },
+        "workingDays": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "approvalWorkflow": {
+          "l1Threshold": 1000,
+          "l2Threshold": 5000,
+          "l3Threshold": 10000,
+          "autoApprovalLimit": 500
+        },
+        "settings": {
+          "allowWeekendExpenses": false,
+          "allowHolidayExpenses": false,
+          "requireReceiptForAmount": 100,
+          "maxExpenseAmount": 50000,
+          "expenseRetentionPeriod": 7
+        },
+        "statistics": {
+          "totalExpenses": 0,
+          "totalAmount": 0,
+          "monthlySpend": 0,
+          "yearlySpend": 0,
+          "averageExpenseAmount": 0
+        },
+        "isActive": true,
+        "createdBy": "68734479e57bbdf8c878b82f",
+        "departments": [],
+        "expenseCategories": [
+          {
+            "name": "Cloth",
+            "description": "Cloth details",
+            "requiresApproval": true,
+            "approvalLimit": 0,
+            "isActive": true,
+            "_id": "6890aad721dec810bef89c0f"
+          }
+        ],
+        "createdAt": "2025-08-04T12:21:30.671Z",
+        "updatedAt": "2025-08-04T12:43:03.433Z",
+        "__v": 1
+      },
+      {
+        "_id": "68919c2d8a04bc0cff628158",
+        "name": "Dwarka",
+        "code": "SITE-A",
+        "location": {
+          "address": "sohna",
+          "city": "gurgaon",
+          "state": "haryana",
+          "pincode": "122103",
+          "country": "India"
+        },
+        "budget": {
+          "monthly": 10000,
+          "yearly": 100000,
+          "alertThreshold": 80,
+          "categories": {
+            "travel": 0,
+            "food": 0,
+            "accommodation": 0,
+            "vehicleKm": 0,
+            "miscellaneous": 0
+          }
+        },
+        "vehicleKmLimit": 1000,
+        "operatingHours": {
+          "start": "09:00",
+          "end": "18:00",
+          "timezone": "Asia/Kolkata"
+        },
+        "workingDays": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "approvalWorkflow": {
+          "l1Threshold": 1000,
+          "l2Threshold": 5000,
+          "l3Threshold": 10000,
+          "autoApprovalLimit": 500
+        },
+        "settings": {
+          "allowWeekendExpenses": false,
+          "allowHolidayExpenses": false,
+          "requireReceiptForAmount": 100,
+          "maxExpenseAmount": 50000,
+          "expenseRetentionPeriod": 7
+        },
+        "statistics": {
+          "totalExpenses": 0,
+          "totalAmount": 0,
+          "monthlySpend": 0,
+          "yearlySpend": 0,
+          "averageExpenseAmount": 0
+        },
+        "isActive": true,
+        "createdBy": "68909f62c99fe8cc9e10f931",
+        "departments": [],
+        "expenseCategories": [
+          {
+            "name": "Toy",
+            "description": "Toys details",
+            "requiresApproval": true,
+            "approvalLimit": 0,
+            "isActive": true,
+            "_id": "68919c518a04bc0cff628201"
+          }
+        ],
+        "createdAt": "2025-08-05T05:52:45.439Z",
+        "updatedAt": "2025-08-05T05:53:21.957Z",
+        "__v": 1
+      },
+      {
+        "_id": "6891ab898a04bc0cff629ea3",
+        "name": "Robustrix",
+        "code": "ROBUSTRIX",
+        "location": {
+          "address": "-5, Plot No.12, Manish Plaza-III Sector-17",
+          "city": "Dwarka",
+          "state": "Delhi",
+          "pincode": "110075",
+          "country": "India"
+        },
+        "budget": {
+          "monthly": 1000000,
+          "yearly": 2000000,
+          "alertThreshold": 80,
+          "categories": {
+            "travel": 0,
+            "food": 0,
+            "accommodation": 0,
+            "vehicleKm": 0,
+            "miscellaneous": 0
+          }
+        },
+        "vehicleKmLimit": 1000,
+        "operatingHours": {
+          "start": "09:00",
+          "end": "18:00",
+          "timezone": "Asia/Kolkata"
+        },
+        "workingDays": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "approvalWorkflow": {
+          "l1Threshold": 1000,
+          "l2Threshold": 5000,
+          "l3Threshold": 10000,
+          "autoApprovalLimit": 500
+        },
+        "settings": {
+          "allowWeekendExpenses": false,
+          "allowHolidayExpenses": false,
+          "requireReceiptForAmount": 100,
+          "maxExpenseAmount": 50000,
+          "expenseRetentionPeriod": 7
+        },
+        "statistics": {
+          "totalExpenses": 0,
+          "totalAmount": 0,
+          "monthlySpend": 0,
+          "yearlySpend": 0,
+          "averageExpenseAmount": 0
+        },
+        "isActive": true,
+        "createdBy": "68909f62c99fe8cc9e10f931",
+        "departments": [],
+        "expenseCategories": [],
+        "createdAt": "2025-08-05T06:58:17.369Z",
+        "updatedAt": "2025-08-05T06:58:17.372Z",
+        "__v": 0
+      }
+    ]
+  }
+}
