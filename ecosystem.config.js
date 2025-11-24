@@ -13,6 +13,9 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: '1G',
+      max_restarts: 5,
+      restart_delay: 5000,       // 5 seconds delay
+      exp_backoff_restart_delay: 200, // exponential backoff
       error_file: '/home/ubuntu/htdocs/customerzone/logs/backend-error.log',
       out_file: '/home/ubuntu/htdocs/customerzone/logs/backend-out.log',
       log_file: '/home/ubuntu/htdocs/customerzone/logs/backend-combined.log',
@@ -35,6 +38,9 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: '1G',
+      max_restarts: 5,
+      restart_delay: 5000,       // 5 seconds delay
+      exp_backoff_restart_delay: 200, // exponential backoff
       error_file: '/home/ubuntu/htdocs/customerzone/logs/frontend-error.log',
       out_file: '/home/ubuntu/htdocs/customerzone/logs/frontend-out.log',
       log_file: '/home/ubuntu/htdocs/customerzone/logs/frontend-combined.log',
