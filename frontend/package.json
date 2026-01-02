@@ -30,6 +30,11 @@
     "recharts": "^3.1.2",
     "socket.io-client": "^4.7.2",
     "web-vitals": "^2.1.4",
+    "workbox-core": "^6.6.0",
+    "workbox-expiration": "^6.6.0",
+    "workbox-precaching": "^6.6.0",
+    "workbox-routing": "^6.6.0",
+    "workbox-strategies": "^6.6.0",
     "xlsx": "^0.18.5"
   },
   "scripts": {
@@ -39,7 +44,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "serve": "serve -s build -l 3002",
+    "serve": "serve -s build -l 3003",
     "pm2:start": "pm2 start ecosystem.config.js",
     "pm2:stop": "pm2 stop expense-frontend",
     "pm2:restart": "pm2 restart expense-frontend",
