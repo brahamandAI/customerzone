@@ -14,4 +14,5 @@ pm2 restart ecosystem.config.js
 cd ../frontend
 npm install
 npm run build
+cd ../backend
 pm2 restart ecosystem.config.js

@@ -2,7 +2,6 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5001",
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -38,10 +37,10 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "dev": "react-scripts start",
-    "dev:3002": "PORT=3002 react-scripts start",
-    "build": "react-scripts build",
+    "start": "NODE_OPTIONS='--max-old-space-size=4096' react-scripts start",
+    "dev": "NODE_OPTIONS='--max-old-space-size=4096' react-scripts start",
+    "dev:3003": "NODE_OPTIONS='--max-old-space-size=4096' PORT=3003 react-scripts start",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "serve -s build -l 3003",
