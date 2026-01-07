@@ -50,6 +50,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 import { useTheme } from '../context/ThemeContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { expenseAPI, siteAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import PaymentModal from '../components/PaymentModal';
@@ -57,6 +58,7 @@ import AttachmentViewer from '../components/AttachmentViewer';
 
 const AllSitesApproval = () => {
   const navigate = useNavigate();
+  const { formatCurrency, formatDate } = useUserPreferences();
   const [allExpenses, setAllExpenses] = useState([]);
   const [sites, setSites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -422,7 +424,7 @@ const AllSitesApproval = () => {
                       <AttachMoneyIcon />
                     </Avatar>
                     <Typography variant="h4" fontWeight={700} color="#4caf50">
-                      ₹{totalAmount.toLocaleString()}
+                      {formatCurrency(totalAmount)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       Total Amount
@@ -571,7 +573,7 @@ const AllSitesApproval = () => {
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                               <CurrencyRupeeIcon sx={{ mr: 1, color: '#4caf50' }} />
                               <Typography variant="body1" fontWeight={600}>
-                                ₹{expense.amount.toLocaleString()}
+                                {formatCurrency(expense.amount)}
                               </Typography>
                             </Box>
                           </Grid>
@@ -658,7 +660,7 @@ const AllSitesApproval = () => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Typography variant="subtitle2" color="text.secondary">Amount</Typography>
-                  <Typography variant="body1">₹{selectedExpense.amount.toLocaleString()}</Typography>
+                  <Typography variant="body1">{formatCurrency(selectedExpense.amount)}</Typography>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Typography variant="subtitle2" color="text.secondary">Site</Typography>

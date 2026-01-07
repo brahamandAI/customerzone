@@ -180,6 +180,34 @@ router.post('/login', [
   // Reset login attempts on successful login
   await user.resetLoginAttempts();
 
+  // Check if 2FA is enabled for this user
+  if (user.preferences?.twoFactorAuth === true) {
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Save OTP to user with 5-minute expiry
+    user.otpCode = otp;
+    user.otpExpires = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+    await user.save();
+    
+    // Send OTP via email
+    try {
+      await emailService.sendOtpEmail(email, otp);
+      console.log(`📧 2FA OTP sent to ${email}`);
+    } catch (emailError) {
+      console.error('Failed to send 2FA OTP email:', emailError);
+    }
+    
+    // Return 2FA required response
+    return res.status(200).json({
+      success: true,
+      requires2FA: true,
+      message: 'Two-factor authentication required. OTP has been sent to your email.',
+      email: email // Send back email for the frontend to use in OTP verification
+    });
+  }
+
+  // No 2FA - proceed with normal login
   // Update last login
   user.lastLogin = new Date();
   await user.save();

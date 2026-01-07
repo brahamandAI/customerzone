@@ -54,6 +54,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { expenseAPI } from '../services/api';
 import { createCSVExportHandler } from '../utils/exportUtils';
 
@@ -62,6 +63,7 @@ const PendingApprovalsPage = () => {
   const { user } = useAuth();
   const { darkMode } = useTheme();
   const { t } = useLanguage();
+  const { formatCurrency, formatDate } = useUserPreferences();
   
   const [approvals, setApprovals] = useState([]);
   const [expenses, setExpenses] = useState([]);
@@ -351,7 +353,7 @@ const PendingApprovalsPage = () => {
                       <AttachMoney />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.totalAmount.toLocaleString()}
+                      {formatCurrency(stats.totalAmount)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -474,7 +476,7 @@ const PendingApprovalsPage = () => {
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" fontWeight={500} color={darkMode ? '#fff' : '#333'}>
-                          ₹{approval.amount.toLocaleString()}
+                          {formatCurrency(approval.amount)}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -578,7 +580,7 @@ const PendingApprovalsPage = () => {
                       Amount
                     </Typography>
                     <Typography variant="body1" color={darkMode ? '#fff' : '#333'}>
-                      ₹{selectedApproval.amount.toLocaleString()}
+                      {formatCurrency(selectedApproval.amount)}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>

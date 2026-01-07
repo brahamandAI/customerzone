@@ -9,9 +9,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { siteAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 
 const CreateSite = () => {
   const { darkMode } = useTheme();
+  const { formatCurrency, getCurrencySymbol } = useUserPreferences();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: '', // Site Name
@@ -464,13 +466,13 @@ const CreateSite = () => {
                       <Grid item xs={12} sm={6}>
                         <TextField
                           fullWidth
-                          label="Monthly Budget (₹)"
+                          label={`Monthly Budget (${getCurrencySymbol()})`}
                           type="number"
                           variant="outlined"
                           value={formData.monthlyBudget}
                           onChange={(e) => setFormData({...formData, monthlyBudget: e.target.value})}
                           InputProps={{
-                            startAdornment: <Typography variant="body2" color={darkMode ? '#b0b0b0' : 'text.secondary'} sx={{ mr: 1 }}>₹</Typography>
+                            startAdornment: <Typography variant="body2" color={darkMode ? '#b0b0b0' : 'text.secondary'} sx={{ mr: 1 }}>{getCurrencySymbol()}</Typography>
                           }}
                           sx={{
                             '& .MuiOutlinedInput-root': {
@@ -501,13 +503,13 @@ const CreateSite = () => {
                       <Grid item xs={12} sm={6}>
                         <TextField
                           fullWidth
-                          label="Yearly Budget (₹)"
+                          label={`Yearly Budget (${getCurrencySymbol()})`}
                           type="number"
                           variant="outlined"
                           value={formData.yearlyBudget}
                           onChange={(e) => setFormData({...formData, yearlyBudget: e.target.value})}
                           InputProps={{
-                            startAdornment: <Typography variant="body2" color={darkMode ? '#b0b0b0' : 'text.secondary'} sx={{ mr: 1 }}>₹</Typography>
+                            startAdornment: <Typography variant="body2" color={darkMode ? '#b0b0b0' : 'text.secondary'} sx={{ mr: 1 }}>{getCurrencySymbol()}</Typography>
                           }}
                           sx={{
                             '& .MuiOutlinedInput-root': {
@@ -636,13 +638,13 @@ const CreateSite = () => {
                         <Grid item xs={12} sm={6} key={category.category}>
                           <TextField
                             fullWidth
-                            label={`${category.category} Budget (₹)`}
+                            label={`${category.category} Budget (${getCurrencySymbol()})`}
                             type="number"
                             variant="outlined"
                             value={category.budget}
                             onChange={(e) => handleCategoryBudgetChange(index, 'budget', e.target.value)}
                             InputProps={{
-                              startAdornment: <Typography variant="body2" color={darkMode ? '#b0b0b0' : 'text.secondary'} sx={{ mr: 1 }}>₹</Typography>
+                              startAdornment: <Typography variant="body2" color={darkMode ? '#b0b0b0' : 'text.secondary'} sx={{ mr: 1 }}>{getCurrencySymbol()}</Typography>
                             }}
                             sx={{
                               '& .MuiOutlinedInput-root': {
@@ -686,7 +688,7 @@ const CreateSite = () => {
                             </Typography>
                           </Box>
                           <Typography variant="body2" color={darkMode ? '#b0b0b0' : 'text.secondary'}>
-                            Total Allocated Budget: ₹{categoryBudgets.reduce((sum, cat) => sum + (parseFloat(cat.budget) || 0), 0).toLocaleString()}
+                            Total Allocated Budget: {formatCurrency(categoryBudgets.reduce((sum, cat) => sum + (parseFloat(cat.budget) || 0), 0))}
                           </Typography>
                           <Typography variant="body2" color={darkMode ? '#b0b0b0' : 'text.secondary'}>
                             Alert Threshold: {formData.budgetAlertThreshold}% of budget utilization

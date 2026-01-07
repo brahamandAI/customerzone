@@ -4,12 +4,14 @@ import BusinessIcon from '@mui/icons-material/Business';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { siteAPI } from '../services/api';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const EditSite = () => {
   const { darkMode } = useTheme();
   const { user } = useAuth();
+  const { formatCurrency, getCurrencySymbol } = useUserPreferences();
   const navigate = useNavigate();
   const { siteId } = useParams();
   const [loading, setLoading] = useState(false);
@@ -323,7 +325,7 @@ const EditSite = () => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
-                      label="Monthly Budget (₹)"
+                      label={`Monthly Budget (${getCurrencySymbol()})`}
                       name="budget.monthly"
                       type="number"
                       value={formData.budget.monthly}
@@ -336,7 +338,7 @@ const EditSite = () => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
-                      label="Yearly Budget (₹)"
+                      label={`Yearly Budget (${getCurrencySymbol()})`}
                       name="budget.yearly"
                       type="number"
                       value={formData.budget.yearly}

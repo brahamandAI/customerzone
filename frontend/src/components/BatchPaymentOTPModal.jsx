@@ -23,8 +23,10 @@ import {
   Timer as TimerIcon
 } from '@mui/icons-material';
 import axios from 'axios';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 
 const BatchPaymentOTPModal = ({ open, onClose, otpData, selectedExpenses, onSuccess }) => {
+  const { formatCurrency } = useUserPreferences();
   const [otp, setOtp] = useState('');
   const [paymentRemarks, setPaymentRemarks] = useState('');
   const [loading, setLoading] = useState(false);
@@ -212,7 +214,7 @@ const BatchPaymentOTPModal = ({ open, onClose, otpData, selectedExpenses, onSucc
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant="body2">Total Amount:</Typography>
             <Typography variant="body2" fontWeight="bold" color="primary">
-              ₹{otpData.totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+              {formatCurrency(otpData.totalAmount)}
             </Typography>
           </Box>
         </Box>

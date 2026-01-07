@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { expenseAPI, siteAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import AttachmentViewer from '../components/AttachmentViewer';
 import AIExpenseAssistant from '../components/AIExpenseAssistant';
 
@@ -19,6 +20,8 @@ const ExpenseForm = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { darkMode } = useTheme();
+  const { saveDraft, loadDraft, clearDraft, getRandomTip, showExpenseTips } = useUserPreferences();
+  const [expenseTip, setExpenseTip] = useState(null);
   
   // All hooks must be called before any conditional logic
   const [attachments, setAttachments] = useState([]);
@@ -301,6 +304,34 @@ const ExpenseForm = () => {
       }
     };
   }, [stream]);
+
+  // Load draft on mount and set expense tip
+  useEffect(() => {
+    // Load saved draft if exists
+    const savedDraft = loadDraft('expense_form');
+    if (savedDraft) {
+      setFormData(prev => ({ ...prev, ...savedDraft }));
+      showAlertMessage('📝 Draft restored from your previous session', 'info');
+    }
+    
+    // Set random expense tip
+    const tip = getRandomTip();
+    if (tip) {
+      setExpenseTip(tip);
+    }
+  }, []);
+
+  // Auto-save draft when form data changes (debounced)
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      // Only save if there's some data entered
+      if (formData.title || formData.amount || formData.description) {
+        saveDraft('expense_form', formData);
+      }
+    }, 2000); // Save after 2 seconds of no changes
+
+    return () => clearTimeout(timeoutId);
+  }, [formData, saveDraft]);
 
   // Block L4 Approver from accessing this page - moved after all hooks
   if (user && ['l4_approver', 'L4_APPROVER'].includes(user?.role)) {
@@ -646,6 +677,9 @@ const ExpenseForm = () => {
         setSuccess('Expense submitted successfully!');
         setOpenSnackbar(true);
         
+        // Clear the saved draft after successful submission
+        clearDraft('expense_form');
+        
         // Show success message for 2 seconds before redirecting
       setTimeout(() => {
         navigate('/dashboard');
@@ -725,6 +759,24 @@ const ExpenseForm = () => {
               Submit Expense Report
             </Typography>
           </Box>
+
+          {/* Expense Tip Display */}
+          {showExpenseTips && expenseTip && (
+            <Box sx={{
+              mb: 3,
+              p: 2,
+              borderRadius: 2,
+              background: 'linear-gradient(135deg, rgba(255,193,7,0.15) 0%, rgba(255,152,0,0.15) 100%)',
+              border: '1px solid rgba(255,193,7,0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1
+            }}>
+              <Typography sx={{ color: '#ffd54f', fontSize: '0.9rem', fontWeight: 500 }}>
+                {expenseTip}
+              </Typography>
+            </Box>
+          )}
 
           <Grid container spacing={4}>
             {/* Main Form */}

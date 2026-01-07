@@ -45,6 +45,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { expenseAPI, dashboardAPI } from '../services/api';
 import { createCSVExportHandler } from '../utils/exportUtils';
 import {
@@ -67,6 +68,7 @@ const TotalAmountPage = () => {
   const { user } = useAuth();
   const { darkMode } = useTheme();
   const { t } = useLanguage();
+  const { formatCurrency, formatDate } = useUserPreferences();
   
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -498,7 +500,7 @@ const TotalAmountPage = () => {
                       <AttachMoney />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.totalAmount.toLocaleString()}
+                      {formatCurrency(stats.totalAmount)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -522,7 +524,7 @@ const TotalAmountPage = () => {
                       <TrendingUp />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.monthlyAmount.toLocaleString()}
+                      {formatCurrency(stats.monthlyAmount)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -546,7 +548,7 @@ const TotalAmountPage = () => {
                       <CalendarToday />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.yearlyAmount.toLocaleString()}
+                      {formatCurrency(stats.yearlyAmount)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -570,7 +572,7 @@ const TotalAmountPage = () => {
                       <TrendingDown />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.averageAmount.toLocaleString()}
+                      {formatCurrency(stats.averageAmount)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -686,7 +688,7 @@ const TotalAmountPage = () => {
                         </Typography>
                       </Box>
                       <Typography variant="h5" fontWeight={700} color={COLORS[index % COLORS.length]}>
-                        ₹{category.amount.toLocaleString()}
+                        {formatCurrency(category.amount)}
                       </Typography>
                       <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'} sx={{ mb: 1 }}>
                         {category.percentage.toFixed(1)}% of total
@@ -759,7 +761,7 @@ const TotalAmountPage = () => {
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" fontWeight={500} color={darkMode ? '#fff' : '#333'}>
-                          ₹{expense.amount.toLocaleString()}
+                          {formatCurrency(expense.amount)}
                         </Typography>
                       </TableCell>
                       <TableCell>

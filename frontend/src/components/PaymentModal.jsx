@@ -17,8 +17,10 @@ import {
 import { BugReport } from '@mui/icons-material';
 import { paymentAPI } from '../services/api';
 import { runPaymentDiagnostics } from '../utils/paymentDiagnostics';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 
 const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
+  const { formatCurrency } = useUserPreferences();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [order, setOrder] = useState(null);
@@ -296,7 +298,7 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
                 textAlign: 'center'
               }}>
                 <Typography variant="h4" fontWeight={700} color="#4caf50">
-                  ₹{expense?.amount?.toLocaleString()}
+                  {formatCurrency(expense?.amount)}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Amount to be processed

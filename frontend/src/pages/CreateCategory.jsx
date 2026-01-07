@@ -4,6 +4,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import AddIcon from '@mui/icons-material/Add';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { categoryAPI, siteAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -11,6 +12,7 @@ import { useEffect } from 'react';
 const CreateCategory = () => {
   const { darkMode } = useTheme();
   const { user } = useAuth();
+  const { getCurrencySymbol } = useUserPreferences();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
@@ -280,7 +282,7 @@ const CreateCategory = () => {
                       <Grid item xs={12} sm={6}>
                         <TextField
                           fullWidth
-                          label="Budget Limit (₹)"
+                          label={`Budget Limit (${getCurrencySymbol()})`}
                           variant="outlined"
                           type="number"
                           value={formData.budgetLimit}

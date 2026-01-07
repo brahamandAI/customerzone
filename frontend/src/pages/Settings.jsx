@@ -13,7 +13,7 @@ import { authAPI, notificationAPI } from '../services/api';
 
 const Settings = () => {
   const { darkMode } = useTheme();
-  const { user, getUserRole } = useAuth();
+  const { user, getUserRole, refreshUser } = useAuth();
   const { darkMode: themeDarkMode, setTheme, isLoading: themeLoading } = useTheme();
   const { language, changeLanguage, t, isLoading: languageLoading } = useLanguage();
   const [loading, setLoading] = useState(true);
@@ -90,40 +90,15 @@ const Settings = () => {
     }
   }, [user, themeLoading, languageLoading]);
 
-  const handleToggle = async (key) => {
+  const handleToggle = (key) => {
     const newValue = !settings[key];
     setSettings(prev => ({ ...prev, [key]: newValue }));
     
-    // Apply changes immediately for theme and language
+    // Only apply theme preview immediately (will be saved with Save Changes button)
     if (key === 'darkMode') {
       setTheme(newValue);
-      // ThemeContext will automatically save to backend, no need to save here
-    } else if (key === 'language') {
-      // Language changes will be handled by the select component
-    } else {
-      // Auto-save other settings after a short delay
-      setTimeout(async () => {
-        try {
-          if (key === 'emailNotifications' || key === 'smsNotifications') {
-            await notificationAPI.updatePreferences({
-              email: key === 'emailNotifications' ? newValue : settings.emailNotifications,
-              sms: key === 'smsNotifications' ? newValue : settings.smsNotifications
-            });
-          } else {
-            await authAPI.updateProfile({
-              preferences: {
-                ...settings,
-                [key]: newValue
-              }
-            });
-          }
-        } catch (error) {
-          console.error('Error auto-saving setting:', error);
-          // Revert if save fails
-          setSettings(prev => ({ ...prev, [key]: !newValue }));
-        }
-      }, 1000); // 1 second delay for auto-save
     }
+    // All other settings will be saved when user clicks "Save Changes"
   };
 
   const handleSave = async () => {
@@ -153,6 +128,9 @@ const Settings = () => {
           showExpenseTips: settings.showExpenseTips
         }
       });
+      
+      // Refresh user data in context so changes reflect immediately across the app
+      await refreshUser();
       
       displayMessage(t('settingsSaved'), 'success');
     } catch (error) {
@@ -408,26 +386,11 @@ const Settings = () => {
                        <Select
                          value={settings.language}
                          label={t('language')}
-                         onChange={async (e) => {
+                         onChange={(e) => {
                            const newLanguage = e.target.value;
                            setSettings({...settings, language: newLanguage});
-                           changeLanguage(newLanguage);
-                           
-                           // Immediately save language to backend
-                           try {
-                             await authAPI.updateProfile({
-                               preferences: {
-                                 ...settings,
-                                 language: newLanguage
-                               }
-                             });
-                           } catch (error) {
-                             console.error('Error saving language:', error);
-                             // Revert if save fails
-                             setSettings({...settings, language: settings.language});
-                             changeLanguage(settings.language);
-                             displayMessage('Failed to save language setting', 'error');
-                           }
+                           changeLanguage(newLanguage); // Apply preview immediately
+                           // Changes will be saved when user clicks "Save Changes"
                          }}
                          sx={{
                            backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
@@ -543,7 +506,10 @@ const Settings = () => {
                        <Select
                          value={settings.timezone}
                          label={t('timezone')}
-                         onChange={(e) => setSettings({...settings, timezone: e.target.value})}
+                         onChange={(e) => {
+                           setSettings({...settings, timezone: e.target.value});
+                           // Changes will be saved when user clicks "Save Changes"
+                         }}
                          sx={{
                            backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
                            color: darkMode ? '#e0e0e0' : '#333333',
@@ -585,7 +551,10 @@ const Settings = () => {
                        <Select
                          value={settings.currency}
                          label={t('currency')}
-                         onChange={(e) => setSettings({...settings, currency: e.target.value})}
+                         onChange={(e) => {
+                           setSettings({...settings, currency: e.target.value});
+                           // Changes will be saved when user clicks "Save Changes"
+                         }}
                          sx={{
                            backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
                            color: darkMode ? '#e0e0e0' : '#333333',
@@ -617,7 +586,7 @@ const Settings = () => {
                          }}
                        >
                         <MenuItem value="INR">Indian Rupee (₹)</MenuItem>
-                        <MenuItem value="USD">US Dollar (₹)</MenuItem>
+                        <MenuItem value="USD">US Dollar ($)</MenuItem>
                         <MenuItem value="EUR">Euro (€)</MenuItem>
                       </Select>
                     </FormControl>

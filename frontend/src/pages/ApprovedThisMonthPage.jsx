@@ -49,6 +49,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { expenseAPI, dashboardAPI } from '../services/api';
 import { createCSVExportHandler } from '../utils/exportUtils';
 import {
@@ -71,6 +72,7 @@ const ApprovedThisMonthPage = () => {
   const { user } = useAuth();
   const { darkMode } = useTheme();
   const { t } = useLanguage();
+  const { formatCurrency, formatDate } = useUserPreferences();
   
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -547,7 +549,7 @@ const ApprovedThisMonthPage = () => {
                       <CheckCircle />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.totalApproved.toLocaleString()}
+                      {formatCurrency(stats.totalApproved)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -571,7 +573,7 @@ const ApprovedThisMonthPage = () => {
                       <TrendingUp />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.monthlyApproved.toLocaleString()}
+                      {formatCurrency(stats.monthlyApproved)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -735,7 +737,7 @@ const ApprovedThisMonthPage = () => {
                         Approvals
                       </Typography>
                       <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
-                        ₹{approver.amount.toLocaleString()} total
+                        {formatCurrency(approver.amount)} total
                       </Typography>
                     </CardContent>
                   </Card>
@@ -799,7 +801,7 @@ const ApprovedThisMonthPage = () => {
                         </TableCell>
                         <TableCell>
                           <Typography variant="body2" fontWeight={500} color={darkMode ? '#fff' : '#333'}>
-                            ₹{expense.amount.toLocaleString()}
+                            {formatCurrency(expense.amount)}
                           </Typography>
                         </TableCell>
                         <TableCell>

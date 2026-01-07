@@ -11,12 +11,14 @@ import SecurityIcon from '@mui/icons-material/Security';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { dashboardAPI } from '../services/api';
 import { config } from '../config';
 
 const Profile = () => {
   const { user, getUserRole, updateUser } = useAuth();
   const { darkMode } = useTheme();
+  const { formatCurrency, getCurrencySymbol } = useUserPreferences();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userStats, setUserStats] = useState(null);
@@ -259,8 +261,8 @@ const Profile = () => {
       return [
         { 
           label: 'Total Expenses Processed', 
-          value: `₹${userStats.userStats?.totalAmount?.toLocaleString() || 0}`, 
-          icon: '₹' 
+          value: formatCurrency(userStats.userStats?.totalAmount || 0), 
+          icon: getCurrencySymbol() 
         },
         { 
           label: 'Pending Payments', 
@@ -269,7 +271,7 @@ const Profile = () => {
         },
         { 
           label: 'Processed This Month', 
-          value: `₹${userStats.userStats?.totalAmount?.toLocaleString() || 0}`, 
+          value: formatCurrency(userStats.userStats?.totalAmount || 0), 
           icon: '✅' 
         },
         { 
@@ -282,8 +284,8 @@ const Profile = () => {
       return [
         { 
           label: 'Total Expenses Reviewed', 
-          value: `₹${userStats.userStats?.totalAmount?.toLocaleString() || 0}`, 
-          icon: '₹' 
+          value: formatCurrency(userStats.userStats?.totalAmount || 0), 
+          icon: getCurrencySymbol() 
         },
         { 
           label: 'Pending Approvals', 
@@ -292,7 +294,7 @@ const Profile = () => {
         },
         { 
           label: user?.role?.toLowerCase() === 'l3_approver' ? 'Processed Payments' : 'Approved This Month', 
-          value: `₹${userStats.userStats?.totalAmount?.toLocaleString() || 0}`, 
+          value: formatCurrency(userStats.userStats?.totalAmount || 0), 
           icon: '✅' 
         },
         { 
@@ -307,12 +309,12 @@ const Profile = () => {
         { 
           label: 'Total Expenses Submitted', 
           value: userStats.userStats?.totalExpenses || 0, 
-          icon: '₹' 
+          icon: getCurrencySymbol() 
         },
         { 
           label: 'Total Amount', 
-          value: `₹${userStats.userStats?.totalAmount?.toLocaleString() || 0}`, 
-          icon: '₹' 
+          value: formatCurrency(userStats.userStats?.totalAmount || 0), 
+          icon: getCurrencySymbol() 
         },
         { 
           label: 'Pending Approvals', 

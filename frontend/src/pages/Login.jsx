@@ -40,6 +40,12 @@ const Login = () => {
   const [otpSending, setOtpSending] = useState(false);
   const [otpVerifying, setOtpVerifying] = useState(false);
   const [otpMessage, setOtpMessage] = useState('');
+  // 2FA State
+  const [requires2FA, setRequires2FA] = useState(false);
+  const [twoFAEmail, setTwoFAEmail] = useState('');
+  const [twoFACode, setTwoFACode] = useState('');
+  const [twoFAVerifying, setTwoFAVerifying] = useState(false);
+  const [twoFAError, setTwoFAError] = useState('');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHoveringForm, setIsHoveringForm] = useState(false);
 
@@ -129,6 +135,15 @@ const Login = () => {
         password: formData.password,
       });
 
+      // Check if 2FA is required
+      if (response.data.requires2FA) {
+        setRequires2FA(true);
+        setTwoFAEmail(response.data.email);
+        setTwoFAError('');
+        setLoading(false);
+        return;
+      }
+
       // Save token and user in localStorage
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -136,10 +151,44 @@ const Login = () => {
       login(response.data.user, response.data.token); // update context with token
       navigate('/dashboard');
     } catch (error) {
-      setErrors({ email: 'Invalid credentials' });
+      setErrors({ email: error.response?.data?.message || 'Invalid credentials' });
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handle 2FA OTP verification
+  const handle2FAVerify = async () => {
+    if (!twoFACode || twoFACode.length < 4) {
+      setTwoFAError('Please enter a valid OTP');
+      return;
+    }
+
+    setTwoFAVerifying(true);
+    setTwoFAError('');
+
+    try {
+      const response = await authAPI.verifyOtp(twoFAEmail, twoFACode);
+      
+      // Save token and user in localStorage
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      login(response.data.user, response.data.token);
+      navigate('/dashboard');
+    } catch (error) {
+      setTwoFAError(error.response?.data?.message || 'Invalid or expired OTP. Please try again.');
+    } finally {
+      setTwoFAVerifying(false);
+    }
+  };
+
+  // Cancel 2FA and go back to login
+  const cancel2FA = () => {
+    setRequires2FA(false);
+    setTwoFAEmail('');
+    setTwoFACode('');
+    setTwoFAError('');
   };
 
   const handleGoogleSignIn = async (credentialResponse) => {
@@ -846,6 +895,135 @@ const Login = () => {
                 </Box>
                 </Box>
               </Slide>
+
+              {/* 2FA Verification */}
+              {requires2FA && (
+                <Fade in={requires2FA}>
+                  <Box sx={{ 
+                    position: 'absolute', 
+                    top: 0, 
+                    left: 0, 
+                    right: 0, 
+                    bottom: 0, 
+                    bgcolor: darkMode ? 'rgba(26,26,26,0.98)' : 'rgba(255,255,255,0.98)',
+                    zIndex: 10,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    p: { xs: 3, sm: 4, md: 5 },
+                    borderRadius: 'inherit'
+                  }}>
+                    <Box sx={{ textAlign: 'center', mb: 4 }}>
+                      <Avatar sx={{ 
+                        width: 80, 
+                        height: 80, 
+                        bgcolor: '#008080', 
+                        mx: 'auto', 
+                        mb: 2,
+                        animation: 'pulse 2s ease-in-out infinite',
+                        '@keyframes pulse': {
+                          '0%, 100%': { boxShadow: '0 0 0 0 rgba(0, 128, 128, 0.4)' },
+                          '50%': { boxShadow: '0 0 0 20px rgba(0, 128, 128, 0)' }
+                        }
+                      }}>
+                        <SecurityIcon sx={{ fontSize: 40 }} />
+                      </Avatar>
+                      <Typography variant="h5" fontWeight={700} color="#008080" gutterBottom>
+                        Two-Factor Authentication
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Enter the 6-digit code sent to <strong>{twoFAEmail}</strong>
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                      <TextField
+                        fullWidth
+                        label="Enter OTP Code"
+                        value={twoFACode}
+                        onChange={(e) => {
+                          // Only allow numbers and max 6 digits
+                          const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                          setTwoFACode(value);
+                        }}
+                        error={!!twoFAError}
+                        helperText={twoFAError}
+                        placeholder="000000"
+                        inputProps={{ 
+                          maxLength: 6,
+                          style: { 
+                            textAlign: 'center', 
+                            fontSize: '1.5rem', 
+                            letterSpacing: '0.5rem',
+                            fontWeight: 700
+                          }
+                        }}
+                        InputProps={{
+                          sx: { 
+                            borderRadius: 3,
+                            backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                            '&:hover fieldset': { borderColor: '#008080' },
+                            '&.Mui-focused fieldset': { borderColor: '#008080', borderWidth: '2px' }
+                          }
+                        }}
+                        autoFocus
+                      />
+
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        size="large"
+                        onClick={handle2FAVerify}
+                        disabled={twoFAVerifying || twoFACode.length < 6}
+                        sx={{
+                          py: 2,
+                          borderRadius: 3,
+                          background: 'linear-gradient(45deg, #008080 30%, #20B2AA 90%)',
+                          color: 'white',
+                          fontSize: '1.1rem',
+                          fontWeight: 600,
+                          textTransform: 'none',
+                          boxShadow: '0 8px 32px rgba(0,128,128,0.3)',
+                          '&:hover': { 
+                            background: 'linear-gradient(45deg, #006666 30%, #008080 90%)',
+                            transform: 'translateY(-2px)'
+                          },
+                          '&:disabled': {
+                            background: 'rgba(0,128,128,0.3)'
+                          },
+                          transition: 'all 0.25s ease'
+                        }}
+                      >
+                        {twoFAVerifying ? 'Verifying...' : 'Verify & Sign In'}
+                      </Button>
+
+                      <Button
+                        variant="text"
+                        onClick={cancel2FA}
+                        sx={{ 
+                          color: darkMode ? '#b0b0b0' : '#666666',
+                          textTransform: 'none',
+                          '&:hover': { color: '#008080', background: 'rgba(0,128,128,0.1)' }
+                        }}
+                      >
+                        ← Back to Login
+                      </Button>
+
+                      <Box sx={{ 
+                        mt: 2, 
+                        p: 2, 
+                        bgcolor: 'rgba(0,128,128,0.1)', 
+                        borderRadius: 2,
+                        border: '1px solid rgba(0,128,128,0.2)'
+                      }}>
+                        <Typography variant="caption" color="text.secondary" display="block" textAlign="center">
+                          💡 Didn't receive the code? Check your spam folder or wait a few seconds and try logging in again.
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Fade>
+              )}
 
               {/* OTP Login */}
               <Slide in={activeTab === 1} direction="left" mountOnEnter unmountOnExit>

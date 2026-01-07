@@ -8,10 +8,12 @@ import PieChartIcon from '@mui/icons-material/PieChart';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import { reportAPI } from '../services/api';
 import { useTheme } from '../context/ThemeContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import * as XLSX from 'xlsx';
 
 const Reports = () => {
   const { darkMode } = useTheme();
+  const { formatCurrency, getCurrencySymbol } = useUserPreferences();
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [selectedSite, setSelectedSite] = useState('all');
   const [startDate, setStartDate] = useState('');
@@ -157,7 +159,7 @@ const Reports = () => {
             },
             {
               label: 'Total Amount',
-              value: `₹${(data.summary?.totalAmount || 0).toLocaleString()}`,
+              value: formatCurrency(data.summary?.totalAmount || 0),
               change: formatTrend(data.trends?.totalAmount || 0),
               trend: getTrendDirection(data.trends?.totalAmount || 0)
             },
@@ -223,7 +225,7 @@ const Reports = () => {
           [''],
           ['Metric', 'Value', 'Trend'],
           ['Total Expenses', summaryData.summary?.totalExpenses || 0, `${summaryData.trends?.totalExpenses || 0}%`],
-          ['Total Amount', `₹${(summaryData.summary?.totalAmount || 0).toLocaleString()}`, `${summaryData.trends?.totalAmount || 0}%`],
+          ['Total Amount', formatCurrency(summaryData.summary?.totalAmount || 0), `${summaryData.trends?.totalAmount || 0}%`],
           ['Approved Count', summaryData.summary?.approvedCount || 0, `${summaryData.trends?.approvedCount || 0}%`],
           ['Pending Count', summaryData.summary?.pendingCount || 0, `${summaryData.trends?.pendingCount || 0}%`],
           ['Rejected Count', summaryData.summary?.rejectedCount || 0, 'N/A'],
@@ -238,7 +240,7 @@ const Reports = () => {
             const percentage = summaryData.summary?.totalAmount > 0 
               ? Math.round((cat.amount / summaryData.summary.totalAmount) * 100) 
               : 0;
-            summarySheet.push([cat._id, `₹${cat.amount.toLocaleString()}`, cat.count, `${percentage}%`]);
+            summarySheet.push([cat._id, formatCurrency(cat.amount), cat.count, `${percentage}%`]);
           });
         }
 
@@ -258,7 +260,7 @@ const Reports = () => {
           expenseSheet.push([
             expense.expenseId || expense._id,
             expense.title || '',
-            `₹${(expense.amount || 0).toLocaleString()}`,
+            formatCurrency(expense.amount || 0),
             expense.category || '',
             expense.status || '',
             expense.submittedBy?.name || '',
@@ -284,9 +286,9 @@ const Reports = () => {
         summaryData.monthlyTrends.forEach(trend => {
           trendsSheet.push([
             `${trend._id.year}-${trend._id.month.toString().padStart(2, '0')}`,
-            `₹${(trend.amount || 0).toLocaleString()}`,
+            formatCurrency(trend.amount || 0),
             trend.count || 0,
-            `₹${(trend.approvedAmount || 0).toLocaleString()}`
+            formatCurrency(trend.approvedAmount || 0)
           ]);
         });
 
@@ -661,7 +663,7 @@ const Reports = () => {
                           <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.site?.code || 'N/A'}</TableCell>
                           <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.site?.name || 'N/A'}</TableCell>
                           <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.description || row.title}</TableCell>
-                          <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>₹{row.amount?.toLocaleString()}</TableCell>
+                          <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{formatCurrency(row.amount)}</TableCell>
                           <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.submittedBy?.name || 'N/A'}</TableCell>
                           <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.expenseDate ? new Date(row.expenseDate).toLocaleDateString() : 'N/A'}</TableCell>
                           <TableCell>

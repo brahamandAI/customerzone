@@ -12,9 +12,11 @@ import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { siteAPI } from '../services/api';
 import { useSocket } from '../context/SocketContext';
 import { useTheme } from '../context/ThemeContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 
 const BudgetAlerts = () => {
   const { darkMode } = useTheme();
+  const { formatCurrency, getCurrencySymbol } = useUserPreferences();
   const [alerts, setAlerts] = useState([]);
   const [siteBudgets, setSiteBudgets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -337,7 +339,7 @@ const BudgetAlerts = () => {
                     <TrendingUpIcon />
                   </Avatar>
                   <Typography variant="h4" fontWeight={700} color="#4caf50">
-                    ₹{alerts.reduce((sum, alert) => sum + alert.current, 0).toLocaleString()}
+                    {formatCurrency(alerts.reduce((sum, alert) => sum + alert.current, 0))}
                   </Typography>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : 'text.secondary'}>
                     Total Spent
@@ -360,7 +362,7 @@ const BudgetAlerts = () => {
                     <CurrencyRupeeIcon />
                   </Avatar>
                   <Typography variant="h4" fontWeight={700} color="#2196f3">
-                    ₹{alerts.reduce((sum, alert) => sum + alert.threshold, 0).toLocaleString()}
+                    {formatCurrency(alerts.reduce((sum, alert) => sum + alert.threshold, 0))}
                   </Typography>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : 'text.secondary'}>
                     Total Budget
@@ -416,7 +418,7 @@ const BudgetAlerts = () => {
                       </Typography>
                       
                       <Typography variant="h6" fontWeight={700} color={darkMode ? '#4fc3f7' : '#667eea'} gutterBottom>
-                        ₹{site.monthlyBudget.toLocaleString()} / Month
+                        {formatCurrency(site.monthlyBudget)} / Month
                       </Typography>
                       
                       <Box sx={{ mt: 2 }}>
@@ -436,7 +438,7 @@ const BudgetAlerts = () => {
                                   {category}
                                 </Typography>
                                 <Typography variant="body2" fontWeight={600} color={darkMode ? '#e0e0e0' : '#333333'}>
-                                  ₹{budget.toLocaleString()}
+                                  {formatCurrency(budget)}
                                 </Typography>
                               </Box>
                             </Grid>
@@ -504,12 +506,12 @@ const BudgetAlerts = () => {
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" fontWeight={500} color={darkMode ? '#e0e0e0' : '#333333'}>
-                          ₹{alert.threshold.toLocaleString()}
+                          {formatCurrency(alert.threshold)}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" fontWeight={500} color={darkMode ? '#e0e0e0' : '#333333'}>
-                          ₹{alert.current.toLocaleString()}
+                          {formatCurrency(alert.current)}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -636,7 +638,7 @@ const BudgetAlerts = () => {
               }}
             />
             <TextField
-              label="Threshold Amount (₹)"
+              label={`Threshold Amount (${getCurrencySymbol()})`}
               type="number"
               value={newAlert.threshold}
               onChange={(e) => setNewAlert({...newAlert, threshold: e.target.value})}

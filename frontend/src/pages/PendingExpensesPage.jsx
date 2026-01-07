@@ -62,6 +62,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { expenseAPI } from '../services/api';
 import { createCSVExportHandler } from '../utils/exportUtils';
 
@@ -70,6 +71,7 @@ const PendingExpensesPage = () => {
   const { user } = useAuth();
   const { darkMode } = useTheme();
   const { t } = useLanguage();
+  const { formatCurrency: formatCurrencyPref, formatDate: formatDatePref } = useUserPreferences();
   
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -90,6 +92,8 @@ const PendingExpensesPage = () => {
     topExpenses: [],
     recentExpenses: []
   });
+  const [selectedExpense, setSelectedExpense] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const COLORS = ['#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#ffecd2'];
 
@@ -304,14 +308,8 @@ const PendingExpensesPage = () => {
     return statusIcons[status] || <Info />;
   };
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
+  // Use currency formatting from user preferences
+  const formatCurrency = formatCurrencyPref;
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-IN', {
@@ -352,7 +350,7 @@ const PendingExpensesPage = () => {
         <Button
           variant="contained"
           startIcon={<Download />}
-          onClick={createCSVExportHandler(expenses, 'pending-expenses')}
+          onClick={createCSVExportHandler({ expenses }, 'pending-expenses', user, setError)}
           sx={{ bgcolor: '#4caf50', '&:hover': { bgcolor: '#45a049' } }}
         >
           Export
@@ -553,7 +551,13 @@ const PendingExpensesPage = () => {
                   </TableCell>
                   <TableCell>
                     <Tooltip title="View Details">
-                      <IconButton size="small">
+                      <IconButton 
+                        size="small"
+                        onClick={() => {
+                          setSelectedExpense(expense);
+                          setOpenDialog(true);
+                        }}
+                      >
                         <Visibility />
                       </IconButton>
                     </Tooltip>
@@ -572,6 +576,206 @@ const PendingExpensesPage = () => {
           </Typography>
         </Box>
       )}
+
+      {/* Expense Details Dialog */}
+      <Dialog 
+        open={openDialog} 
+        onClose={() => setOpenDialog(false)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: { bgcolor: darkMode ? '#121212' : '#f5f5f5', borderRadius: 2 }
+        }}
+      >
+        <DialogTitle sx={{ bgcolor: darkMode ? '#1e1e1e' : '#fff', borderBottom: `3px solid ${selectedExpense ? getStatusColor(selectedExpense.status) : '#ff9800'}` }}>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box display="flex" alignItems="center" gap={2}>
+              <Avatar sx={{ bgcolor: selectedExpense ? getStatusColor(selectedExpense.status) : '#ff9800' }}>
+                {selectedExpense ? getStatusIcon(selectedExpense.status) : <Pending />}
+              </Avatar>
+              <Box>
+                <Typography variant="h6" fontWeight="bold">
+                  {selectedExpense?.expenseNumber || 'Expense Details'}
+                </Typography>
+                <Typography variant="caption" color="textSecondary">
+                  {selectedExpense?.title}
+                </Typography>
+              </Box>
+            </Box>
+            <Chip
+              icon={selectedExpense ? getStatusIcon(selectedExpense.status) : null}
+              label={selectedExpense?.status?.replace(/_/g, ' ').toUpperCase() || ''}
+              size="small"
+              sx={{
+                bgcolor: selectedExpense ? getStatusColor(selectedExpense.status) : '#666',
+                color: 'white',
+                fontWeight: 'bold'
+              }}
+            />
+          </Box>
+        </DialogTitle>
+        <DialogContent sx={{ bgcolor: darkMode ? '#121212' : '#f5f5f5', p: 3, pt: 4, overflow: 'hidden' }}>
+          {selectedExpense && (
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              {/* Amount Card */}
+              <Grid item xs={12} sm={6}>
+                <Card sx={{ bgcolor: darkMode ? '#1e1e1e' : '#fff', height: '100%' }}>
+                  <CardContent>
+                    <Box display="flex" alignItems="center" justifyContent="space-between">
+                      <Box>
+                        <Typography color="textSecondary" gutterBottom variant="caption">
+                          Amount
+                        </Typography>
+                        <Typography variant="h5" fontWeight="bold" color="#ff9800">
+                          {formatCurrency(selectedExpense.amount)}
+                        </Typography>
+                      </Box>
+                      <Avatar sx={{ bgcolor: '#ff9800' }}>
+                        <AttachMoney />
+                      </Avatar>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {/* Category Card */}
+              <Grid item xs={12} sm={6}>
+                <Card sx={{ bgcolor: darkMode ? '#1e1e1e' : '#fff', height: '100%' }}>
+                  <CardContent>
+                    <Box display="flex" alignItems="center" justifyContent="space-between">
+                      <Box>
+                        <Typography color="textSecondary" gutterBottom variant="caption">
+                          Category
+                        </Typography>
+                        <Chip
+                          label={selectedExpense.category}
+                          size="small"
+                          sx={{ bgcolor: COLORS[0], color: 'white', fontWeight: 'bold' }}
+                        />
+                      </Box>
+                      <Avatar sx={{ bgcolor: COLORS[0] }}>
+                        <Category />
+                      </Avatar>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {/* Date Card */}
+              <Grid item xs={12} sm={6}>
+                <Card sx={{ bgcolor: darkMode ? '#1e1e1e' : '#fff', height: '100%' }}>
+                  <CardContent>
+                    <Box display="flex" alignItems="center" justifyContent="space-between">
+                      <Box>
+                        <Typography color="textSecondary" gutterBottom variant="caption">
+                          Expense Date
+                        </Typography>
+                        <Typography variant="body1" fontWeight="bold">
+                          {formatDate(selectedExpense.expenseDate)}
+                        </Typography>
+                      </Box>
+                      <Avatar sx={{ bgcolor: '#2196f3' }}>
+                        <DateRange />
+                      </Avatar>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {/* Site Card */}
+              <Grid item xs={12} sm={6}>
+                <Card sx={{ bgcolor: darkMode ? '#1e1e1e' : '#fff', height: '100%' }}>
+                  <CardContent>
+                    <Box display="flex" alignItems="center" justifyContent="space-between">
+                      <Box>
+                        <Typography color="textSecondary" gutterBottom variant="caption">
+                          Site
+                        </Typography>
+                        <Typography variant="body1" fontWeight="bold">
+                          {selectedExpense.site?.name || selectedExpense.site || 'N/A'}
+                        </Typography>
+                      </Box>
+                      <Avatar sx={{ bgcolor: '#4caf50' }}>
+                        <Business />
+                      </Avatar>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {/* Description Card */}
+              <Grid item xs={12}>
+                <Card sx={{ bgcolor: darkMode ? '#1e1e1e' : '#fff' }}>
+                  <CardContent>
+                    <Box display="flex" alignItems="flex-start" gap={2}>
+                      <Avatar sx={{ bgcolor: COLORS[1] }}>
+                        <Description />
+                      </Avatar>
+                      <Box flex={1}>
+                        <Typography color="textSecondary" gutterBottom variant="caption">
+                          Description
+                        </Typography>
+                        <Typography variant="body1">
+                          {selectedExpense.description || 'No description provided'}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {/* Additional Info */}
+              <Grid item xs={12}>
+                <Card sx={{ bgcolor: darkMode ? '#1e1e1e' : '#fff' }}>
+                  <CardContent>
+                    <Typography variant="subtitle2" fontWeight="bold" gutterBottom sx={{ mb: 2 }}>
+                      Additional Information
+                    </Typography>
+                    <Divider sx={{ mb: 2 }} />
+                    <Grid container spacing={2}>
+                      {selectedExpense.department && (
+                        <Grid item xs={6} sm={3}>
+                          <Typography variant="caption" color="textSecondary">Department</Typography>
+                          <Typography variant="body2" fontWeight="bold">{selectedExpense.department}</Typography>
+                        </Grid>
+                      )}
+                      {selectedExpense.submittedBy && (
+                        <Grid item xs={6} sm={3}>
+                          <Typography variant="caption" color="textSecondary">Submitted By</Typography>
+                          <Typography variant="body2" fontWeight="bold">
+                            {selectedExpense.submittedBy?.name || selectedExpense.submittedBy}
+                          </Typography>
+                        </Grid>
+                      )}
+                      {selectedExpense.createdAt && (
+                        <Grid item xs={6} sm={3}>
+                          <Typography variant="caption" color="textSecondary">Submitted On</Typography>
+                          <Typography variant="body2" fontWeight="bold">{formatDate(selectedExpense.createdAt)}</Typography>
+                        </Grid>
+                      )}
+                      {selectedExpense.currency && (
+                        <Grid item xs={6} sm={3}>
+                          <Typography variant="caption" color="textSecondary">Currency</Typography>
+                          <Typography variant="body2" fontWeight="bold">{selectedExpense.currency}</Typography>
+                        </Grid>
+                      )}
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ bgcolor: darkMode ? '#1e1e1e' : '#fff', p: 2 }}>
+          <Button 
+            onClick={() => setOpenDialog(false)} 
+            variant="contained"
+            sx={{ bgcolor: '#667eea', '&:hover': { bgcolor: '#5a6fd6' } }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

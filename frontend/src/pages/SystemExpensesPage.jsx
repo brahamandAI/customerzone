@@ -54,6 +54,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { expenseAPI, dashboardAPI } from '../services/api';
 import { createCSVExportHandler } from '../utils/exportUtils';
 import {
@@ -78,6 +79,7 @@ const SystemExpensesPage = () => {
   const { user } = useAuth();
   const { darkMode } = useTheme();
   const { t } = useLanguage();
+  const { formatCurrency, formatDate } = useUserPreferences();
   
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -490,7 +492,7 @@ const SystemExpensesPage = () => {
                       <AttachMoney />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.totalAmount.toLocaleString()}
+                      {formatCurrency(stats.totalAmount)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -514,7 +516,7 @@ const SystemExpensesPage = () => {
                       <TrendingUp />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.averageExpense.toLocaleString()}
+                      {formatCurrency(stats.averageExpense)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -667,7 +669,7 @@ const SystemExpensesPage = () => {
                               Count: {site.count}
                             </Typography>
                             <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
-                              Amount: ₹{site.amount.toLocaleString()}
+                              Amount: {formatCurrency(site.amount)}
                             </Typography>
                           </Box>
                           <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'} sx={{ mb: 1 }}>
@@ -727,7 +729,7 @@ const SystemExpensesPage = () => {
                               Count: {category.count}
                             </Typography>
                             <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
-                              Amount: ₹{category.amount.toLocaleString()}
+                              Amount: {formatCurrency(category.amount)}
                             </Typography>
                           </Box>
                           <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'} sx={{ mb: 1 }}>
@@ -809,7 +811,7 @@ const SystemExpensesPage = () => {
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" fontWeight={500} color={darkMode ? '#fff' : '#333'}>
-                          ₹{expense.amount.toLocaleString()}
+                          {formatCurrency(expense.amount)}
                         </Typography>
                       </TableCell>
                       <TableCell>

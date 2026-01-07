@@ -56,7 +56,11 @@ const expenseSchema = new mongoose.Schema({
     required: [true, 'Please add expense date'],
     validate: {
       validator: function(date) {
-        return date <= new Date();
+        // Compare at day level only (ignore time), allowing today's date
+        const expenseDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const today = new Date();
+        const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        return expenseDay <= todayDay;
       },
       message: 'Expense date cannot be in the future'
     }

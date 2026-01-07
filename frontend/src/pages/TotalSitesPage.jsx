@@ -56,6 +56,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { siteAPI, userAPI } from '../services/api';
 import { createCSVExportHandler } from '../utils/exportUtils';
 import {
@@ -78,6 +79,7 @@ const TotalSitesPage = () => {
   const { user } = useAuth();
   const { darkMode } = useTheme();
   const { t } = useLanguage();
+  const { formatCurrency, formatDate } = useUserPreferences();
   
   const [sites, setSites] = useState([]);
   const [users, setUsers] = useState([]);
@@ -422,7 +424,7 @@ const TotalSitesPage = () => {
                       <AttachMoney />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.totalBudget.toLocaleString()}
+                      {formatCurrency(stats.totalBudget)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -446,7 +448,7 @@ const TotalSitesPage = () => {
                       <TrendingUp />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.usedBudget.toLocaleString()}
+                      {formatCurrency(stats.usedBudget)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -509,7 +511,7 @@ const TotalSitesPage = () => {
                       Total Budget
                     </Typography>
                     <Typography variant="body2" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.totalBudget.toLocaleString()}
+                      {formatCurrency(stats.totalBudget)}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -517,7 +519,7 @@ const TotalSitesPage = () => {
                       Used Budget
                     </Typography>
                     <Typography variant="body2" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.usedBudget.toLocaleString()}
+                      {formatCurrency(stats.usedBudget)}
                     </Typography>
                   </Box>
                   <LinearProgress 
@@ -601,7 +603,7 @@ const TotalSitesPage = () => {
                         </TableCell>
                         <TableCell>
                           <Typography variant="body2" fontWeight={500} color={darkMode ? '#fff' : '#333'}>
-                            ₹{site.budget?.monthly?.toLocaleString() || 0}
+                            {formatCurrency(site.budget?.monthly || 0)}
                           </Typography>
                         </TableCell>
                         <TableCell>

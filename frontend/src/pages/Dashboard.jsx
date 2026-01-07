@@ -20,6 +20,7 @@ import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { dashboardAPI } from '../services/api';
 
 const Dashboard = () => {
@@ -28,6 +29,7 @@ const Dashboard = () => {
   const { socket } = useSocket();
   const { t } = useLanguage();
   const { darkMode } = useTheme();
+  const { formatCurrency, formatDate } = useUserPreferences();
   const [stats, setStats] = useState({
     totalExpenses: 0,
     monthlyExpenses: 0,
@@ -165,7 +167,7 @@ const Dashboard = () => {
         id: Date.now(),
         type: activityType,
         title: activityTitle,
-        description: `${data.siteName} - ₹${(data.amount || 0).toLocaleString()}`,
+        description: `${data.siteName} - ${formatCurrency(data.amount || 0)}`,
         time: 'Just now',
         status: data.status
       };
@@ -544,7 +546,7 @@ const Dashboard = () => {
                     <CurrencyRupeeIcon />
                   </Avatar>
                   <Typography variant="h4" fontWeight={700} color="#667eea">
-                    ₹{Number(stats.totalAmount || 0).toLocaleString()}
+                    {formatCurrency(stats.totalAmount || 0)}
                   </Typography>
                   <Typography variant="body2" sx={{ color: darkMode ? '#b0b0b0' : '#666666' }}>
                     {user?.role?.toLowerCase() === 'finance' ? 'Total Amount Paid' : t('totalAmountYTD')}

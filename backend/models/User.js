@@ -135,6 +135,14 @@ const userSchema = new mongoose.Schema({
       sms: {
         type: Boolean,
         default: false
+      },
+      budgetAlerts: {
+        type: Boolean,
+        default: true
+      },
+      approvalReminders: {
+        type: Boolean,
+        default: true
       }
     },
     language: {
@@ -148,6 +156,22 @@ const userSchema = new mongoose.Schema({
     currency: {
       type: String,
       default: 'INR'
+    },
+    autoLogout: {
+      type: Number,
+      default: 30 // minutes
+    },
+    twoFactorAuth: {
+      type: Boolean,
+      default: false
+    },
+    autoSaveDraft: {
+      type: Boolean,
+      default: true
+    },
+    showExpenseTips: {
+      type: Boolean,
+      default: true
     }
   },
   permissions: {

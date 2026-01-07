@@ -15,6 +15,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 import { useTheme } from '../context/ThemeContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { expenseAPI, dashboardAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import PaymentModal from '../components/PaymentModal';
@@ -49,6 +50,7 @@ const Approval = () => {
   const { user, getUserRole } = useAuth();
   const { socket } = useSocket();
   const { darkMode } = useTheme();
+  const { formatCurrency, formatDateTime } = useUserPreferences();
 
   // Get user role in correct format
   const userRole = getUserRole(); // This returns UPPERCASE
@@ -767,7 +769,7 @@ const Approval = () => {
                     <CurrencyRupeeIcon />
                   </Avatar>
                   <Typography variant="h4" fontWeight={700} color="#2196f3">
-                    ₹{totalAmount.toLocaleString()}
+                    {formatCurrency(totalAmount)}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Total Approved Amount
@@ -937,12 +939,12 @@ const Approval = () => {
                         
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                           <Typography variant="h6" fontWeight={700} color="#667eea">
-                            ₹{approval.amount.toLocaleString()}
+                            {formatCurrency(approval.amount)}
                           </Typography>
                           {approval.modifiedAmount && approval.modifiedAmount !== approval.amount && (
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                               <Typography variant="body2" color="warning.main" fontWeight={600}>
-                                → ₹{approval.modifiedAmount.toLocaleString()}
+                                → {formatCurrency(approval.modifiedAmount)}
                               </Typography>
                               <Chip 
                                 label="Modified" 
@@ -1116,7 +1118,7 @@ const Approval = () => {
                     </Grid>
                     <Grid item xs={6}>
                       <Typography variant="body2" color="text.secondary">Original Amount:</Typography>
-                      <Typography variant="body1" fontWeight={600}>₹{selectedApproval?.amount?.toLocaleString()}</Typography>
+                      <Typography variant="body1" fontWeight={600}>{formatCurrency(selectedApproval?.amount)}</Typography>
                     </Grid>
                     <Grid item xs={6}>
                       <Typography variant="body2" color="text.secondary">Site:</Typography>
@@ -1134,7 +1136,7 @@ const Approval = () => {
                     <Grid item xs={12} sm={6}>
                       <TextField
                         label="Original Amount"
-                        value={`₹${selectedApproval?.amount?.toLocaleString()}`}
+                        value={formatCurrency(selectedApproval?.amount)}
                         fullWidth
                         disabled
                         sx={{ mb: 2 }}
@@ -1149,7 +1151,7 @@ const Approval = () => {
                         placeholder={`Enter ${isFinance ? 'payment' : 'new'} amount`}
                         fullWidth
                         helperText={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount ? 
-                          `Difference: ₹${(parseFloat(modifiedAmount) - selectedApproval?.amount).toLocaleString()}` : 
+                          `Difference: ${formatCurrency(parseFloat(modifiedAmount) - selectedApproval?.amount)}` : 
                           "Leave empty to keep original amount"
                         }
                         sx={{ mb: 2 }}
@@ -1221,8 +1223,8 @@ const Approval = () => {
                                 Amount Modification:
                               </Typography>
                               <Typography variant="body2">
-                                Original: ₹{comment.originalAmount?.toLocaleString()} → 
-                                Modified: ₹{comment.modifiedAmount?.toLocaleString()}
+                                Original: {formatCurrency(comment.originalAmount)} → 
+                                Modified: {formatCurrency(comment.modifiedAmount)}
                               </Typography>
                               {comment.amountChangeReason && (
                                 <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>

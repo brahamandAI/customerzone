@@ -18,11 +18,13 @@ import {
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import axios from 'axios';
 import BatchPaymentSelector from '../components/BatchPaymentSelector';
 
 const BatchPaymentPage = () => {
   const { user } = useAuth();
+  const { formatCurrency } = useUserPreferences();
   const navigate = useNavigate();
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -213,7 +215,7 @@ const BatchPaymentPage = () => {
                       </Typography>
                     </Box>
                     <Typography variant="h6" color="primary">
-                      ₹{batch.totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                      {formatCurrency(batch.totalAmount)}
                     </Typography>
                   </Box>
                 </Paper>

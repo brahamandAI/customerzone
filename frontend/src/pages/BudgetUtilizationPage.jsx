@@ -48,6 +48,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 import { expenseAPI, dashboardAPI } from '../services/api';
 import { createCSVExportHandler } from '../utils/exportUtils';
 import {
@@ -72,6 +73,7 @@ const BudgetUtilizationPage = () => {
   const { user } = useAuth();
   const { darkMode } = useTheme();
   const { t } = useLanguage();
+  const { formatCurrency, formatDate } = useUserPreferences();
   
   const [budgetData, setBudgetData] = useState(null);
   const [expenses, setExpenses] = useState([]);
@@ -414,7 +416,7 @@ const BudgetUtilizationPage = () => {
                       <AccountBalance />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.totalBudget.toLocaleString()}
+                      {formatCurrency(stats.totalBudget)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -438,7 +440,7 @@ const BudgetUtilizationPage = () => {
                       <AttachMoney />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.usedBudget.toLocaleString()}
+                      {formatCurrency(stats.usedBudget)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -462,7 +464,7 @@ const BudgetUtilizationPage = () => {
                       <TrendingDown />
                     </Avatar>
                     <Typography variant="h6" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                      ₹{stats.remainingBudget.toLocaleString()}
+                      {formatCurrency(stats.remainingBudget)}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
@@ -652,7 +654,7 @@ const BudgetUtilizationPage = () => {
                         </Typography>
                       </Box>
                       <Typography variant="h5" fontWeight={700} color={COLORS[index % COLORS.length]}>
-                        ₹{category.amount.toLocaleString()}
+                        {formatCurrency(category.amount)}
                       </Typography>
                       <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'} sx={{ mb: 1 }}>
                         {category.percentage.toFixed(1)}% of spending
@@ -748,7 +750,7 @@ const BudgetUtilizationPage = () => {
                         Daily Budget
                       </Typography>
                       <Typography variant="h4" fontWeight={700} color="#2196f3">
-                        ₹{(stats.remainingBudget / 30).toFixed(0)}
+                        {formatCurrency(stats.remainingBudget / 30)}
                       </Typography>
                       <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
                         Available per day
@@ -767,7 +769,7 @@ const BudgetUtilizationPage = () => {
                         Savings Potential
                       </Typography>
                       <Typography variant="h4" fontWeight={700} color="#4caf50">
-                        ₹{stats.remainingBudget.toLocaleString()}
+                        {formatCurrency(stats.remainingBudget)}
                       </Typography>
                       <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>
                         Remaining budget

@@ -25,8 +25,10 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import BatchPaymentOTPModal from './BatchPaymentOTPModal';
+import { useUserPreferences } from '../context/UserPreferencesContext';
 
 const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
+  const { formatCurrency } = useUserPreferences();
   const [selectedExpenses, setSelectedExpenses] = useState(new Set());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -176,7 +178,7 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
               variant="outlined"
             />
             <Chip 
-              label={`Total: ₹${selectedTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`}
+              label={`Total: ${formatCurrency(selectedTotal)}`}
               color="success"
               variant="outlined"
             />
@@ -254,7 +256,7 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
                 </TableCell>
                 <TableCell align="right">
                   <Typography variant="body2" fontWeight="bold" color="primary">
-                    ₹{expense.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                    {formatCurrency(expense.amount)}
                   </Typography>
                 </TableCell>
                 <TableCell>

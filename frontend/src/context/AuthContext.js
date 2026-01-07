@@ -99,6 +99,29 @@ export const AuthProvider = ({ children }) => {
     console.log('🔍 DEBUG: User updated in context and localStorage');
   };
 
+  // Refresh user data from backend (useful after settings changes)
+  const refreshUser = async () => {
+    try {
+      const response = await authAPI.getProfile();
+      if (response.data.success) {
+        const userData = response.data.user;
+        
+        // Preserve profile picture if backend doesn't have one
+        if (user?.profilePicture && !userData.profilePicture) {
+          userData.profilePicture = user.profilePicture;
+        }
+        
+        console.log('🔄 User data refreshed:', userData);
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+        return userData;
+      }
+    } catch (error) {
+      console.error('Failed to refresh user data:', error);
+    }
+    return null;
+  };
+
   // Refresh token periodically
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -175,6 +198,7 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     updateUser,
+    refreshUser,
     getUserRole,
     hasPermission,
     canApproveLevel,
