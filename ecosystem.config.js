@@ -27,11 +27,13 @@ module.exports = {
       // ---- ENV ----
       env: {
         NODE_ENV: 'production',
-        PORT: 5001
+        PORT: 5001,
+        FRONTEND_URL: 'https://customerzone.in,https://www.customerzone.in'
       },
       env_production: {
         NODE_ENV: 'production',
-        PORT: 5001
+        PORT: 5001,
+        FRONTEND_URL: 'https://customerzone.in,https://www.customerzone.in'
       },
       
       // ---- LOGGING (LOCAL, ROTATABLE) ----

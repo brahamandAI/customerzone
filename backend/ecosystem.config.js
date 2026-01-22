@@ -7,7 +7,7 @@ module.exports = {
       cwd: '/home/ubuntu/htdocs/customerzone/backend',
       
       // ---- START USING PNPM (IMPORTANT) ----
-      script: '/usr/local/bin/pnpm',
+      script: '/home/ubuntu/.local/share/pnpm/pnpm',
       args: 'start',
       interpreter: 'sh',
       
@@ -54,7 +54,7 @@ module.exports = {
       cwd: '/home/ubuntu/htdocs/customerzone/frontend',
       
       // ---- START USING PNPM (IMPORTANT) ----
-      script: '/usr/local/bin/pnpm',
+      script: '/home/ubuntu/.local/share/pnpm/pnpm',
       args: 'serve',
       interpreter: 'sh',
       
