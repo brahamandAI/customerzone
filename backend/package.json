@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
+    "dev": "PORT=5001 nodemon server.js",
     "build": "node --check server.js && echo 'Backend build validation passed'",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -61,6 +61,7 @@
     "razorpay": "^2.8.6",
     "sharp": "^0.32.5",
     "socket.io": "^4.7.2",
+    "uuid": "^13.0.0",
     "winston": "^3.10.0",
     "xss-clean": "^0.1.4"
   },
