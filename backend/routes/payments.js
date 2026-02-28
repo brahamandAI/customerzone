@@ -5,7 +5,117 @@ const razorpayService = require('../services/razorpay.service');
 const Expense = require('../models/Expense');
 const User = require('../models/User');
 
-// @desc    Create payment order
+// @desc    Verify UTR payment (manual bank transfer - Razorpay bypassed)
+// @route   POST /api/payments/verify-utr
+// @access  Private (Finance/L3 only)
+router.post('/verify-utr', protect, authorize('l3_approver', 'finance'), async (req, res) => {
+  try {
+    const { expenseId, utrNumber } = req.body;
+
+    if (!expenseId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Expense ID is required'
+      });
+    }
+
+    if (!utrNumber || String(utrNumber).trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'UTR number is required'
+      });
+    }
+
+    const expense = await Expense.findById(expenseId)
+      .populate('submittedBy', 'name email')
+      .populate('site', 'name');
+
+    if (!expense) {
+      return res.status(404).json({
+        success: false,
+        message: 'Expense not found'
+      });
+    }
+
+    // Check expense is approved and ready for payment
+    if (!['approved', 'approved_l3', 'approved_finance'].includes(expense.status)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Expense is not approved for payment'
+      });
+    }
+
+    // Update expense with payment information
+    expense.status = 'payment_processed';
+    expense.paymentAmount = expense.amount;
+    expense.paymentDate = new Date();
+    expense.paymentProcessedBy = req.user.id;
+    expense.paymentDetails = {
+      utrNumber: String(utrNumber).trim(),
+      paymentMethod: 'manual_bank_transfer',
+      processedAt: new Date()
+    };
+
+    await expense.save();
+
+    // Add to approval history
+    const ApprovalHistory = require('../models/ApprovalHistory');
+    await ApprovalHistory.create({
+      expense: expenseId,
+      approver: req.user.id,
+      action: 'payment_processed',
+      level: 3,
+      comments: `Payment processed via bank transfer. UTR: ${utrNumber}`,
+      paymentAmount: expense.paymentAmount,
+      paymentDate: expense.paymentDate
+    });
+
+    // Update site statistics
+    const Site = require('../models/Site');
+    const site = await Site.findById(expense.site);
+    if (site) {
+      await site.updateStatistics(expense.paymentAmount, true);
+    }
+
+    // Emit socket event for real-time updates
+    const io = req.app.get('io');
+    const socketData = {
+      expenseId: expense._id,
+      expenseNumber: expense.expenseNumber,
+      status: 'payment_processed',
+      paymentAmount: expense.paymentAmount,
+      paymentDate: expense.paymentDate,
+      processedBy: req.user.name,
+      timestamp: new Date()
+    };
+
+    io.to('role-l3_approver').emit('expense_payment_processed', socketData);
+    io.to(`user-${expense.submittedBy._id}`).emit('expense_payment_processed', socketData);
+    io.emit('dashboard-update', socketData);
+
+    res.json({
+      success: true,
+      message: 'Payment is done',
+      payment: {
+        id: utrNumber,
+        amount: expense.paymentAmount,
+        status: 'payment_processed',
+        method: 'manual_bank_transfer',
+        utrNumber: utrNumber,
+        processedAt: expense.paymentDate
+      }
+    });
+
+  } catch (error) {
+    console.error('Error verifying UTR payment:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to process payment'
+    });
+  }
+});
+
+// @desc    Create payment order (RAZORPAY - COMMENTED OUT / BYPASSED)
 // @route   POST /api/payments/create-order
 // @access  Private
 router.post('/create-order', protect, async (req, res) => {

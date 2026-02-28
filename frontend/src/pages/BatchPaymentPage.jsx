@@ -147,7 +147,7 @@ const BatchPaymentPage = () => {
           Batch Payment Processing
         </Typography>
         <Typography variant="body1" sx={{ color: 'white', fontSize: '1.1rem', opacity: 0.95 }}>
-          Process multiple approved expenses with a single OTP for faster month-end processing
+          Process multiple approved expenses with UTR number for faster month-end processing
         </Typography>
       </Paper>
 
@@ -209,6 +209,9 @@ const BatchPaymentPage = () => {
                     <Box>
                       <Typography variant="subtitle1" fontWeight="bold">
                         {batch.expenseCount} Expenses Processed
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        UTR: {batch.utrNumber || 'N/A'}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         {new Date(batch.createdAt).toLocaleString('en-IN')}

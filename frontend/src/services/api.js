@@ -139,6 +139,7 @@ export const siteAPI = {
 export const paymentAPI = {
   createOrder: (data) => api.post('/payments/create-order', data),
   verifyPayment: (data) => api.post('/payments/verify', data),
+  verifyUtrPayment: (data) => api.post('/payments/verify-utr', data), // UTR-based manual payment (Razorpay bypassed)
   getHistory: (params) => api.get('/payments/history', { params }),
   refundPayment: (data) => api.post('/payments/refund', data),
 };

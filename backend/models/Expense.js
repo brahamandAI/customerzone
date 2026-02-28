@@ -290,7 +290,10 @@ const expenseSchema = new mongoose.Schema({
     wallet: String,
     vpa: String,
     email: String,
-    contact: String
+    contact: String,
+    utrNumber: String,        // For manual bank transfer (Razorpay bypassed)
+    processedAt: Date,
+    batchPayment: Boolean     // True if processed via batch payment
   },
   refundDetails: {
     refundId: String,

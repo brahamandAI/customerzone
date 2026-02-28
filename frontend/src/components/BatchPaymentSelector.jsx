@@ -14,8 +14,7 @@ import {
   Chip,
   Alert,
   IconButton,
-  Tooltip,
-  CircularProgress
+  Tooltip
 } from '@mui/material';
 import {
   Payment as PaymentIcon,
@@ -23,17 +22,14 @@ import {
   Deselect as DeselectIcon,
   Info as InfoIcon
 } from '@mui/icons-material';
-import axios from 'axios';
-import BatchPaymentOTPModal from './BatchPaymentOTPModal';
+import BatchPaymentUtrModal from './BatchPaymentUtrModal';
 import { useUserPreferences } from '../context/UserPreferencesContext';
 
 const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
   const { formatCurrency } = useUserPreferences();
   const [selectedExpenses, setSelectedExpenses] = useState(new Set());
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [otpModalOpen, setOtpModalOpen] = useState(false);
-  const [otpData, setOtpData] = useState(null);
+  const [utrModalOpen, setUtrModalOpen] = useState(false);
 
   // Filter only eligible expenses (approved and not yet paid)
   const eligibleExpenses = expenses.filter(exp => 
@@ -67,49 +63,17 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
       .reduce((sum, exp) => sum + exp.amount, 0);
   };
 
-  const handleGenerateOTP = async () => {
+  const handleProcessPayment = () => {
     if (selectedExpenses.size === 0) {
       setError('Please select at least one expense');
       return;
     }
-
-    setLoading(true);
     setError('');
-
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/batch-payments/generate-otp`,
-        {
-          expenseIds: Array.from(selectedExpenses)
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      if (response.data.success) {
-        setOtpData(response.data.data);
-        setOtpModalOpen(true);
-      } else {
-        setError(response.data.message || 'Failed to generate OTP');
-      }
-    } catch (err) {
-      console.error('OTP generation error:', err);
-      setError(err.response?.data?.message || 'Failed to generate OTP. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    setUtrModalOpen(true);
   };
 
   const handlePaymentSuccess = (results) => {
-    // Clear selection
     setSelectedExpenses(new Set());
-    setOtpData(null);
-    
-    // Notify parent component
     if (onPaymentComplete) {
       onPaymentComplete(results);
     }
@@ -135,9 +99,9 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
             <Typography variant="h6" gutterBottom>
               Batch Payment Processing
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Select multiple expenses to process payment with a single OTP
-            </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Select multiple expenses to process payment with UTR number
+          </Typography>
           </Box>
           
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
@@ -154,9 +118,9 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
             
             <Button
               variant="contained"
-              startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <PaymentIcon />}
-              onClick={handleGenerateOTP}
-              disabled={loading || selectedCount === 0}
+              startIcon={<PaymentIcon />}
+              onClick={handleProcessPayment}
+              disabled={selectedCount === 0}
               sx={{
                 background: 'linear-gradient(135deg, #004D4D 0%, #006666 100%)',
                 '&:hover': {
@@ -164,7 +128,7 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
                 }
               }}
             >
-              {loading ? 'Generating OTP...' : `Process ${selectedCount} Expense${selectedCount !== 1 ? 's' : ''}`}
+              Process {selectedCount} Expense{selectedCount !== 1 ? 's' : ''}
             </Button>
           </Box>
         </Box>
@@ -288,9 +252,9 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
             <Typography variant="body2" component="div">
               <ol style={{ margin: 0, paddingLeft: 20 }}>
                 <li>Select the expenses you want to process</li>
-                <li>Click "Process Expenses" to generate an OTP</li>
-                <li>You'll receive a 6-digit OTP via email and SMS (valid for 5 minutes)</li>
-                <li>Enter the OTP to process all selected expenses at once</li>
+                <li>Click "Process Expenses" to open payment modal</li>
+                <li>Enter the UTR number from your bank transfer</li>
+                <li>Click Confirm Payment to process all selected expenses</li>
                 <li>All submitters will be notified automatically</li>
               </ol>
             </Typography>
@@ -298,12 +262,15 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
         </Box>
       </Paper>
 
-      {/* OTP Modal */}
-      <BatchPaymentOTPModal
-        open={otpModalOpen}
-        onClose={() => setOtpModalOpen(false)}
-        otpData={otpData}
-        selectedExpenses={Array.from(selectedExpenses)}
+      {/* UTR Modal */}
+      <BatchPaymentUtrModal
+        open={utrModalOpen}
+        onClose={() => setUtrModalOpen(false)}
+        batchData={{
+          expenseIds: Array.from(selectedExpenses),
+          expenseCount: selectedCount,
+          totalAmount: selectedTotal
+        }}
         onSuccess={handlePaymentSuccess}
       />
     </Box>

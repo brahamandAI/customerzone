@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { protect, authorize } = require('../middleware/auth');
 const BatchOTP = require('../models/BatchOTP');
+const BatchPayment = require('../models/BatchPayment');
 const Expense = require('../models/Expense');
 const User = require('../models/User');
 const Site = require('../models/Site');
@@ -9,7 +10,201 @@ const ApprovalHistory = require('../models/ApprovalHistory');
 const emailService = require('../services/emailService');
 const smsService = require('../services/smsService');
 
-// @desc    Generate OTP for batch payment processing
+// @desc    Process batch payment with UTR (no OTP)
+// @route   POST /api/batch-payments/process-utr
+// @access  Private (Finance & L3 Approver only)
+router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async (req, res) => {
+  try {
+    const { expenseIds, utrNumber, paymentRemarks } = req.body;
+
+    if (!expenseIds || !Array.isArray(expenseIds) || expenseIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide at least one expense ID'
+      });
+    }
+
+    if (!utrNumber || String(utrNumber).trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'UTR number is required'
+      });
+    }
+
+    const expenses = await Expense.find({
+      _id: { $in: expenseIds },
+      status: { $in: ['approved', 'approved_l3', 'approved_finance'] }
+    }).populate('submittedBy', 'name email phone')
+      .populate('site', 'name code');
+
+    if (expenses.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No eligible expenses found for payment processing'
+      });
+    }
+
+    const processedExpenses = [];
+    const failedExpenses = [];
+    const notifications = [];
+    const utr = String(utrNumber).trim();
+
+    for (const expense of expenses) {
+      try {
+        if (!['approved', 'approved_l3', 'approved_finance'].includes(expense.status)) {
+          failedExpenses.push({
+            expenseId: expense._id,
+            expenseNumber: expense.expenseNumber,
+            reason: `Invalid status: ${expense.status}`
+          });
+          continue;
+        }
+
+        expense.status = 'payment_processed';
+        expense.paymentAmount = expense.amount;
+        expense.paymentDate = new Date();
+        expense.paymentProcessedBy = req.user._id;
+        expense.paymentDetails = {
+          utrNumber: utr,
+          paymentMethod: 'manual_bank_transfer',
+          processedAt: new Date(),
+          batchPayment: true
+        };
+
+        if (paymentRemarks) {
+          expense.comments.push({
+            user: req.user._id,
+            text: `Batch Payment (UTR: ${utr}): ${paymentRemarks}`,
+            isInternal: true,
+            date: new Date()
+          });
+        }
+
+        await expense.save();
+
+        await ApprovalHistory.create({
+          expense: expense._id,
+          approver: req.user._id,
+          action: 'payment_processed',
+          level: 4,
+          comments: `Batch payment via bank transfer. UTR: ${utr}`,
+          paymentAmount: expense.amount,
+          paymentDate: new Date(),
+          ipAddress: req.ip,
+          userAgent: req.get('user-agent')
+        });
+
+        if (expense.site) {
+          const site = await Site.findById(expense.site._id);
+          if (site) {
+            await site.updateStatistics(expense.amount, true);
+          }
+        }
+
+        processedExpenses.push({
+          expenseId: expense._id,
+          expenseNumber: expense.expenseNumber,
+          amount: expense.amount,
+          submitter: expense.submittedBy.name
+        });
+
+        notifications.push({
+          userId: expense.submittedBy._id,
+          email: expense.submittedBy.email,
+          phone: expense.submittedBy.phone,
+          expenseNumber: expense.expenseNumber,
+          amount: expense.amount,
+          siteName: expense.site?.name
+        });
+      } catch (error) {
+        console.error(`❌ Failed to process expense ${expense.expenseNumber}:`, error);
+        failedExpenses.push({
+          expenseId: expense._id,
+          expenseNumber: expense.expenseNumber,
+          reason: error.message
+        });
+      }
+    }
+
+    // Save batch payment record for history
+    const totalAmount = processedExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+    await BatchPayment.create({
+      utrNumber: utr,
+      user: req.user._id,
+      expenseIds: processedExpenses.map(e => e.expenseId),
+      totalAmount,
+      expenseCount: processedExpenses.length,
+      paymentRemarks: paymentRemarks?.trim() || undefined
+    });
+
+    // Send notifications
+    setImmediate(async () => {
+      for (const notification of notifications) {
+        try {
+          await emailService.sendPaymentProcessedNotification({
+            email: notification.email,
+            expenseNumber: notification.expenseNumber,
+            amount: notification.amount,
+            siteName: notification.siteName
+          });
+          if (notification.phone) {
+            await smsService.sendPaymentProcessedNotification({
+              phone: notification.phone,
+              expenseNumber: notification.expenseNumber,
+              amount: notification.amount
+            });
+          }
+        } catch (err) {
+          console.error('⚠️ Failed to send notification:', err);
+        }
+      }
+    });
+
+    // Socket events
+    const io = req.app.get('io');
+    for (const notification of notifications) {
+      io.to(`user-${notification.userId}`).emit('expense_payment_processed', {
+        expenseNumber: notification.expenseNumber,
+        amount: notification.amount,
+        paymentDate: new Date(),
+        processedBy: req.user.name,
+        batchProcessing: true
+      });
+    }
+    io.to('role-finance').to('role-l3_approver').emit('batch-payment-completed', {
+      processedCount: processedExpenses.length,
+      totalAmount,
+      failedCount: failedExpenses.length,
+      processedBy: req.user.name,
+      utrNumber: utr,
+      timestamp: new Date()
+    });
+    io.emit('dashboard-update', { type: 'batch_payment', count: processedExpenses.length, timestamp: new Date() });
+
+    res.json({
+      success: true,
+      message: 'Payment is done',
+      data: {
+        processed: processedExpenses,
+        failed: failedExpenses,
+        totalProcessed: processedExpenses.length,
+        totalFailed: failedExpenses.length,
+        totalAmount,
+        utrNumber: utr
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error processing batch UTR payment:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to process batch payment',
+      error: error.message
+    });
+  }
+});
+
+// @desc    Generate OTP for batch payment processing (DEPRECATED - use process-utr instead)
 // @route   POST /api/batch-payments/generate-otp
 // @access  Private (Finance & L3 Approver only)
 router.post('/generate-otp', protect, authorize('finance', 'l3_approver'), async (req, res) => {
@@ -381,31 +576,32 @@ router.post('/verify-and-process', protect, authorize('finance', 'l3_approver'),
   }
 });
 
-// @desc    Get batch payment history
+// @desc    Get batch payment history (UTR-based)
 // @route   GET /api/batch-payments/history
 // @access  Private (Finance & L3 Approver only)
 router.get('/history', protect, authorize('finance', 'l3_approver'), async (req, res) => {
   try {
     const { limit = 50, page = 1 } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    const batchOTPs = await BatchOTP.find({
-      user: req.user._id,
-      isUsed: true
-    })
+    const batchPayments = await BatchPayment.find({ user: req.user._id })
       .sort({ createdAt: -1 })
       .limit(parseInt(limit))
-      .skip((parseInt(page) - 1) * parseInt(limit))
-      .select('-otp'); // Don't expose OTP values
+      .skip(skip);
 
-    const total = await BatchOTP.countDocuments({
-      user: req.user._id,
-      isUsed: true
-    });
+    const total = await BatchPayment.countDocuments({ user: req.user._id });
 
     res.json({
       success: true,
       data: {
-        batchPayments: batchOTPs,
+        batchPayments: batchPayments.map(bp => ({
+          _id: bp._id,
+          utrNumber: bp.utrNumber,
+          expenseCount: bp.expenseCount,
+          totalAmount: bp.totalAmount,
+          paymentRemarks: bp.paymentRemarks,
+          createdAt: bp.createdAt
+        })),
         pagination: {
           total,
           page: parseInt(page),
