@@ -1,11 +1,10 @@
 #!/bin/bash
 
 cd frontend
-pnpm install
-pnpm build
+npm install
+npm run build
 cd ../backend
-pnpm install
-
+npm install
 
 cd ../
 

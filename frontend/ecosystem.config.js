@@ -2,16 +2,30 @@ module.exports = {
   apps: [
     {
       name: 'expense-frontend',
-      script: 'npx',
-      args: 'serve -s build -l 3003',
+      cwd: '/home/robustrix/htdocs/customerzone/frontend',
+      script: 'node_modules/.bin/serve',
+      args: '-s build -l 3003',
+      interpreter: 'node',
+      instances: 1,
+      exec_mode: 'fork',
+      autorestart: true,
+      max_restarts: 5,
+      min_uptime: '30s',
+      restart_delay: 5000,
+      exp_backoff_restart_delay: 200,
+      max_memory_restart: '512M',
       env: {
         NODE_ENV: 'production',
-        PORT: 3003
+        PORT: 3003,
       },
-      instances: 1,
-      autorestart: true,
+      error_file: './logs/err.log',
+      out_file: './logs/out.log',
+      log_file: './logs/combined.log',
+      time: true,
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
+      kill_timeout: 5000,
+      listen_timeout: 30000,
       watch: false,
-      max_memory_restart: '1G'
-    }
-  ]
-}; 
+    },
+  ],
+};

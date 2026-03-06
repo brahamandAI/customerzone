@@ -2,97 +2,60 @@ module.exports = {
   apps: [
     {
       name: 'expense-backend',
-      
-      // ---- WORKING DIRECTORY ----
-      cwd: '/home/ubuntu/htdocs/customerzone/backend',
-      
-      // ---- START USING PNPM (IMPORTANT) ----
-      script: '/home/ubuntu/.local/share/pnpm/pnpm',
-      args: 'start',
-      interpreter: 'sh',
-      
-      // ---- ABSOLUTE SAFETY ----
-      instances: 1,          // NEVER > 1
-      exec_mode: 'fork',     // NEVER cluster
-      
-      // ---- RESTART CONTROL ----
+      cwd: '/home/robustrix/htdocs/customerzone/backend',
+      script: 'server.js',
+      interpreter: 'node',
+      instances: 1,
+      exec_mode: 'fork',
       autorestart: true,
       max_restarts: 5,
-      restart_delay: 5000,       // 5 seconds delay
-      exp_backoff_restart_delay: 200, // exponential backoff
-      
-      // ---- HARD MEMORY LIMIT ----
+      min_uptime: '30s',
+      restart_delay: 5000,
+      exp_backoff_restart_delay: 200,
       max_memory_restart: '1G',
-      
-      // ---- ENV ----
       env: {
         NODE_ENV: 'production',
-        PORT: 5001
+        PORT: 5001,
       },
       env_production: {
         NODE_ENV: 'production',
-        PORT: 5001
+        PORT: 5001,
       },
-      
-      // ---- LOGGING (LOCAL, ROTATABLE) ----
-      error_file: '/home/ubuntu/htdocs/customerzone/backend/logs/backend-error.log',
-      out_file: '/home/ubuntu/htdocs/customerzone/backend/logs/backend-out.log',
-      log_file: '/home/ubuntu/htdocs/customerzone/backend/logs/backend-combined.log',
+      error_file: './logs/backend-err.log',
+      out_file: './logs/backend-out.log',
+      log_file: './logs/backend-combined.log',
       time: true,
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
-      
-      // ---- SHUTDOWN SAFETY ----
       kill_timeout: 5000,
       listen_timeout: 30000,
-      wait_ready: false,
-      watch: false
+      watch: false,
     },
     {
       name: 'expense-frontend',
-      
-      // ---- WORKING DIRECTORY ----
-      cwd: '/home/ubuntu/htdocs/customerzone/frontend',
-      
-      // ---- START USING PNPM (IMPORTANT) ----
-      script: '/home/ubuntu/.local/share/pnpm/pnpm',
-      args: 'serve',
-      interpreter: 'sh',
-      
-      // ---- ABSOLUTE SAFETY ----
-      instances: 1,          // NEVER > 1
-      exec_mode: 'fork',     // NEVER cluster
-      
-      // ---- RESTART CONTROL ----
+      cwd: '/home/robustrix/htdocs/customerzone/frontend',
+      script: 'node_modules/.bin/serve',
+      args: '-s build -l 3003',
+      interpreter: 'node',
+      instances: 1,
+      exec_mode: 'fork',
       autorestart: true,
       max_restarts: 5,
-      restart_delay: 5000,       // 5 seconds delay
-      exp_backoff_restart_delay: 200, // exponential backoff
-      
-      // ---- HARD MEMORY LIMIT ----
-      max_memory_restart: '1G',
-      
-      // ---- ENV ----
+      min_uptime: '30s',
+      restart_delay: 5000,
+      exp_backoff_restart_delay: 200,
+      max_memory_restart: '512M',
       env: {
         NODE_ENV: 'production',
-        PORT: 3003
+        PORT: 3003,
       },
-      env_production: {
-        NODE_ENV: 'production',
-        PORT: 3003
-      },
-      
-      // ---- LOGGING (LOCAL, ROTATABLE) ----
-      error_file: '/home/ubuntu/htdocs/customerzone/backend/logs/frontend-error.log',
-      out_file: '/home/ubuntu/htdocs/customerzone/backend/logs/frontend-out.log',
-      log_file: '/home/ubuntu/htdocs/customerzone/backend/logs/frontend-combined.log',
+      error_file: './logs/frontend-err.log',
+      out_file: './logs/frontend-out.log',
+      log_file: './logs/frontend-combined.log',
       time: true,
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
-      
-      // ---- SHUTDOWN SAFETY ----
       kill_timeout: 5000,
       listen_timeout: 30000,
-      wait_ready: false,
-      watch: false
-    }
-  ]
-}; 
+      watch: false,
+    },
+  ],
+};
