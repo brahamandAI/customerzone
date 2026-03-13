@@ -2,7 +2,7 @@
 // Uses environment variables from .env.local (development) or .env (production)
 
 const getApiBaseUrl = () => {
-  return process.env.REACT_APP_API_URL || 'http://www.customerzone.in/api';
+  return process.env.REACT_APP_API_URL || 'https://customerzone.in/api';
 };
 
 const getBackendUrl = () => {
