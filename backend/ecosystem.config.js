@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'expense-backend',
-      cwd: '/home/robustrix/htdocs/customerzone/backend',
+      cwd: '/home/ubuntu/htdocs/customerzone/backend',
       script: 'server.js',
       interpreter: 'node',
       instances: 1,
@@ -32,7 +32,7 @@ module.exports = {
     },
     {
       name: 'expense-frontend',
-      cwd: '/home/robustrix/htdocs/customerzone/frontend',
+      cwd: '/home/ubuntu/htdocs/customerzone/frontend',
       script: 'node_modules/.bin/serve',
       args: '-s build -l 3003',
       interpreter: 'node',

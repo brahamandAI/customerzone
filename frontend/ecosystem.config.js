@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'expense-frontend',
-      cwd: '/home/robustrix/htdocs/customerzone/frontend',
+      cwd: '/home/ubuntu/htdocs/customerzone/frontend',
       script: 'node_modules/.bin/serve',
       args: '-s build -l 3003',
       interpreter: 'node',

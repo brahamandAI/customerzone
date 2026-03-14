@@ -1,8 +1,12 @@
+const path = require('path');
+const backendDir = '/home/ubuntu/htdocs/customerzone/backend';
+const frontendDir = '/home/ubuntu/htdocs/customerzone/frontend';
+
 module.exports = {
   apps: [
     {
       name: 'expense-backend',
-      cwd: '/home/robustrix/htdocs/customerzone/backend',
+      cwd: backendDir,
       script: 'server.js',
       interpreter: 'node',
       instances: 1,
@@ -17,9 +21,9 @@ module.exports = {
         NODE_ENV: 'production',
         PORT: 5001,
       },
-      error_file: './logs/backend-err.log',
-      out_file: './logs/backend-out.log',
-      log_file: './logs/backend-combined.log',
+      // Use PM2 default logs (~/.pm2/logs/) so output is always captured even if backend/logs/ missing
+      error_file: path.join(process.env.HOME || '/home/ubuntu', '.pm2', 'logs', 'expense-backend-error.log'),
+      out_file: path.join(process.env.HOME || '/home/ubuntu', '.pm2', 'logs', 'expense-backend-out.log'),
       time: true,
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
       kill_timeout: 5000,
@@ -28,10 +32,10 @@ module.exports = {
     },
     {
       name: 'expense-frontend',
-      cwd: '/home/robustrix/htdocs/customerzone/frontend',
-      script: 'node_modules/.bin/serve',
-      args: '-s build -l 3003',
-      interpreter: 'node',
+      cwd: frontendDir,
+      script: 'npx',
+      args: 'serve -s build -l 3003',
+      interpreter: 'none',
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,
@@ -44,9 +48,8 @@ module.exports = {
         NODE_ENV: 'production',
         PORT: 3003,
       },
-      error_file: './logs/frontend-err.log',
-      out_file: './logs/frontend-out.log',
-      log_file: './logs/frontend-combined.log',
+      error_file: path.join(process.env.HOME || '/home/ubuntu', '.pm2', 'logs', 'expense-frontend-error.log'),
+      out_file: path.join(process.env.HOME || '/home/ubuntu', '.pm2', 'logs', 'expense-frontend-out.log'),
       time: true,
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
       kill_timeout: 5000,

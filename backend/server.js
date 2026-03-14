@@ -6,7 +6,6 @@ const morgan = require('morgan');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 // const fileUpload = require('express-fileupload'); // COMMENTED OUT - CONFLICTS WITH MULTER
@@ -29,6 +28,12 @@ const envFile = envCandidates.find((candidate) =>
 ) || '.env';
 
 require('dotenv').config({ path: path.join(__dirname, envFile) });
+
+// Ensure logs directory exists before Winston (avoids crash when PM2/cwd has no logs/)
+const logsDir = path.join(__dirname, 'logs');
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
 
 const app = express();
 const server = createServer(app);
@@ -91,7 +96,6 @@ app.use(helmet({
 
 app.use(compression());
 app.use(mongoSanitize());
-app.use(xss());
 app.use(hpp());
 app.use(cookieParser());
 
