@@ -90,6 +90,7 @@ export const expenseAPI = {
   },
   getNextExpenseNumber: () => api.get('/expenses/next-number'),
   getPendingApprovals: () => api.get('/expenses/pending'),
+  getRejectedByMe: () => api.get('/expenses/rejected-by-me'),
   approveExpense: (id, data) => api.put(`/expenses/${id}/approve`, data),
   rejectExpense: (id, data) => api.put(`/expenses/${id}/approve`, data),
   getAll: () => api.get('/expenses/all'),
@@ -99,7 +100,8 @@ export const expenseAPI = {
   // Attachments methods
   getAttachments: (expenseId) => api.get(`/expenses/${expenseId}/attachments`),
   downloadAttachment: (expenseId, attachmentId) => api.get(`/expenses/${expenseId}/attachments/${attachmentId}/download`, {
-    responseType: 'blob'
+    responseType: 'blob',
+    timeout: 120000 // 2 min for large files (up to 100MB)
   }),
 };
 

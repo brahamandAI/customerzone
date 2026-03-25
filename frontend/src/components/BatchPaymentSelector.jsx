@@ -20,10 +20,12 @@ import {
   Payment as PaymentIcon,
   SelectAll as SelectAllIcon,
   Deselect as DeselectIcon,
-  Info as InfoIcon
+  Info as InfoIcon,
+  Download as DownloadIcon
 } from '@mui/icons-material';
 import BatchPaymentUtrModal from './BatchPaymentUtrModal';
 import { useUserPreferences } from '../context/UserPreferencesContext';
+import { exportExpensesToExcel } from '../utils/exportUtils';
 
 const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
   const { formatCurrency } = useUserPreferences();
@@ -72,6 +74,18 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
     setUtrModalOpen(true);
   };
 
+  const handleExportToExcel = () => {
+    if (selectedExpenses.size === 0) {
+      setError('Please select at least one expense to export');
+      return;
+    }
+    const toExport = eligibleExpenses.filter(exp => selectedExpenses.has(exp._id));
+    const ok = exportExpensesToExcel(toExport, 'batch-payment-export');
+    if (!ok) {
+      setError('Failed to export to Excel. Please try again.');
+    }
+  };
+
   const handlePaymentSuccess = (results) => {
     setSelectedExpenses(new Set());
     if (onPaymentComplete) {
@@ -104,7 +118,7 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
           </Typography>
           </Box>
           
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
             <Tooltip title={selectedExpenses.size === eligibleExpenses.length ? 'Deselect All' : 'Select All'}>
               <Button
                 variant="outlined"
@@ -115,6 +129,21 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
                 {selectedExpenses.size === eligibleExpenses.length ? 'Deselect All' : 'Select All'}
               </Button>
             </Tooltip>
+
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<DownloadIcon />}
+              onClick={handleExportToExcel}
+              disabled={selectedCount === 0}
+              sx={{
+                borderColor: '#4caf50',
+                color: '#4caf50',
+                '&:hover': { borderColor: '#388e3c', bgcolor: 'rgba(76, 175, 80, 0.08)' }
+              }}
+            >
+              Export to Excel {selectedCount > 0 ? `(${selectedCount})` : ''}
+            </Button>
             
             <Button
               variant="contained"

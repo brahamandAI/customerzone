@@ -15,14 +15,15 @@ const emailService = require('../services/emailService');
 const smsService = require('../services/smsService');
 const policyService = require('../services/policy.service');
 
-// Configure multer for expense file uploads
+// Configure multer - use path relative to backend dir so uploads are always in same location
+const backendUploadDir = path.join(__dirname, '..', 'uploads', 'expense-attachments');
+if (!fs.existsSync(backendUploadDir)) {
+  fs.mkdirSync(backendUploadDir, { recursive: true });
+}
+
 const expenseStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = 'uploads/expense-attachments';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
+    cb(null, backendUploadDir);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -33,16 +34,17 @@ const expenseStorage = multer.diskStorage({
 const uploadExpenseFile = multer({
   storage: expenseStorage,
   limits: {
-    fileSize: (Number(process.env.UPLOAD_MAX_MB || 25)) * 1024 * 1024 // default 25MB; configurable via env
+    fileSize: (Number(process.env.UPLOAD_MAX_MB || 100)) * 1024 * 1024 // default 100MB; configurable via env
   },
   fileFilter: function (req, file, cb) {
-    // Allow common file types
+    // Allow common file types (images, PDFs, Office, text, etc.)
     const allowedTypes = [
-      'image/jpeg', 'image/png', 'image/gif', 'image/webp',
-      'application/pdf', 'application/msword', 
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      'image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/tiff',
+      'application/pdf',
+      'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'text/plain', 'text/csv', 'application/csv',
+      'application/octet-stream' // generic binary for unknown types
     ];
     
     if (allowedTypes.includes(file.mimetype)) {
@@ -564,9 +566,10 @@ router.get('/all', protect, async (req, res) => {
     console.log('🔍 Expenses query for user role:', user.role, 'Query:', query);
 
     const expenses = await Expense.find(query)
-      .select('expenseNumber title amount category expenseDate submittedBy site status policyFlags riskScore')
-      .populate('submittedBy', 'name email department')
+      .select('expenseNumber title amount category expenseDate submittedBy site status policyFlags riskScore approvalHistory')
+      .populate('submittedBy', 'name email department bankDetails')
       .populate('site', 'name code fullAddress budgetUtilization remainingBudget budgetStatus isOperating')
+      .populate('approvalHistory.approver', 'name email role')
       .sort({ createdAt: -1 });
 
     console.log('📊 Found expenses count:', expenses.length);
@@ -614,6 +617,45 @@ router.get('/submitter/:submitterId', async (req, res) => {
   }
 });
 
+// Get expenses rejected by current user (at their level)
+router.get('/rejected-by-me', protect, authorize('l1_approver', 'l2_approver', 'l3_approver', 'finance'), async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const rejectedExpenses = await Expense.find({
+      status: 'rejected',
+      'approvalHistory.approver': userId,
+      'approvalHistory.action': 'rejected',
+      isActive: true,
+      isDeleted: false
+    })
+    .populate('submittedBy', 'name email department')
+    .populate('site', 'name code')
+    .populate('approvalHistory.approver', 'name email role')
+    .sort({ updatedAt: -1 });
+
+    // Filter to only those where current user was the one who rejected
+    const filtered = rejectedExpenses.filter(exp => {
+      const rejectedEntry = exp.approvalHistory?.find(
+        h => h.action === 'rejected' && h.approver?._id?.toString() === userId.toString()
+      );
+      return !!rejectedEntry;
+    });
+
+    res.json({
+      success: true,
+      data: filtered
+    });
+  } catch (error) {
+    console.error('Error fetching rejected expenses:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
 // Get expenses for approval (pending expenses)
 router.get('/pending', protect, authorize('l1_approver', 'l2_approver', 'l3_approver', 'finance'), async (req, res) => {
   try {
@@ -628,20 +670,18 @@ router.get('/pending', protect, authorize('l1_approver', 'l2_approver', 'l3_appr
 
     const pendingExpenseIds = pendingApprovals.map(pa => pa.expense);
     
-    // Role-based filtering
+    // Role-based filtering (include 'returned' - expenses sent back for correction)
     let statusFilter = {};
     if (userRole === 'l1_approver') {
-      // Include newly created flagged expenses which are marked under_review
-      statusFilter = { status: { $in: ['submitted', 'under_review'] } };
+      statusFilter = { status: { $in: ['submitted', 'under_review', 'returned'] } };
     } else if (userRole === 'l2_approver') {
-      statusFilter = { status: 'approved_l1' };
+      statusFilter = { status: { $in: ['approved_l1', 'returned'] } };
     } else if (userRole === 'l3_approver') {
-      statusFilter = { status: 'approved_l2' };
+      statusFilter = { status: { $in: ['approved_l2', 'returned'] } };
     } else if (userRole === 'finance') {
-      statusFilter = { status: 'approved_l3' };
+      statusFilter = { status: { $in: ['approved_l3', 'returned'] } };
     } else {
-      // For other roles, show all pending including under_review (flagged cases)
-      statusFilter = { status: { $in: ['submitted', 'under_review', 'approved_l1', 'approved_l2', 'approved_l3'] } };
+      statusFilter = { status: { $in: ['submitted', 'under_review', 'approved_l1', 'approved_l2', 'approved_l3', 'returned'] } };
     }
     
     const expenses = await Expense.find({
@@ -650,7 +690,7 @@ router.get('/pending', protect, authorize('l1_approver', 'l2_approver', 'l3_appr
       isActive: true,
       isDeleted: false
     })
-    .populate('submittedBy', 'name email department')
+    .populate('submittedBy', 'name email department bankDetails')
     .populate('site', 'name code')
     .populate('pendingApprovers.approver', 'name email role')
     .populate('approvalHistory.approver', 'name email role')
@@ -678,7 +718,7 @@ router.get('/:expenseId', async (req, res) => {
     
     const expense = await Expense.findById(expenseId)
       .select('+policyFlags +riskScore +attachments +approvalHistory +pendingApprovers')
-      .populate('submittedBy', 'name email department')
+      .populate('submittedBy', 'name email department bankDetails')
       .populate('site', 'name code')
       .populate('approvalHistory.approver', 'name email role')
       .populate('pendingApprovers.approver', 'name email role');
@@ -755,11 +795,25 @@ router.get('/:expenseId/attachments/:attachmentId/download', protect, async (req
       });
     }
 
-    // Check if file exists directly using the full path
-    const filePath = attachment.path;
-    
+    // Resolve file path - handle both absolute (new uploads) and relative (legacy) paths
+    let filePath = attachment.path;
+    if (!path.isAbsolute(filePath)) {
+      const normalized = filePath.replace(/^[./\\]+/, '').replace(/\\/g, '/');
+      const candidates = [
+        path.join(process.cwd(), normalized),
+        path.join(__dirname, '..', normalized),
+        path.join(backendUploadDir, path.basename(normalized))
+      ];
+      for (const candidate of candidates) {
+        if (fs.existsSync(candidate)) {
+          filePath = candidate;
+          break;
+        }
+      }
+    }
+
     if (!fs.existsSync(filePath)) {
-      console.error(`❌ File not found: ${filePath}`);
+      console.error(`❌ File not found: ${attachment.path}`);
       return res.status(404).json({
         success: false,
         message: 'File not found on server'
@@ -880,8 +934,11 @@ router.put('/:expenseId/approve', protect, authorize('l1_approver', 'l2_approver
     // Update expense status and other fields
     const levelNum = typeof level === 'string' ? parseInt(level.replace('L', '')) : parseInt(level);
     
+    // For reject: return to previous approver (level 2+) or fully reject (level 1)
+    const rejectStatus = levelNum >= 2 ? 'returned' : 'rejected';
+
     const updateData = {
-      status: action === 'reject' ? 'rejected' : 
+      status: action === 'reject' ? rejectStatus : 
               action === 'payment' ? 'payment_processed' :
               levelNum === 1 ? 'approved_l1' :
               levelNum === 2 ? 'approved_l2' :
@@ -1279,8 +1336,29 @@ router.put('/:expenseId/approve', protect, authorize('l1_approver', 'l2_approver
       // Remove L3 PendingApprover for this expense and approver (payment completes the process)
       await PendingApprover.deleteMany({ expense: expenseId, level: 3, approver: approverId });
     } else if (action === 'reject') {
-      // Remove all PendingApprovers for this expense if rejected
       await PendingApprover.deleteMany({ expense: expenseId });
+
+      // Return to previous approver for correction (L2+ rejections)
+      if (levelNum >= 2) {
+        const prevLevel = levelNum - 1;
+        const prevApproval = (expense.approvalHistory || []).find(
+          h => h.level === prevLevel && (h.action === 'approved' || h.action === 'payment_processed')
+        );
+        const previousApproverId = prevApproval?.approver?._id ?? prevApproval?.approver;
+
+        if (previousApproverId) {
+          await PendingApprover.create({
+            level: prevLevel,
+            approver: previousApproverId,
+            expense: expenseId,
+            status: 'pending'
+          });
+          console.log(`↩️ Expense returned to level ${prevLevel} approver for correction`);
+        } else {
+          // Fallback: fully reject if no previous approver found
+          await Expense.findByIdAndUpdate(expenseId, { status: 'rejected' });
+        }
+      }
     }
 
     const responseData = {

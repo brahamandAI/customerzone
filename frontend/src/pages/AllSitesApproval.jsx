@@ -144,6 +144,7 @@ const AllSitesApproval = () => {
                          expense.status === 'approved_l1' ? 'L2' : 'L1',
             priority: expense.priority || 'normal',
             attachments: expense.attachments?.length || 0,
+            attachmentsArray: expense.attachments || [],
             modifiedAmount: expense.modifiedAmount,
             approvalComments: transformedApprovalHistory
           };
@@ -725,9 +726,9 @@ const AllSitesApproval = () => {
         </DialogTitle>
         <DialogContent>
           {selectedExpenseForAttachments && (
-            <AttachmentViewer 
+            <AttachmentViewer
               expenseId={selectedExpenseForAttachments.id || selectedExpenseForAttachments._id}
-              attachments={selectedExpenseForAttachments.attachments || []}
+              attachments={selectedExpenseForAttachments.attachmentsArray || selectedExpenseForAttachments.attachments || []}
             />
           )}
         </DialogContent>

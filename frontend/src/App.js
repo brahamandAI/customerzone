@@ -42,6 +42,7 @@ import TotalSitesPage from './pages/TotalSitesPage';
 import SystemExpensesPage from './pages/SystemExpensesPage';
 import PaymentProcessedPage from './pages/PaymentProcessedPage';
 import PendingExpensesPage from './pages/PendingExpensesPage';
+import SubmitterRejectedPage from './pages/SubmitterRejectedPage';
 import BatchPaymentPage from './pages/BatchPaymentPage';
 
 // PrivateRoute component to protect routes
@@ -168,7 +169,11 @@ function Layout() {
             <PendingExpensesPage />
           </PrivateRoute>
         } />
-        
+        <Route path="/my-rejected-expenses" element={
+          <PrivateRoute>
+            <SubmitterRejectedPage />
+          </PrivateRoute>
+        } />
         <Route path="/batch-payment" element={
           <PrivateRoute>
             <BatchPaymentPage />

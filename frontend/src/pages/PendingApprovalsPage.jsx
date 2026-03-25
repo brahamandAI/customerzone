@@ -58,6 +58,13 @@ import { useUserPreferences } from '../context/UserPreferencesContext';
 import { expenseAPI } from '../services/api';
 import { createCSVExportHandler } from '../utils/exportUtils';
 
+/** Last rejection comment from approval history (upper level sent back). */
+const getLastRejectionReason = (exp) => {
+  const hist = exp.approvalHistory || [];
+  const rej = [...hist].reverse().find((h) => h.action === 'rejected');
+  return (rej?.comments || rej?.comment || '').trim();
+};
+
 const PendingApprovalsPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -180,6 +187,10 @@ const PendingApprovalsPage = () => {
       case 'submitted': return '#ff9800';
       case 'under_review': return '#2196f3';
       case 'approved_l1': return '#4caf50';
+      case 'approved_l2': return '#2e7d32';
+      case 'approved_l3': return '#1b5e20';
+      case 'approved_finance': return '#00695c';
+      case 'returned': return '#ff5722';
       default: return '#757575';
     }
   };
@@ -189,6 +200,10 @@ const PendingApprovalsPage = () => {
       case 'submitted': return <Schedule />;
       case 'under_review': return <Visibility />;
       case 'approved_l1': return <CheckCircle />;
+      case 'approved_l2': return <CheckCircle />;
+      case 'approved_l3': return <CheckCircle />;
+      case 'approved_finance': return <CheckCircle />;
+      case 'returned': return <Cancel />;
       default: return <Schedule />;
     }
   };
@@ -239,7 +254,7 @@ const PendingApprovalsPage = () => {
               </Typography>
             </Box>
             <Typography variant="body1" color={darkMode ? '#b0b0b0' : '#666'}>
-              Review and approve pending expense requests
+              Same queue as dashboard <strong>Pending</strong> — includes items <strong>returned</strong> to you with reject reason below.
             </Typography>
             <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
               <Button
@@ -404,6 +419,10 @@ const PendingApprovalsPage = () => {
                     <MenuItem value="submitted">Submitted</MenuItem>
                     <MenuItem value="under_review">Under Review</MenuItem>
                     <MenuItem value="approved_l1">L1 Approved</MenuItem>
+                    <MenuItem value="approved_l2">L2 Approved</MenuItem>
+                    <MenuItem value="approved_l3">L3 Approved</MenuItem>
+                    <MenuItem value="approved_finance">Finance Approved</MenuItem>
+                    <MenuItem value="returned">Returned (reject reason)</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -441,6 +460,7 @@ const PendingApprovalsPage = () => {
                     <TableCell sx={{ color: darkMode ? '#fff' : '#333', fontWeight: 600 }}>Submitted By</TableCell>
                     <TableCell sx={{ color: darkMode ? '#fff' : '#333', fontWeight: 600 }}>Amount</TableCell>
                     <TableCell sx={{ color: darkMode ? '#fff' : '#333', fontWeight: 600 }}>Status</TableCell>
+                    <TableCell sx={{ color: darkMode ? '#fff' : '#333', fontWeight: 600 }}>Reject reason</TableCell>
                     <TableCell sx={{ color: darkMode ? '#fff' : '#333', fontWeight: 600 }}>Priority</TableCell>
                     <TableCell sx={{ color: darkMode ? '#fff' : '#333', fontWeight: 600 }}>Days</TableCell>
                     <TableCell sx={{ color: darkMode ? '#fff' : '#333', fontWeight: 600 }}>Actions</TableCell>
@@ -482,7 +502,7 @@ const PendingApprovalsPage = () => {
                       <TableCell>
                         <Chip
                           icon={getStatusIcon(approval.status)}
-                          label={approval.status.replace('_', ' ').toUpperCase()}
+                          label={String(approval.status || '').replace(/_/g, ' ').toUpperCase()}
                           size="small"
                           sx={{
                             bgcolor: getStatusColor(approval.status),
@@ -490,6 +510,17 @@ const PendingApprovalsPage = () => {
                             fontWeight: 500
                           }}
                         />
+                      </TableCell>
+                      <TableCell sx={{ maxWidth: 280 }}>
+                        {getLastRejectionReason(approval) ? (
+                          <Tooltip title={getLastRejectionReason(approval)}>
+                            <Typography variant="body2" color={darkMode ? '#ffccbc' : '#bf360c'} sx={{ lineHeight: 1.35 }}>
+                              {getLastRejectionReason(approval)}
+                            </Typography>
+                          </Tooltip>
+                        ) : (
+                          <Typography variant="caption" color={darkMode ? '#888' : '#999'}>—</Typography>
+                        )}
                       </TableCell>
                       <TableCell>
                         <Chip
@@ -566,6 +597,12 @@ const PendingApprovalsPage = () => {
           <DialogContent>
             {selectedApproval && (
               <Box sx={{ mt: 2 }}>
+                {selectedApproval.status === 'returned' && getLastRejectionReason(selectedApproval) && (
+                  <Alert severity="warning" sx={{ mb: 2 }}>
+                    <Typography variant="subtitle2" fontWeight={700}>Reject reason</Typography>
+                    <Typography variant="body2">{getLastRejectionReason(selectedApproval)}</Typography>
+                  </Alert>
+                )}
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="body2" color={darkMode ? '#b0b0b0' : '#666'}>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { config } from '../config';
 import {
   Box,
   Typography,
@@ -30,6 +29,14 @@ import {
   Print as PrintIcon
 } from '@mui/icons-material';
 import { expenseAPI } from '../services/api';
+
+/** Mongo subdocs use _id; some API shapes expose id only — normalize for download URLs */
+const getAttachmentServerId = (attachment) => {
+  if (!attachment) return null;
+  const raw = attachment._id ?? attachment.id;
+  if (raw == null) return null;
+  return typeof raw === 'string' ? raw : String(raw);
+};
 
 const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
   const [loading, setLoading] = useState(false);
@@ -97,9 +104,9 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
         }
-      } else if (expenseId && attachment._id) {
+      } else if (expenseId && getAttachmentServerId(attachment)) {
         // Handle server files
-        const response = await expenseAPI.downloadAttachment(expenseId, attachment._id);
+        const response = await expenseAPI.downloadAttachment(expenseId, getAttachmentServerId(attachment));
         
         // Create blob and download
         const blob = new Blob([response.data], { type: attachment.mimetype });
@@ -121,95 +128,83 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
   };
 
   const handlePreview = async (attachment) => {
-    console.log('🔍 Preview debug - Attachment:', attachment);
-    console.log('🔍 Preview debug - ExpenseId:', expenseId);
-    console.log('🔍 Preview debug - Has file:', !!attachment.file);
-    console.log('🔍 Preview debug - Source:', attachment.source);
-    console.log('🔍 Preview debug - MimeType:', attachment.mimetype);
-    
     setSelectedAttachment(attachment);
     setPreviewOpen(true);
-    
-    // Check if this is a local file (from file upload) or server file
+
     const isLocalFile = attachment.file || attachment.source === 'ai-assistant';
-    
+
     if (isLocalFile && attachment.file) {
-      console.log('🔍 Handling local file');
-      // Handle local files (from file upload or AI assistant)
       if (attachment.mimetype && attachment.mimetype.includes('pdf')) {
-        console.log('🔍 Local PDF file - using FileReader');
         const reader = new FileReader();
         reader.onload = (e) => {
-          console.log('🔍 FileReader completed');
-          setSelectedAttachment(prev => ({
-            ...prev,
-            dataUrl: e.target.result
-          }));
+          setSelectedAttachment(prev => ({ ...prev, dataUrl: e.target.result }));
         };
         reader.readAsDataURL(attachment.file);
       } else {
-        console.log('🔍 Local non-PDF file - using object URL');
-        // For non-PDF files, create object URL
         const objectUrl = URL.createObjectURL(attachment.file);
-        setSelectedAttachment(prev => ({
-          ...prev,
-          objectUrl: objectUrl
-        }));
+        setSelectedAttachment(prev => ({ ...prev, objectUrl }));
       }
-    } else if (expenseId && attachment._id && attachment.mimetype && attachment.mimetype.includes('pdf')) {
-      console.log('🔍 Server PDF file - using API');
-      // For server PDFs, try to get the file as blob and create object URL
-      try {
-        const response = await expenseAPI.downloadAttachment(expenseId, attachment._id);
-        const blob = new Blob([response.data], { type: 'application/pdf' });
-        const objectUrl = URL.createObjectURL(blob);
-        setSelectedAttachment(prev => ({
-          ...prev,
-          objectUrl: objectUrl
-        }));
-      } catch (error) {
-        console.error('Error loading PDF for preview:', error);
-        // Fallback to direct URL
-        setSelectedAttachment(prev => ({
-          ...prev,
-          objectUrl: null,
-          previewError: true
-        }));
+      return;
+    }
+
+    if (!expenseId || !getAttachmentServerId(attachment)) {
+      setSelectedAttachment(prev => ({ ...prev, objectUrl: null, dataUrl: null, previewError: true }));
+      return;
+    }
+
+    try {
+      const response = await expenseAPI.downloadAttachment(expenseId, getAttachmentServerId(attachment));
+      if (response.status < 200 || response.status >= 300) {
+        throw new Error('Download failed');
       }
-    } else if (expenseId && attachment._id) {
-      console.log('🔍 Server non-PDF file - using API');
-      // For non-PDF server files, try to get the file as blob
-      try {
-        const response = await expenseAPI.downloadAttachment(expenseId, attachment._id);
-        const blob = new Blob([response.data], { type: attachment.mimetype });
-        const objectUrl = URL.createObjectURL(blob);
-        setSelectedAttachment(prev => ({
-          ...prev,
-          objectUrl: objectUrl
-        }));
-      } catch (error) {
-        console.error('Error loading file for preview:', error);
-        setSelectedAttachment(prev => ({
-          ...prev,
-          objectUrl: null,
-          previewError: true
-        }));
+      const blob = new Blob([response.data], { type: attachment.mimetype || 'application/octet-stream' });
+      // If server returned JSON error with 200 (misconfigured proxy), avoid feeding it to the PDF viewer
+      if (attachment.mimetype?.includes('pdf') && blob.size > 0 && blob.size < 4096) {
+        const peek = await blob.slice(0, 1).text();
+        if (peek === '{' || peek === '<') {
+          const full = await blob.text();
+          if (full.trimStart().startsWith('{')) {
+            try {
+              const errJson = JSON.parse(full);
+              throw new Error(errJson.message || 'File not available');
+            } catch (e) {
+              if (e.message && e.message !== full) throw e;
+              throw new Error('File not available');
+            }
+          }
+        }
       }
-    } else {
-      console.log('🔍 No valid preview method found - showing error');
-      // No valid preview method found
+      const objectUrl = URL.createObjectURL(blob);
+      setSelectedAttachment(prev => ({ ...prev, objectUrl }));
+    } catch (error) {
+      console.error('Error loading file for preview:', error);
+      let fileNotFound = error?.response?.status === 404;
+      let previewErrorMessage = fileNotFound
+        ? 'File not found on server. It may have been removed or moved.'
+        : error?.message;
+      if (fileNotFound && error?.response?.data instanceof Blob) {
+        try {
+          const t = await error.response.data.text();
+          const j = JSON.parse(t);
+          if (j?.message) previewErrorMessage = j.message;
+        } catch (_) {
+          /* keep default */
+        }
+      }
       setSelectedAttachment(prev => ({
         ...prev,
         objectUrl: null,
         dataUrl: null,
-        previewError: true
+        previewError: true,
+        fileNotFound,
+        previewErrorMessage
       }));
     }
   };
 
   // Alternative method: Open PDF in new window for preview
   const handleOpenPdfInNewWindow = async (attachment) => {
-    const actionKey = (attachment._id || attachment.id || 'local') + '_open';
+    const actionKey = (getAttachmentServerId(attachment) || 'local') + '_open';
     setLoadingActions(prev => ({ ...prev, [actionKey]: true }));
     try {
       // Check if this is a local file (from file upload) or server file
@@ -226,12 +221,11 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
             URL.revokeObjectURL(objectUrl);
           }, 5000);
         }
-      } else if (expenseId && attachment._id) {
-        // Get the PDF as blob using authenticated API
-        const response = await expenseAPI.downloadAttachment(expenseId, attachment._id);
-        const blob = new Blob([response.data], { type: 'application/pdf' });
+      } else if (expenseId && getAttachmentServerId(attachment)) {
+        const response = await expenseAPI.downloadAttachment(expenseId, getAttachmentServerId(attachment));
+        const blob = new Blob([response.data], { type: attachment.mimetype || 'application/octet-stream' });
         const objectUrl = URL.createObjectURL(blob);
-        
+
         const newWindow = window.open(objectUrl, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
         if (newWindow) {
           newWindow.focus();
@@ -257,7 +251,7 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
   };
 
   const handlePrint = async (attachment) => {
-    const actionKey = (attachment._id || attachment.id || 'local') + '_print';
+    const actionKey = (getAttachmentServerId(attachment) || 'local') + '_print';
     setLoadingActions(prev => ({ ...prev, [actionKey]: true }));
     try {
       // Check if this is a local file (from file upload) or server file
@@ -276,12 +270,11 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
             }, 5000);
           };
         }
-      } else if (expenseId && attachment._id) {
-        // Get the PDF as blob using authenticated API
-        const response = await expenseAPI.downloadAttachment(expenseId, attachment._id);
-        const blob = new Blob([response.data], { type: 'application/pdf' });
+      } else if (expenseId && getAttachmentServerId(attachment)) {
+        const response = await expenseAPI.downloadAttachment(expenseId, getAttachmentServerId(attachment));
+        const blob = new Blob([response.data], { type: attachment.mimetype || 'application/octet-stream' });
         const objectUrl = URL.createObjectURL(blob);
-        
+
         const printWindow = window.open(objectUrl, '_blank');
         if (printWindow) {
           printWindow.onload = () => {
@@ -338,9 +331,9 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
     if (!mimetype) return 'Document';
     if (mimetype.includes('pdf')) return 'PDF';
     if (mimetype.includes('image')) return 'Image';
-    if (mimetype.includes('document') || mimetype.includes('word')) return 'Document';
-    if (mimetype.includes('excel') || mimetype.includes('spreadsheet')) return 'Spreadsheet';
-    if (mimetype.includes('text')) return 'Text';
+    if (mimetype.includes('document') || mimetype.includes('word')) return 'Word';
+    if (mimetype.includes('excel') || mimetype.includes('spreadsheet')) return 'Excel';
+    if (mimetype.includes('text') || mimetype.includes('csv')) return 'Text';
     if (mimetype.includes('zip') || mimetype.includes('rar')) return 'Archive';
     return 'File';
   };
@@ -416,7 +409,7 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
       {/* Attachments Grid */}
       <Grid container spacing={2}>
         {Array.isArray(attachmentList) ? attachmentList.map((attachment, index) => (
-          <Grid item xs={12} sm={6} md={4} key={attachment._id || index}>
+          <Grid item xs={12} sm={6} md={4} key={getAttachmentServerId(attachment) || index}>
             <Card 
               sx={{ 
                 height: '100%',
@@ -451,7 +444,7 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
                   </Box>
                   <Box sx={{ flexGrow: 1 }}>
                     <Typography variant="body2" fontWeight={600} noWrap>
-                      {attachment.originalName}
+                      {attachment.originalName || attachment.name || `File ${index + 1}`}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
                       {getFileType(attachment.mimetype)} • {formatFileSize(attachment.size)}
@@ -462,7 +455,7 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
                 {/* File Details */}
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="caption" color="text.secondary" display="block">
-                    Uploaded: {formatDate(attachment.uploadDate)}
+                    Uploaded: {attachment.uploadDate ? formatDate(attachment.uploadDate) : 'N/A'}
                   </Typography>
                   {attachment.isReceipt && (
                     <Chip 
@@ -593,54 +586,61 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
                            PDF Preview - {selectedAttachment.originalName}
                          </Typography>
                        </Box>
-                                               <Box sx={{ display: 'flex', gap: 1 }}>
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() => selectedAttachment && handleOpenPdfInNewWindow(selectedAttachment)}
-                            startIcon={loadingActions[(selectedAttachment._id || selectedAttachment.id || 'local') + '_open'] ? <CircularProgress size={16} /> : <ViewIcon />}
-                            disabled={loadingActions[(selectedAttachment._id || selectedAttachment.id || 'local') + '_open']}
-                          >
-                            {loadingActions[(selectedAttachment._id || selectedAttachment.id || 'local') + '_open'] ? 'Opening...' : 'Open in New Window'}
-                          </Button>
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() => selectedAttachment && handlePrint(selectedAttachment)}
-                            startIcon={loadingActions[(selectedAttachment._id || selectedAttachment.id || 'local') + '_print'] ? <CircularProgress size={16} /> : <PrintIcon />}
-                            disabled={loadingActions[(selectedAttachment._id || selectedAttachment.id || 'local') + '_print']}
-                          >
-                            {loadingActions[(selectedAttachment._id || selectedAttachment.id || 'local') + '_print'] ? 'Preparing...' : 'Print'}
-                          </Button>
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() => selectedAttachment && handleDownload(selectedAttachment)}
-                            startIcon={<DownloadIcon />}
-                          >
-                            Download
-                          </Button>
-                        </Box>
+                                               {!selectedAttachment.fileNotFound && (
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={() => selectedAttachment && handleOpenPdfInNewWindow(selectedAttachment)}
+                              startIcon={loadingActions[(getAttachmentServerId(selectedAttachment) || 'local') + '_open'] ? <CircularProgress size={16} /> : <ViewIcon />}
+                              disabled={loadingActions[(getAttachmentServerId(selectedAttachment) || 'local') + '_open']}
+                            >
+                              {loadingActions[(getAttachmentServerId(selectedAttachment) || 'local') + '_open'] ? 'Opening...' : 'Open in New Window'}
+                            </Button>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={() => selectedAttachment && handlePrint(selectedAttachment)}
+                              startIcon={loadingActions[(getAttachmentServerId(selectedAttachment) || 'local') + '_print'] ? <CircularProgress size={16} /> : <PrintIcon />}
+                              disabled={loadingActions[(getAttachmentServerId(selectedAttachment) || 'local') + '_print']}
+                            >
+                              {loadingActions[(getAttachmentServerId(selectedAttachment) || 'local') + '_print'] ? 'Preparing...' : 'Print'}
+                            </Button>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={() => selectedAttachment && handleDownload(selectedAttachment)}
+                              startIcon={<DownloadIcon />}
+                            >
+                              Download
+                            </Button>
+                          </Box>
+                        )}
                      </Box>
                      
-                                                                 {/* PDF iframe with proper styling */}
-                      <Box sx={{ flexGrow: 1, position: 'relative' }}>
+                                                                 {/* PDF Preview - object + embed + iframe for max browser compatibility */}
+                      <Box sx={{ flexGrow: 1, position: 'relative', minHeight: 500 }}>
                         {(selectedAttachment.objectUrl || selectedAttachment.dataUrl) ? (
-                          <iframe
-                            src={`${selectedAttachment.objectUrl || selectedAttachment.dataUrl}#toolbar=1&navpanes=1&scrollbar=1&view=FitH`}
-                            style={{ 
-                              border: 'none', 
-                              width: '100%', 
-                              height: '100%',
-                              minHeight: '600px',
-                              backgroundColor: '#f5f5f5'
-                            }}
-                            title={selectedAttachment.originalName}
-                            onError={(e) => {
-                              console.error('PDF preview failed:', e);
-                              handlePdfPreviewError();
-                            }}
-                          />
+                          <Box sx={{ width: '100%', height: '100%', minHeight: '60vh' }}>
+                            <object
+                              data={`${selectedAttachment.objectUrl || selectedAttachment.dataUrl}#toolbar=1&navpanes=1&scrollbar=1`}
+                              type="application/pdf"
+                              style={{ 
+                                border: 'none', 
+                                width: '100%', 
+                                height: '100%',
+                                minHeight: '60vh',
+                                backgroundColor: '#525659'
+                              }}
+                              onError={() => handlePdfPreviewError()}
+                            >
+                              <embed
+                                src={`${selectedAttachment.objectUrl || selectedAttachment.dataUrl}#toolbar=1&navpanes=1`}
+                                type="application/pdf"
+                                style={{ width: '100%', height: '60vh', border: 'none' }}
+                              />
+                            </object>
+                          </Box>
                         ) : selectedAttachment.previewError ? (
                           <Box sx={{
                             display: 'flex',
@@ -648,35 +648,48 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             height: '100%',
+                            minHeight: 400,
                             p: 3,
                             textAlign: 'center',
                             bgcolor: '#f5f5f5'
                           }}>
                             <PdfViewIcon sx={{ fontSize: 64, mb: 2, color: '#ff4444' }} />
                             <Typography variant="h6" gutterBottom>
-                              PDF Preview Not Available
+                              {selectedAttachment.fileNotFound ? 'File Not Found on Server' : 'PDF Preview Not Available'}
                             </Typography>
                             <Typography variant="body2" sx={{ mb: 2 }}>
-                              The PDF preview could not be loaded. This may be due to browser security restrictions.
+                              {selectedAttachment.fileNotFound
+                                ? (selectedAttachment.previewErrorMessage || 'This file is no longer on the server. Re-upload the attachment if needed.')
+                                : (selectedAttachment.previewErrorMessage || 'Use "Open in New Window" to view, or download the file.')}
                             </Typography>
-                            <Box sx={{ display: 'flex', gap: 2 }}>
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => selectedAttachment && handleDownload(selectedAttachment)}
-                                startIcon={<DownloadIcon />}
-                              >
-                                Download PDF
-                              </Button>
-                              <Button
-                                variant="outlined"
-                                color="primary"
-                                onClick={() => selectedAttachment && handlePrint(selectedAttachment)}
-                                startIcon={<PrintIcon />}
-                              >
-                                Print PDF
-                              </Button>
-                            </Box>
+                            {!selectedAttachment.fileNotFound && (
+                              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={() => selectedAttachment && handleOpenPdfInNewWindow(selectedAttachment)}
+                                  startIcon={<ViewIcon />}
+                                >
+                                  Open in New Window
+                                </Button>
+                                <Button
+                                  variant="outlined"
+                                  color="primary"
+                                  onClick={() => selectedAttachment && handleDownload(selectedAttachment)}
+                                  startIcon={<DownloadIcon />}
+                                >
+                                  Download PDF
+                                </Button>
+                                <Button
+                                  variant="outlined"
+                                  color="primary"
+                                  onClick={() => selectedAttachment && handlePrint(selectedAttachment)}
+                                  startIcon={<PrintIcon />}
+                                >
+                                  Print PDF
+                                </Button>
+                              </Box>
+                            )}
                           </Box>
                         ) : (
                           <Box sx={{
@@ -701,36 +714,42 @@ const AttachmentViewer = ({ expenseId, attachments = [], onClose }) => {
                        </Box>
                    </Box>
                  ) : (selectedAttachment.mimetype && selectedAttachment.mimetype.includes('image')) ? (
-                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                     <img
-                       src={expenseId ? `${config.apiBaseUrl}/expenses/${expenseId}/attachments/${selectedAttachment._id}/download` : 
-                            selectedAttachment.dataUrl}
-                       alt={selectedAttachment.originalName}
-                       style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                       onError={(e) => {
-                         console.error('Image preview failed:', e);
-                         e.target.style.display = 'none';
-                         if (e.target.nextSibling) {
-                           e.target.nextSibling.style.display = 'flex';
-                         }
-                       }}
-                     />
+                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+                     {(selectedAttachment.objectUrl || selectedAttachment.dataUrl) ? (
+                       <img
+                         src={selectedAttachment.objectUrl || selectedAttachment.dataUrl}
+                         alt={selectedAttachment.originalName}
+                         style={{ maxWidth: '100%', maxHeight: '75vh', objectFit: 'contain' }}
+                         onError={(e) => {
+                           e.target.style.display = 'none';
+                           if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
+                         }}
+                       />
+                     ) : null}
+                     <Box sx={{
+                       display: selectedAttachment.objectUrl || selectedAttachment.dataUrl ? 'none' : 'flex',
+                       flexDirection: 'column',
+                       alignItems: 'center',
+                       justifyContent: 'center',
+                       minHeight: 300,
+                       color: 'text.secondary',
+                       p: 3
+                     }}>
+                       <ImageIcon sx={{ fontSize: 64, mb: 2, opacity: 0.5 }} />
+                       <Typography variant="h6" gutterBottom>Loading image...</Typography>
+                       <CircularProgress sx={{ my: 2 }} />
+                     </Box>
                      <Box sx={{
                        display: 'none',
                        flexDirection: 'column',
                        alignItems: 'center',
                        justifyContent: 'center',
-                       height: '100%',
+                       minHeight: 300,
                        color: 'text.secondary',
                        p: 3
                      }}>
                        <ImageIcon sx={{ fontSize: 64, mb: 2, opacity: 0.5 }} />
-                       <Typography variant="h6" gutterBottom>
-                         Image Preview Failed
-                       </Typography>
-                       <Typography variant="body2" textAlign="center" sx={{ mb: 2 }}>
-                         Unable to load image preview. Please download to view.
-                       </Typography>
+                       <Typography variant="h6" gutterBottom>Image Preview Failed</Typography>
                        <Button
                          variant="contained"
                          color="primary"

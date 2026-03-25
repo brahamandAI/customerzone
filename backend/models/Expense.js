@@ -248,6 +248,7 @@ const expenseSchema = new mongoose.Schema({
       'approved_finance',
       'approved',
       'rejected',
+      'returned',  // Returned to previous approver for correction (rejection reason visible)
       'cancelled',
       'reimbursed',
       'payment_processed',

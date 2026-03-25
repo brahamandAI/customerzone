@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Typography, Paper, Grid, Fade, Zoom, Button, Chip, Avatar, List, ListItem, Divider, Dialog, DialogTitle, DialogContent, DialogActions, TextField, CircularProgress, Snackbar, Alert, Tabs, Tab, FormControl, InputLabel, Select, MenuItem, IconButton, Tooltip } from '@mui/material';
+import { Box, Typography, Paper, Grid, Fade, Zoom, Button, Chip, Avatar, List, ListItem, Divider, Dialog, DialogTitle, DialogContent, DialogActions, TextField, CircularProgress, Snackbar, Alert, Tabs, Tab, FormControl, InputLabel, Select, MenuItem, IconButton, Tooltip, Checkbox } from '@mui/material';
 import ApprovalIcon from '@mui/icons-material/Approval';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -20,10 +20,17 @@ import { expenseAPI, dashboardAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import PaymentModal from '../components/PaymentModal';
 import AttachmentViewer from '../components/AttachmentViewer';
+import { exportSingleExpenseToExcel, exportExpensesToExcel } from '../utils/exportUtils';
+import DownloadIcon from '@mui/icons-material/Download';
+import SelectAllIcon from '@mui/icons-material/SelectAll';
+import DeselectIcon from '@mui/icons-material/IndeterminateCheckBox';
 
 const Approval = () => {
   const navigate = useNavigate();
   const [approvals, setApprovals] = useState([]);
+  const [rejectedApprovals, setRejectedApprovals] = useState([]);
+  const [listTab, setListTab] = useState(0); // 0=Pending, 1=Rejected
+  const [selectedForExport, setSelectedForExport] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedApproval, setSelectedApproval] = useState(null);
@@ -100,22 +107,15 @@ const Approval = () => {
         console.log('User role for filtering:', userRole);
         console.log('Total expenses from API:', response.data.data.length);
         
-        // Filter based on role
+        // Filter based on role (include 'returned' - expenses sent back for correction)
         if (userRole === 'L1_APPROVER') {
-          filteredExpenses = response.data.data.filter(expense => expense.status === 'submitted' || expense.status === 'under_review');
-          console.log('L1 Approver - Filtered expenses (submitted + under_review):', filteredExpenses);
+          filteredExpenses = response.data.data.filter(expense => ['submitted', 'under_review', 'returned'].includes(expense.status));
         } else if (userRole === 'L2_APPROVER') {
-          filteredExpenses = response.data.data.filter(expense => expense.status === 'approved_l1');
-          console.log('L2 Approver - Filtered expenses (approved_l1):', filteredExpenses);
+          filteredExpenses = response.data.data.filter(expense => ['approved_l1', 'returned'].includes(expense.status));
         } else if (userRole === 'L3_APPROVER') {
-          filteredExpenses = response.data.data.filter(expense => expense.status === 'approved_l2');
-          console.log('L3 Approver - All expenses:', response.data.data);
-          console.log('L3 Approver - Filtered expenses (approved_l2):', filteredExpenses);
+          filteredExpenses = response.data.data.filter(expense => ['approved_l2', 'returned'].includes(expense.status));
         } else if (userRole === 'FINANCE') {
-          filteredExpenses = response.data.data.filter(expense => expense.status === 'approved_l3');
-          console.log('Finance - All expenses:', response.data.data);
-          console.log('Finance - Filtered expenses (approved_l3):', filteredExpenses);
-          console.log('Finance - Filtered expenses count:', filteredExpenses.length);
+          filteredExpenses = response.data.data.filter(expense => ['approved_l3', 'returned'].includes(expense.status));
         }
 
         // Transform data with error handling
@@ -144,15 +144,19 @@ const Approval = () => {
               submitter: typeof expense.submittedBy === 'object' ? (expense.submittedBy?.name || 'Unknown User') : expense.submittedBy,
           date: new Date(expense.expenseDate).toISOString().split('T')[0],
           description: expense.description,
-                      status: expense.status === 'submitted' || expense.status === 'under_review' || expense.status === 'approved_l1' || expense.status === 'approved_l2' || expense.status === 'approved_l3'
+                      status: expense.status === 'returned' ? 'returned' :
+                      (expense.status === 'submitted' || expense.status === 'under_review' || expense.status === 'approved_l1' || expense.status === 'approved_l2' || expense.status === 'approved_l3')
           ? 'pending' 
           : expense.status.toLowerCase(),
-          approvalLevel: expense.status === 'submitted' ? 'L1' :
+          approvalLevel: expense.status === 'returned' ? (userRole === 'L1_APPROVER' ? 'L1' : userRole === 'L2_APPROVER' ? 'L2' : userRole === 'L3_APPROVER' ? 'L3' : 'L4') :
+                       expense.status === 'submitted' ? 'L1' :
                        expense.status === 'approved_l1' ? 'L2' :
                        expense.status === 'approved_l2' ? 'L3' :
                        expense.status === 'approved_l3' ? 'L4' : 'L1',
           priority: expense.priority || 'normal',
           attachments: expense.attachments?.length || 0,
+          attachmentsArray: expense.attachments || [],
+          submittedBy: expense.submittedBy,
           modifiedAmount: expense.modifiedAmount,
           approvalComments: transformedApprovalHistory,
           policyFlags: expense.policyFlags || [],
@@ -186,6 +190,8 @@ const Approval = () => {
               approvalLevel: 'L1',
               priority: 'normal',
               attachments: 0,
+              attachmentsArray: [],
+              submittedBy: null,
               modifiedAmount: null,
               approvalComments: [],
               policyFlags: [],
@@ -217,10 +223,45 @@ const Approval = () => {
     }
   }, [getUserRole]);
 
+  // Fetch rejected expenses (expenses rejected by current user)
+  const fetchRejectedApprovals = useCallback(async () => {
+    try {
+      const response = await expenseAPI.getRejectedByMe();
+      if (response.data.success) {
+        const transformed = (response.data.data || []).map(expense => ({
+          id: expense.id || expense._id,
+          expenseNumber: expense.expenseNumber,
+          title: expense.title,
+          amount: expense.amount,
+          site: typeof expense.site === 'object' ? expense.site?.name : expense.site,
+          category: expense.category,
+          submitter: typeof expense.submittedBy === 'object' ? expense.submittedBy?.name : expense.submittedBy,
+          date: new Date(expense.expenseDate).toISOString().split('T')[0],
+          description: expense.description,
+          status: 'rejected',
+          approvalLevel: 'L1',
+          priority: expense.priority || 'normal',
+          attachments: expense.attachments?.length || 0,
+          attachmentsArray: expense.attachments || [],
+          approvalComments: (expense.approvalHistory || []).map(h => ({
+            level: `L${h.level}`,
+            comment: h.comments || h.comment || '',
+            timestamp: h.date || h.timestamp || new Date(),
+            action: h.action || '',
+            approver: h.approver
+          }))
+        }));
+        setRejectedApprovals(transformed);
+      }
+    } catch (err) {
+      console.error('Error fetching rejected expenses:', err);
+    }
+  }, []);
+
   // Fetch both approvals and stats
   const fetchData = useCallback(async () => {
-    await Promise.all([fetchApprovals(), fetchApprovalStats()]);
-  }, [fetchApprovals, fetchApprovalStats]);
+    await Promise.all([fetchApprovals(), fetchApprovalStats(), fetchRejectedApprovals()]);
+  }, [fetchApprovals, fetchApprovalStats, fetchRejectedApprovals]);
 
   useEffect(() => {
     fetchData();
@@ -424,6 +465,7 @@ const Approval = () => {
                              expense.status === 'approved_l3' ? 'L4' : 'L1',
                 priority: expense.priority || 'normal',
                 attachments: expense.attachments?.length || 0,
+                attachmentsArray: expense.attachments || [],
                 modifiedAmount: expense.modifiedAmount,
                 approvalComments: transformedApprovalHistory,
                 policyFlags: expense.policyFlags || [],
@@ -545,6 +587,49 @@ const Approval = () => {
     setAttachmentDialogOpen(true);
   };
 
+  // Multi-select for Excel export (finance, pending tab only)
+  const pendingIds = approvals.filter(a => a.status === 'pending').map(a => a.id);
+  const handleSelectAllExport = () => {
+    if (selectedForExport.size === pendingIds.length) {
+      setSelectedForExport(new Set());
+    } else {
+      setSelectedForExport(new Set(pendingIds));
+    }
+  };
+  const handleSelectForExport = (id) => {
+    setSelectedForExport(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+  const handleExportSelectedToExcel = () => {
+    const toExport = approvals.filter(a => selectedForExport.has(a.id));
+    if (toExport.length === 0) {
+      setSnackbarMessage('Please select at least one expense to export');
+      setSnackbarSeverity('warning');
+      setSnackbarOpen(true);
+      return;
+    }
+    const expenseShape = toExport.map(a => ({
+      expenseNumber: a.expenseNumber,
+      category: a.category,
+      amount: a.amount,
+      submittedBy: a.submittedBy || { name: a.submitter }
+    }));
+    const ok = exportExpensesToExcel(expenseShape, 'payment-processing-export');
+    if (ok) {
+      setSnackbarMessage(`Exported ${toExport.length} expense(s) to Excel successfully`);
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+    } else {
+      setSnackbarMessage('Failed to export to Excel');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    }
+  };
+
   const handlePriorityChange = (approvalId, priority) => {
     if (priority) {
       setApprovalPriorities(prev => ({
@@ -565,6 +650,7 @@ const Approval = () => {
     switch (status) {
       case 'approved': return '#4caf50';
       case 'rejected': return '#f44336';
+      case 'returned': return '#ff9800';
       case 'pending': return '#ff9800';
       default: return '#2196f3';
     }
@@ -574,6 +660,7 @@ const Approval = () => {
     switch (status) {
       case 'approved': return <CheckCircleIcon />;
       case 'rejected': return <CancelIcon />;
+      case 'returned': return <PendingIcon />;
       case 'pending': return <PendingIcon />;
       default: return <ReceiptIcon />;
     }
@@ -632,7 +719,7 @@ const Approval = () => {
   // Update the pending approvals count calculation
   const pendingApprovals = approvals.filter(approval => {
     const isApprover = canApprove(approval);
-    const isPending = approval.status === 'pending';
+    const isPending = approval.status === 'pending' || approval.status === 'returned';
     console.log('Checking pending:', { id: approval.id, status: approval.status, isApprover, isPending });
     return isPending && isApprover;
   }).length;
@@ -826,6 +913,14 @@ const Approval = () => {
             )}
           </Grid>
 
+          {/* Pending / Rejected Tabs */}
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+            <Tabs value={listTab} onChange={(e, v) => { setListTab(v); if (v === 1) setSelectedForExport(new Set()); }} sx={{ px: 0 }}>
+              <Tab label={`${isFinance ? 'Pending Payments' : 'Pending Approvals'} (${approvals.length})`} />
+              <Tab label={`Rejected By Me (${rejectedApprovals.length})`} />
+            </Tabs>
+          </Box>
+
           {/* Approvals List */}
           <Paper elevation={16} sx={{ 
             borderRadius: 3, 
@@ -834,17 +929,55 @@ const Approval = () => {
             border: darkMode ? '1px solid rgba(51,51,51,0.2)' : '1px solid rgba(255,255,255,0.2)',
             overflow: 'hidden'
           }}>
-            <Box sx={{ p: 3, borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+            <Box sx={{ p: 3, borderBottom: '1px solid rgba(0,0,0,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
               <Typography variant="h6" fontWeight={600} color="#667eea">
-                {isFinance ? 'Payment Requests' : 'Approval Requests'}
+                {listTab === 0 
+                  ? (isFinance ? 'Payment Requests' : 'Approval Requests')
+                  : 'Rejected Expenses'}
               </Typography>
+              {isFinance && listTab === 0 && approvals.length > 0 && (
+                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                  <Tooltip title={selectedForExport.size === pendingIds.length ? 'Deselect All' : 'Select All'}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      startIcon={selectedForExport.size === pendingIds.length ? <DeselectIcon /> : <SelectAllIcon />}
+                      onClick={handleSelectAllExport}
+                      sx={{ borderColor: darkMode ? '#555' : '#667eea', color: darkMode ? '#fff' : '#667eea' }}
+                    >
+                      {selectedForExport.size === pendingIds.length ? 'Deselect All' : 'Select All'}
+                    </Button>
+                  </Tooltip>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<DownloadIcon />}
+                    onClick={handleExportSelectedToExcel}
+                    disabled={selectedForExport.size === 0}
+                    sx={{
+                      background: 'linear-gradient(45deg, #4caf50 30%, #66bb6a 90%)',
+                      '&:hover': { background: 'linear-gradient(45deg, #388e3c 30%, #4caf50 90%)' }
+                    }}
+                  >
+                    Export to Excel {selectedForExport.size > 0 ? `(${selectedForExport.size})` : ''}
+                  </Button>
+                </Box>
+              )}
             </Box>
             
             <List sx={{ p: 0 }}>
-              {approvals.map((approval, index) => (
+              {(listTab === 0 ? approvals : rejectedApprovals).map((approval, index) => (
                 <React.Fragment key={approval.id}>
                   <ListItem sx={{ p: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 2 }}>
+                      {isFinance && listTab === 0 && approval.status === 'pending' && (
+                        <Checkbox
+                          checked={selectedForExport.has(approval.id)}
+                          onChange={(e) => { e.stopPropagation(); handleSelectForExport(approval.id); }}
+                          onClick={(e) => e.stopPropagation()}
+                          sx={{ p: 0.5 }}
+                        />
+                      )}
                       <Avatar sx={{ bgcolor: getStatusColor(approval.status) }}>
                         {getStatusIcon(approval.status)}
                       </Avatar>
@@ -936,6 +1069,20 @@ const Approval = () => {
                         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                           {approval.description}
                         </Typography>
+
+                        {approval.status === 'returned' && (() => {
+                          const last = [...(approval.approvalComments || [])].reverse().find((c) => c.action === 'rejected');
+                          const reason = (last?.comment || '').trim();
+                          if (!reason) return null;
+                          return (
+                            <Alert severity="warning" sx={{ mb: 2, py: 1 }}>
+                              <Typography variant="caption" fontWeight={700} display="block" gutterBottom>
+                                Reject reason (fix &amp; resubmit)
+                              </Typography>
+                              <Typography variant="body2">{reason}</Typography>
+                            </Alert>
+                          );
+                        })()}
                         
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                           <Typography variant="h6" fontWeight={700} color="#667eea">
@@ -954,8 +1101,8 @@ const Approval = () => {
                               />
                             </Box>
                           )}
-                          {approval.attachments > 0 && (
-                            <Tooltip title={`${approval.attachments} attachment${approval.attachments > 1 ? 's' : ''}`}>
+                          {(approval.attachments > 0 || approval.attachmentsArray?.length > 0) && (
+                            <Tooltip title={`${approval.attachments || approval.attachmentsArray?.length || 0} attachment${(approval.attachments || approval.attachmentsArray?.length || 0) > 1 ? 's' : ''}`}>
                               <IconButton 
                               size="small"
                                 onClick={() => handleOpenAttachmentDialog(approval)}
@@ -977,9 +1124,28 @@ const Approval = () => {
                         </Box>
                       </Box>
                       
-                      {approval.status === 'pending' && canApprove(approval) && (
+                      {(approval.status === 'pending' && canApprove(approval)) || (approval.status === 'returned' && canApprove(approval)) || approval.status === 'rejected' ? (
                         <Box sx={{ display: 'flex', gap: 1 }}>
-                          {isFinance ? (
+                          {approval.status === 'rejected' ? (
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              onClick={() => handleOpenDialog(approval)}
+                              sx={{ minWidth: 'auto', px: 2 }}
+                            >
+                              View Details
+                            </Button>
+                          ) : approval.status === 'returned' ? (
+                            <Button
+                              variant="contained"
+                              color="warning"
+                              size="small"
+                              onClick={() => handleOpenDialog(approval)}
+                              sx={{ minWidth: 'auto', px: 2 }}
+                            >
+                              Fix & Resubmit
+                            </Button>
+                          ) : isFinance ? (
                             // Finance (L4) - Payment only
                             <Button
                               variant="contained"
@@ -994,7 +1160,7 @@ const Approval = () => {
                           ) : (
                             // L1, L2, and L3 (Super Admin) - Approve/Reject
                             <>
-                          <Button
+                              <Button
                             variant="contained"
                             color="success"
                             size="small"
@@ -1041,7 +1207,7 @@ const Approval = () => {
                             </>
                           )}
                         </Box>
-                      )}
+                      ) : null}
                       
                       {approval.status === 'pending' && !canApprove(approval) && (
                         <Chip 
@@ -1052,7 +1218,7 @@ const Approval = () => {
                       )}
                     </Box>
                   </ListItem>
-                  {index < approvals.length - 1 && <Divider />}
+                  {index < (listTab === 0 ? approvals : rejectedApprovals).length - 1 && <Divider />}
                 </React.Fragment>
               ))}
             </List>
@@ -1084,9 +1250,9 @@ const Approval = () => {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <AttachFileIcon fontSize="small" />
                     Attachments
-                    {selectedApproval?.attachments > 0 && (
+                    {(selectedApproval?.attachments > 0 || (selectedApproval?.attachmentsArray?.length > 0)) && (
                       <Chip 
-                        label={selectedApproval.attachments} 
+                        label={selectedApproval?.attachments || selectedApproval?.attachmentsArray?.length || 0} 
                         size="small" 
                         color="primary"
                         sx={{ height: 20, fontSize: '0.75rem' }}
@@ -1102,9 +1268,48 @@ const Approval = () => {
           <Box sx={{ p: 3 }}>
             {activeTab === 0 && (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                {/* Returned - Rejection Reason Highlight */}
+                {selectedApproval?.status === 'returned' && (() => {
+                  const lastRejection = [...(selectedApproval?.approvalComments || [])].reverse().find(c => c.action === 'rejected');
+                  return lastRejection ? (
+                    <Alert severity="warning" sx={{ border: '1px solid #ff9800' }}>
+                      <Typography variant="subtitle2" fontWeight={700} gutterBottom>Returned for Correction</Typography>
+                      <Typography variant="body2">Reason: {lastRejection.comment || 'No reason provided'}</Typography>
+                      {lastRejection.approver?.name && (
+                        <Typography variant="caption" display="block" color="text.secondary" sx={{ mt: 1 }}>
+                          Rejected by {lastRejection.approver.name} ({lastRejection.level})
+                        </Typography>
+                      )}
+                    </Alert>
+                  ) : null;
+                })()}
                 {/* Expense Details */}
                 <Box sx={{ p: 2, bgcolor: 'rgba(0,0,0,0.05)', borderRadius: 2 }}>
-                  <Typography variant="h6" gutterBottom>Expense Details</Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Typography variant="h6" gutterBottom>Expense Details</Typography>
+                    {isFinance && selectedApproval?.status !== 'rejected' && (
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<DownloadIcon />}
+                        onClick={async () => {
+                          const ok = await exportSingleExpenseToExcel(
+                            selectedApproval?.id || selectedApproval?._id,
+                            expenseAPI,
+                            setError
+                          );
+                          if (ok) {
+                            setSnackbarMessage('Excel exported successfully');
+                            setSnackbarSeverity('success');
+                            setSnackbarOpen(true);
+                          }
+                        }}
+                        sx={{ borderColor: '#4caf50', color: '#4caf50' }}
+                      >
+                        Export to Excel
+                      </Button>
+                    )}
+                  </Box>
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
                       <Typography variant="body2" color="text.secondary">Expense Number:</Typography>
@@ -1246,7 +1451,11 @@ const Approval = () => {
               <Box>
                 <AttachmentViewer 
                   expenseId={selectedApproval?.id || selectedApproval?._id}
-                  attachments={selectedApproval?.attachments || []}
+                  attachments={
+                    Array.isArray(selectedApproval?.attachmentsArray)
+                      ? selectedApproval.attachmentsArray
+                      : (Array.isArray(selectedApproval?.attachments) ? selectedApproval.attachments : [])
+                  }
                 />
               </Box>
             )}
@@ -1254,7 +1463,10 @@ const Approval = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-          {isFinance ? (
+          {selectedApproval?.status === 'rejected' ? (
+            /* Rejected - view only, no actions */
+            null
+          ) : isFinance ? (
             // Finance (L4) - Payment only
             <Button 
               onClick={() => selectedApproval && handlePayment(selectedApproval.id)}
@@ -1276,9 +1488,6 @@ const Approval = () => {
               >
                 Reject
               </Button>
-              
-
-              
               <Button 
                 onClick={() => selectedApproval && handleApprove(selectedApproval.id)}
                 color="success"
@@ -1311,7 +1520,11 @@ const Approval = () => {
           {selectedApprovalForAttachments && (
             <AttachmentViewer 
               expenseId={selectedApprovalForAttachments.id || selectedApprovalForAttachments._id}
-              attachments={selectedApprovalForAttachments.attachments || []}
+              attachments={
+                Array.isArray(selectedApprovalForAttachments?.attachmentsArray)
+                  ? selectedApprovalForAttachments.attachmentsArray
+                  : (Array.isArray(selectedApprovalForAttachments?.attachments) ? selectedApprovalForAttachments.attachments : [])
+              }
             />
           )}
         </DialogContent>

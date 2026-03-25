@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "PORT=5001 nodemon server.js",
+    "dev": "cross-env PORT=5001 nodemon server.js",
     "build": "node --check server.js && echo 'Backend build validation passed'",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -36,6 +36,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "cron": "^2.4.4",
+    "cross-env": "^10.1.0",
     "dayjs": "^1.11.18",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",

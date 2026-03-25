@@ -14,6 +14,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import PaymentIcon from '@mui/icons-material/Payment';
 import PeopleIcon from '@mui/icons-material/People';
 import BusinessIcon from '@mui/icons-material/Business';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -36,7 +37,8 @@ const Dashboard = () => {
     pendingApprovals: 0,
     approvedThisMonth: 0,
     budgetUtilization: 0,
-    savings: 0
+    savings: 0,
+    submitterRejectedCount: 0
   });
   const [budgetBreakdown, setBudgetBreakdown] = useState({ approvedAmount: 0, pendingAmount: 0, remainingBudget: 0, approvedUtilization: 0, projectedUtilization: 0 });
   const [topCategories, setTopCategories] = useState([]);
@@ -99,7 +101,8 @@ const Dashboard = () => {
         pendingApprovals: 0,
         approvedThisMonth: 0,
         budgetUtilization: 0,
-        savings: 0
+        savings: 0,
+        submitterRejectedCount: 0
       });
       setTopCategories([]);
       setRecentActivities([]);
@@ -297,7 +300,8 @@ const Dashboard = () => {
         budgetUtilization: 0,
         totalUsers: 0,
         totalSites: 0,
-        systemExpenses: 0
+        systemExpenses: 0,
+        submitterRejectedCount: 0
       };
     }
 
@@ -338,7 +342,9 @@ const Dashboard = () => {
       totalUsers: (isFinance || user?.role?.toLowerCase() === 'l3_approver') ? (data.systemStats?.totalUsers || 0) : 0,
       totalSites: (isFinance || user?.role?.toLowerCase() === 'l3_approver') ? (data.systemStats?.totalSites || 0) : 0,
       systemExpenses: (isFinance || user?.role?.toLowerCase() === 'l3_approver') ? (data.systemStats?.monthlyExpenses?.amount || 0) : 0,
-      paymentProcessed: isFinance ? (data.paymentStats?.totalPayments || 0) : 0
+      paymentProcessed: isFinance ? (data.paymentStats?.totalPayments || 0) : 0,
+      submitterRejectedCount:
+        user.role?.toLowerCase() === 'submitter' ? (data.userStats?.rejectedExpenses ?? 0) : 0
     };
     
     console.log('Calculated stats:', stats);
@@ -814,6 +820,45 @@ const Dashboard = () => {
                     >
                       <Typography variant="caption" sx={{ color: '#666' }}>Remaining budget</Typography>
                       <Typography variant="h4" fontWeight={700} color="#667eea">₹{Number(budgetBreakdown.remainingBudget || 0).toLocaleString()}</Typography>
+                    </Paper>
+                  </Zoom>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Zoom in style={{ transitionDelay: '880ms' }}>
+                    <Paper
+                      elevation={16}
+                      sx={{
+                        p: 3,
+                        borderRadius: 3,
+                        background: darkMode ? 'rgba(26,26,26,0.95)' : 'rgba(255,255,255,0.95)',
+                        backdropFilter: 'blur(10px)',
+                        border: darkMode ? '1px solid rgba(51,51,51,0.3)' : '1px solid rgba(244,67,54,0.25)',
+                        textAlign: 'center',
+                        minHeight: 180,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          transform: 'translateY(-4px)',
+                          boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+                          border: darkMode ? '1px solid #f44336' : '1px solid #f44336'
+                        }
+                      }}
+                      onClick={() => navigate('/my-rejected-expenses')}
+                    >
+                      <Avatar sx={{ bgcolor: '#f44336', mx: 'auto', mb: 1.5, width: 40, height: 40 }}>
+                        <CancelIcon />
+                      </Avatar>
+                      <Typography variant="caption" sx={{ color: '#666' }}>Rejected by approver</Typography>
+                      <Typography variant="h4" fontWeight={700} color="#f44336">
+                        {Number(stats.submitterRejectedCount || 0).toLocaleString()}
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: darkMode ? '#aaa' : '#666', mt: 0.5, display: 'block', px: 1 }}>
+                        View reasons &amp; details
+                      </Typography>
                     </Paper>
                   </Zoom>
                 </Grid>

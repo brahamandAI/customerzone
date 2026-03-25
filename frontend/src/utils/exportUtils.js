@@ -1,4 +1,68 @@
 // Export utility functions for all detail pages
+import * as XLSX from 'xlsx';
+
+// Export single expense to Excel for payment processing (S. no, Exp No, Exp Category, Beneficiary Name, Account, IFSC, Amount)
+export const exportSingleExpenseToExcel = async (expenseId, expenseAPI, setError) => {
+  try {
+    const response = await expenseAPI.getById(expenseId);
+    if (!response.data?.success || !response.data.data) {
+      setError?.('Failed to fetch expense details for export');
+      return false;
+    }
+    const exp = response.data.data;
+    const beneficiary = exp.submittedBy;
+    const bankDetails = beneficiary?.bankDetails || {};
+    const row = [
+      1, // S. no
+      exp.expenseNumber || '',
+      exp.category || '',
+      beneficiary?.name || exp.submittedBy?.name || 'N/A',
+      bankDetails.accountNumber || '',
+      bankDetails.ifscCode || '',
+      exp.amount || 0
+    ];
+    const headers = ['S. no', 'Exp No', 'Exp Category', 'Beneficiary Name', 'Account', 'IFSC', 'Amount'];
+    const wsData = [headers, row];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Payment');
+    XLSX.writeFile(wb, `expense-${exp.expenseNumber || expenseId}-${new Date().toISOString().split('T')[0]}.xlsx`);
+    return true;
+  } catch (err) {
+    console.error('Excel export failed:', err);
+    setError?.('Failed to export to Excel. Please try again.');
+    return false;
+  }
+};
+
+// Export multiple expenses to Excel (same format)
+export const exportExpensesToExcel = (expenses, filename = 'payment-export') => {
+  try {
+    const headers = ['S. no', 'Exp No', 'Exp Category', 'Beneficiary Name', 'Account', 'IFSC', 'Amount'];
+    const rows = expenses.map((exp, i) => {
+      const beneficiary = exp.submittedBy;
+      const bankDetails = beneficiary?.bankDetails || {};
+      return [
+        i + 1,
+        exp.expenseNumber || '',
+        exp.category || '',
+        beneficiary?.name || exp.submittedBy?.name || 'N/A',
+        bankDetails.accountNumber || '',
+        bankDetails.ifscCode || '',
+        exp.amount || 0
+      ];
+    });
+    const wsData = [headers, ...rows];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Payments');
+    XLSX.writeFile(wb, `${filename}-${new Date().toISOString().split('T')[0]}.xlsx`);
+    return true;
+  } catch (err) {
+    console.error('Excel export failed:', err);
+    return false;
+  }
+};
 
 export const exportToJSON = (data, filename, user) => {
   try {

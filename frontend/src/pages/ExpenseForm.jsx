@@ -1410,7 +1410,7 @@ const ExpenseForm = () => {
                           multiple
                           hidden
                           onChange={handleFileUpload}
-                          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                          accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tiff,.doc,.docx,.xls,.xlsx,.txt,.csv"
                         />
                       </Button>
                       <Button

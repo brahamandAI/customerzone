@@ -13,6 +13,7 @@ import {
   Chip,
   TextField
 } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { paymentAPI } from '../services/api';
 import { useUserPreferences } from '../context/UserPreferencesContext';
 
@@ -54,10 +55,10 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
       if (response.data.success) {
         setPaymentDone(true);
         onPaymentSuccess(response.data.payment);
-        // Close after showing success for 1.5 seconds
+        // Close after showing success acknowledgment for 2.5 seconds
         setTimeout(() => {
           handleClose();
-        }, 1500);
+        }, 2500);
       } else {
         setError(response.data.message || 'Payment failed');
       }
@@ -93,12 +94,19 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
         )}
 
         {paymentDone ? (
-          <Box sx={{ py: 4, textAlign: 'center' }}>
-            <Typography variant="h5" color="success.main" fontWeight={600} gutterBottom>
-              Payment is done
+          <Box sx={{ py: 5, textAlign: 'center' }}>
+            <CheckCircleIcon sx={{ fontSize: 72, color: '#4caf50', mb: 2 }} />
+            <Typography variant="h5" color="success.main" fontWeight={700} gutterBottom>
+              Payment Successful!
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+              Your payment has been processed successfully.
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              UTR: {utrNumber}
+              UTR Number: <strong>{utrNumber}</strong>
+            </Typography>
+            <Typography variant="caption" display="block" color="text.secondary" sx={{ mt: 2 }}>
+              Submitter will be notified. This dialog will close shortly.
             </Typography>
           </Box>
         ) : (

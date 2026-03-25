@@ -89,17 +89,18 @@ router.get('/overview', protect, authorize('submitter', 'l1_approver', 'l2_appro
 
     const pendingExpenseIds = pendingApprovals.map(pa => pa.expense);
     
-    // Role-based filtering (same logic as approval page)
+    // Role-based filtering (align with GET /expenses/pending — include returned for correction)
     let statusFilter = {};
     if (userRole === 'l1_approver') {
-      // Include newly-created flagged items that are marked under_review
-      statusFilter = { status: { $in: ['submitted', 'under_review'] } };
+      statusFilter = { status: { $in: ['submitted', 'under_review', 'returned'] } };
     } else if (userRole === 'l2_approver') {
-      statusFilter = { status: 'approved_l1' };
+      statusFilter = { status: { $in: ['approved_l1', 'returned'] } };
     } else if (userRole === 'l3_approver') {
-      statusFilter = { status: 'approved_l2' };
+      statusFilter = { status: { $in: ['approved_l2', 'returned'] } };
+    } else if (userRole === 'finance') {
+      statusFilter = { status: { $in: ['approved_l3', 'returned'] } };
     } else {
-      statusFilter = { status: { $in: ['submitted', 'approved_l1', 'approved_l2'] } };
+      statusFilter = { status: { $in: ['submitted', 'approved_l1', 'approved_l2', 'returned'] } };
     }
     
     pendingApprovalsCount = await Expense.countDocuments({
