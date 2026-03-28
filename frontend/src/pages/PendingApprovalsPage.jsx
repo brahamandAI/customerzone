@@ -67,7 +67,7 @@ const getLastRejectionReason = (exp) => {
 
 const PendingApprovalsPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, getUserRole } = useAuth();
   const { darkMode } = useTheme();
   const { t } = useLanguage();
   const { formatCurrency, formatDate } = useUserPreferences();
@@ -93,6 +93,23 @@ const PendingApprovalsPage = () => {
   });
 
   const itemsPerPage = 10;
+
+  /** Map expense status + current user role to API numeric level (same rules as Approval page). */
+  const getApprovalLevelForExpense = (exp) => {
+    if (!exp) return 1;
+    const role = getUserRole();
+    if (exp.status === 'returned') {
+      if (role === 'L1_APPROVER') return 1;
+      if (role === 'L2_APPROVER') return 2;
+      if (role === 'L3_APPROVER') return 3;
+      if (role === 'FINANCE') return 4;
+    }
+    if (exp.status === 'submitted' || exp.status === 'under_review') return 1;
+    if (exp.status === 'approved_l1') return 2;
+    if (exp.status === 'approved_l2') return 3;
+    if (exp.status === 'approved_l3') return 4;
+    return 1;
+  };
 
   // Fetch pending approvals
   const fetchApprovals = useCallback(async () => {
@@ -142,9 +159,10 @@ const PendingApprovalsPage = () => {
 
   const handleApprove = async (id) => {
     try {
+      const level = getApprovalLevelForExpense(selectedApproval);
       const response = await expenseAPI.approveExpense(id, {
         action: 'approve',
-        level: 2,
+        level,
         approverId: user?._id,
         comments: approvalComment,
         modifiedAmount: modifiedAmount ? parseFloat(modifiedAmount) : null,
@@ -165,11 +183,14 @@ const PendingApprovalsPage = () => {
 
   const handleReject = async (id) => {
     try {
+      const level = getApprovalLevelForExpense(selectedApproval);
       const response = await expenseAPI.rejectExpense(id, {
         action: 'reject',
-        level: 2,
+        level,
         approverId: user?._id,
-        comments: approvalComment
+        comments: approvalComment,
+        modifiedAmount: modifiedAmount ? parseFloat(modifiedAmount) : null,
+        modificationReason: amountChangeReason
       });
 
       if (response.data.success) {

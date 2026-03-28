@@ -341,7 +341,7 @@ const Approval = () => {
     };
   }, [socket, fetchData]);
 
-  const levelMap = { L1: 1, L2: 2, L3: 3 };
+  const levelMap = { L1: 1, L2: 2, L3: 3, L4: 4 };
 
   const handleApprove = async (id) => {
     // Store original state for rollback
@@ -521,8 +521,12 @@ const Approval = () => {
       const data = response.data;
       
       if (data.success) {
-        // Show success message
-        setSnackbarMessage('Expense rejected successfully! Submitter will be notified.');
+        const rejLevel = levelMap[selectedApproval.approvalLevel] ?? 1;
+        setSnackbarMessage(
+          rejLevel >= 2
+            ? 'Expense returned to previous approver for correction.'
+            : 'Expense rejected successfully! Submitter will be notified.'
+        );
         setSnackbarSeverity('success');
         setSnackbarOpen(true);
         
@@ -1135,30 +1139,31 @@ const Approval = () => {
                             >
                               View Details
                             </Button>
-                          ) : approval.status === 'returned' ? (
-                            <Button
-                              variant="contained"
-                              color="warning"
-                              size="small"
-                              onClick={() => handleOpenDialog(approval)}
-                              sx={{ minWidth: 'auto', px: 2 }}
-                            >
-                              Fix & Resubmit
-                            </Button>
                           ) : isFinance ? (
-                            // Finance (L4) - Payment only
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              size="small"
-                              onClick={() => handleOpenDialog(approval)}
-                              sx={{ minWidth: 'auto', px: 2 }}
-                              startIcon={<CurrencyRupeeIcon />}
-                            >
-                              Process Payment
-                            </Button>
+                            // Finance (L4) — pending or returned: pay or reject (return to L3)
+                            <>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                onClick={() => handleOpenDialog(approval)}
+                                sx={{ minWidth: 'auto', px: 2 }}
+                                startIcon={<CurrencyRupeeIcon />}
+                              >
+                                Process Payment
+                              </Button>
+                              <Button
+                                variant="contained"
+                                color="error"
+                                size="small"
+                                onClick={() => handleOpenDialog(approval)}
+                                sx={{ minWidth: 'auto', px: 2 }}
+                              >
+                                Reject
+                              </Button>
+                            </>
                           ) : (
-                            // L1, L2, and L3 (Super Admin) - Approve/Reject
+                            // L1, L2, L3 — includes returned (e.g. reject L2 → L1 can reject again)
                             <>
                               <Button
                             variant="contained"
@@ -1467,16 +1472,25 @@ const Approval = () => {
             /* Rejected - view only, no actions */
             null
           ) : isFinance ? (
-            // Finance (L4) - Payment only
-            <Button 
-              onClick={() => selectedApproval && handlePayment(selectedApproval.id)}
-              color="primary"
-              variant="contained"
-              disabled={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount && !amountChangeReason}
-              startIcon={<CurrencyRupeeIcon />}
-            >
-              Process Payment
-            </Button>
+            <>
+              <Button
+                onClick={() => selectedApproval && handleReject(selectedApproval.id)}
+                color="error"
+                variant="contained"
+                disabled={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount && !amountChangeReason}
+              >
+                Reject
+              </Button>
+              <Button 
+                onClick={() => selectedApproval && handlePayment(selectedApproval.id)}
+                color="primary"
+                variant="contained"
+                disabled={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount && !amountChangeReason}
+                startIcon={<CurrencyRupeeIcon />}
+              >
+                Process Payment
+              </Button>
+            </>
           ) : (
             // L1, L2, and L3 (Super Admin) - Approve/Reject
             <>
