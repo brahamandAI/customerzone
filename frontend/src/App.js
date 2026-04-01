@@ -44,6 +44,7 @@ import PaymentProcessedPage from './pages/PaymentProcessedPage';
 import PendingExpensesPage from './pages/PendingExpensesPage';
 import SubmitterRejectedPage from './pages/SubmitterRejectedPage';
 import BatchPaymentPage from './pages/BatchPaymentPage';
+import SuperAdminFinancePipelinePage from './pages/SuperAdminFinancePipelinePage';
 
 // PrivateRoute component to protect routes
 const PrivateRoute = ({ children }) => {
@@ -162,6 +163,11 @@ function Layout() {
         <Route path="/payment-processed" element={
           <PrivateRoute>
             <PaymentProcessedPage />
+          </PrivateRoute>
+        } />
+        <Route path="/super-admin/:slug" element={
+          <PrivateRoute>
+            <SuperAdminFinancePipelinePage />
           </PrivateRoute>
         } />
         <Route path="/pending-expenses" element={

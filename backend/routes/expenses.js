@@ -656,6 +656,76 @@ router.get('/rejected-by-me', protect, authorize('l1_approver', 'l2_approver', '
   }
 });
 
+// L3 Super Admin: expenses this user approved at L3, still with Finance (awaiting payment)
+router.get('/l3-awaiting-finance', protect, authorize('l3_approver'), async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const expenses = await Expense.find({
+      status: 'approved_l3',
+      approvalHistory: {
+        $elemMatch: {
+          approver: userId,
+          level: 3,
+          action: 'approved'
+        }
+      },
+      isActive: true,
+      isDeleted: false
+    })
+      .populate('submittedBy', 'name email department')
+      .populate('site', 'name code')
+      .populate('approvalHistory.approver', 'name email role')
+      .sort({ updatedAt: -1 });
+
+    res.json({
+      success: true,
+      data: expenses
+    });
+  } catch (error) {
+    console.error('Error fetching L3 awaiting finance expenses:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
+// L3 Super Admin: expenses this user approved at L3 where payment is completed
+router.get('/l3-payments-completed', protect, authorize('l3_approver'), async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const expenses = await Expense.find({
+      status: { $in: ['payment_processed', 'reimbursed'] },
+      approvalHistory: {
+        $elemMatch: {
+          approver: userId,
+          level: 3,
+          action: 'approved'
+        }
+      },
+      isActive: true,
+      isDeleted: false
+    })
+      .populate('submittedBy', 'name email department')
+      .populate('site', 'name code')
+      .populate('approvalHistory.approver', 'name email role')
+      .sort({ updatedAt: -1 });
+
+    res.json({
+      success: true,
+      data: expenses
+    });
+  } catch (error) {
+    console.error('Error fetching L3 payments completed expenses:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
 // Get expenses for approval (pending expenses)
 router.get('/pending', protect, authorize('l1_approver', 'l2_approver', 'l3_approver', 'finance'), async (req, res) => {
   try {
@@ -1137,9 +1207,12 @@ router.put('/:expenseId/approve', protect, authorize('l1_approver', 'l2_approver
       // Handle payment processing
       console.log('Emitting payment notification for L3:', levelNum);
       
+      const submitterId =
+        updatedExpense.submittedBy?._id ?? updatedExpense.submittedBy;
       const socketData = {
         ...notificationData,
         status: 'payment_processed',
+        submittedById: submitterId,
         amount: paymentAmount || modifiedAmount || updatedExpense.amount,
         category: updatedExpense.category,
         siteName: updatedExpense.site.name,

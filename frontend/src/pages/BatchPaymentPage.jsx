@@ -104,12 +104,8 @@ const BatchPaymentPage = () => {
     }
   };
 
-  const handlePaymentComplete = (results) => {
-    // Refresh the expenses list
+  const handlePaymentComplete = () => {
     fetchApprovedExpenses();
-    
-    // Show success message
-    alert(`Successfully processed ${results.totalProcessed} expenses!`);
   };
 
   if (loading) {

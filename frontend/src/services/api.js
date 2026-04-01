@@ -91,6 +91,9 @@ export const expenseAPI = {
   getNextExpenseNumber: () => api.get('/expenses/next-number'),
   getPendingApprovals: () => api.get('/expenses/pending'),
   getRejectedByMe: () => api.get('/expenses/rejected-by-me'),
+  /** L3 Super Admin — matches dashboard card counts */
+  getL3AwaitingFinance: () => api.get('/expenses/l3-awaiting-finance'),
+  getL3PaymentsCompleted: () => api.get('/expenses/l3-payments-completed'),
   approveExpense: (id, data) => api.put(`/expenses/${id}/approve`, data),
   rejectExpense: (id, data) => api.put(`/expenses/${id}/approve`, data),
   getAll: () => api.get('/expenses/all'),

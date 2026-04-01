@@ -60,8 +60,8 @@ const NavBar = () => {
     { label: 'Reports', path: '/reports', icon: <ReceiptIcon />, show: user && !['submitter', 'SUBMITTER'].includes(user?.role) },
     // Show Approvals for L1, L2, and L3 approvers (but not submitters)
     { label: (user?.role?.toLowerCase() === 'finance') ? 'Payment Processing' : 'Approvals', path: '/approval', icon: <ApprovalIcon />, show: user && !['submitter', 'SUBMITTER'].includes(user?.role) },
-    // Batch Payment - Only for Finance and L3 Approver
-    { label: '🔐 Batch Payment', path: '/batch-payment', icon: <PaymentIcon />, show: user && ['finance', 'l3_approver'].includes(user?.role?.toLowerCase()) },
+    // Batch Payment - Finance only (not Super Admin / L3)
+    { label: '🔐 Batch Payment', path: '/batch-payment', icon: <PaymentIcon />, show: user && user?.role?.toLowerCase() === 'finance' },
     // L2 and L3 approvers can see admin panel (but not Finance)
     { label: 'Admin', path: '/admin', icon: <AdminPanelSettingsIcon />, show: hasPermission('l2_approver') && user?.role?.toLowerCase() !== 'finance' },
   ].filter(item => item.show);

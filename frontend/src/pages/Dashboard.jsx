@@ -12,6 +12,8 @@ import PendingIcon from '@mui/icons-material/Pending';
 import AddIcon from '@mui/icons-material/Add';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PaymentIcon from '@mui/icons-material/Payment';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import PeopleIcon from '@mui/icons-material/People';
 import BusinessIcon from '@mui/icons-material/Business';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -35,6 +37,8 @@ const Dashboard = () => {
     totalExpenses: 0,
     monthlyExpenses: 0,
     pendingApprovals: 0,
+    superAdminAwaitingFinance: 0,
+    superAdminPaymentsCompleted: 0,
     approvedThisMonth: 0,
     budgetUtilization: 0,
     savings: 0,
@@ -99,6 +103,8 @@ const Dashboard = () => {
         totalExpenses: 0,
         monthlyExpenses: 0,
         pendingApprovals: 0,
+        superAdminAwaitingFinance: 0,
+        superAdminPaymentsCompleted: 0,
         approvedThisMonth: 0,
         budgetUtilization: 0,
         savings: 0,
@@ -294,6 +300,8 @@ const Dashboard = () => {
     if (!user) {
       return {
         pendingApprovals: 0,
+        superAdminAwaitingFinance: 0,
+        superAdminPaymentsCompleted: 0,
         totalAmount: 0,
         totalExpenses: 0,
         approvedThisMonth: 0,
@@ -322,6 +330,8 @@ const Dashboard = () => {
     });
     
     const stats = {
+      superAdminAwaitingFinance: user?.role?.toLowerCase() === 'l3_approver' ? (data.superAdminAwaitingFinanceCount ?? 0) : 0,
+      superAdminPaymentsCompleted: user?.role?.toLowerCase() === 'l3_approver' ? (data.superAdminPaymentsCompletedCount ?? 0) : 0,
       pendingApprovals: data.pendingApprovalsCount || 0,
       totalAmount: isFinance 
         ? (data.paymentStats?.totalAmount || 0)  // Total amount paid by Finance
@@ -650,6 +660,88 @@ const Dashboard = () => {
                 </Paper>
               </Zoom>
             </Grid>
+
+            {/* Super Admin (L3): finance pipeline for expenses they approved at L3 */}
+            {user?.role?.toLowerCase() === 'l3_approver' && (
+              <>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Zoom in style={{ transitionDelay: '650ms' }}>
+                    <Paper
+                      elevation={16}
+                      sx={{
+                        p: 3,
+                        borderRadius: 3,
+                        background: darkMode ? 'rgba(26,26,26,0.95)' : 'rgba(255,255,255,0.95)',
+                        backdropFilter: 'blur(10px)',
+                        border: darkMode ? '1px solid rgba(51,51,51,0.3)' : '1px solid rgba(255,255,255,0.2)',
+                        textAlign: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          transform: 'translateY(-4px)',
+                          boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+                          border: darkMode ? '1px solid #0288d1' : '1px solid #0288d1'
+                        }
+                      }}
+                      onClick={() => navigate('/super-admin/awaiting-finance')}
+                    >
+                      <Avatar sx={{ bgcolor: '#0288d1', mx: 'auto', mb: 2 }}>
+                        <HourglassTopIcon />
+                      </Avatar>
+                      <Typography variant="h4" fontWeight={700} color="#0288d1">
+                        {Number(stats.superAdminAwaitingFinance ?? 0).toLocaleString()}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: darkMode ? '#b0b0b0' : '#666666' }}>
+                        Awaiting Finance Payment
+                      </Typography>
+                      <Chip
+                        label="With finance"
+                        size="small"
+                        sx={{ mt: 1, bgcolor: 'rgba(2, 136, 209, 0.12)', color: '#0288d1' }}
+                      />
+                    </Paper>
+                  </Zoom>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Zoom in style={{ transitionDelay: '700ms' }}>
+                    <Paper
+                      elevation={16}
+                      sx={{
+                        p: 3,
+                        borderRadius: 3,
+                        background: darkMode ? 'rgba(26,26,26,0.95)' : 'rgba(255,255,255,0.95)',
+                        backdropFilter: 'blur(10px)',
+                        border: darkMode ? '1px solid rgba(51,51,51,0.3)' : '1px solid rgba(255,255,255,0.2)',
+                        textAlign: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          transform: 'translateY(-4px)',
+                          boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+                          border: darkMode ? '1px solid #00897b' : '1px solid #00897b'
+                        }
+                      }}
+                      onClick={() => navigate('/super-admin/payments-completed')}
+                    >
+                      <Avatar sx={{ bgcolor: '#00897b', mx: 'auto', mb: 2 }}>
+                        <VerifiedIcon />
+                      </Avatar>
+                      <Typography variant="h4" fontWeight={700} color="#00897b">
+                        {Number(stats.superAdminPaymentsCompleted ?? 0).toLocaleString()}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: darkMode ? '#b0b0b0' : '#666666' }}>
+                        Payments Completed
+                      </Typography>
+                      <Chip
+                        label="Paid / reimbursed"
+                        size="small"
+                        sx={{ mt: 1, bgcolor: 'rgba(0, 137, 123, 0.12)', color: '#00897b' }}
+                      />
+                    </Paper>
+                  </Zoom>
+                </Grid>
+              </>
+            )}
               </>
             )}
 

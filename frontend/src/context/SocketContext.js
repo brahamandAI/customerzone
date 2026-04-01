@@ -13,6 +13,8 @@ export const useSocket = () => {
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [notifications, setNotifications] = useState([]);
+  /** Brief toast when Finance completes payment (submitter user room). */
+  const [paymentAckToast, setPaymentAckToast] = useState({ open: false, message: '' });
   const socketRef = useRef(null);
   const { user } = useAuth();
 
@@ -173,6 +175,40 @@ export const SocketProvider = ({ children }) => {
       }, ...prev]);
     });
 
+    newSocket.on('expense_payment_processed', (data) => {
+      const submitterId =
+        data.submittedById != null ? String(data.submittedById) : null;
+      const me = user?._id != null ? String(user._id) : '';
+      if (!submitterId || submitterId !== me) {
+        return;
+      }
+
+      const expenseId = data.expenseId != null ? String(data.expenseId) : '';
+      const num = data.expenseNumber ?? '';
+      const rawAmt = data.paymentAmount ?? data.amount;
+      const amt =
+        rawAmt != null && !Number.isNaN(Number(rawAmt))
+          ? Number(rawAmt).toLocaleString('en-IN')
+          : String(rawAmt ?? '');
+      const message = `Expense #${num} — ₹${amt} paid by Finance.`;
+      console.log('Payment processed notification:', expenseId, message);
+      setNotifications((prev) =>
+        [
+          {
+            id: `payment-${expenseId}-${Date.now()}`,
+            type: 'payment_acknowledged',
+            title: 'Payment received',
+            message,
+            data: { ...data, expenseId },
+            timestamp: new Date(data.timestamp || Date.now()),
+            read: false
+          },
+          ...prev
+        ].slice(0, 50)
+      );
+      setPaymentAckToast({ open: true, message });
+    });
+
     // Cleanup function
     return () => {
       if (socketRef.current) {
@@ -199,12 +235,18 @@ export const SocketProvider = ({ children }) => {
     setNotifications([]);
   };
 
+  const closePaymentAckToast = () => {
+    setPaymentAckToast((t) => ({ ...t, open: false }));
+  };
+
   const value = {
     socket,
     notifications,
     markNotificationAsRead,
     clearNotifications,
-    unreadCount: notifications.filter(n => !n.read).length
+    unreadCount: notifications.filter(n => !n.read).length,
+    paymentAckToast,
+    closePaymentAckToast
   };
 
   return (

@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { useSocket } from '../context/SocketContext';
-import { Badge, IconButton, Menu, MenuItem, Typography, Box } from '@mui/material';
+import { Badge, IconButton, Menu, MenuItem, Typography, Box, Snackbar, Alert } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
 const NotificationBell = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const { notifications, unreadCount, markNotificationAsRead } = useSocket();
+  const {
+    notifications,
+    unreadCount,
+    markNotificationAsRead,
+    paymentAckToast,
+    closePaymentAckToast
+  } = useSocket();
   const navigate = useNavigate();
 
   const handleClick = (event) => {
@@ -27,6 +33,12 @@ const NotificationBell = () => {
     } else if (notification.type === 'budget_alert') {
       // Always go to summary page for budget alerts
       navigate('/budget-alerts');
+    } else if (
+      notification.type === 'payment_acknowledged' ||
+      (notification.type === 'expense_approved' &&
+        notification.data?.status === 'payment_processed')
+    ) {
+      navigate('/pending-expenses');
     }
     
     handleClose();
@@ -34,6 +46,21 @@ const NotificationBell = () => {
 
   return (
     <>
+      <Snackbar
+        open={paymentAckToast.open}
+        autoHideDuration={8000}
+        onClose={closePaymentAckToast}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={closePaymentAckToast}
+          severity="success"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {paymentAckToast.message}
+        </Alert>
+      </Snackbar>
       <IconButton
         color="inherit"
         onClick={handleClick}

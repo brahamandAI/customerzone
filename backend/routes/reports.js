@@ -7,6 +7,57 @@ const Expense = require('../models/Expense');
 
 const router = express.Router();
 
+/**
+ * Inclusive YYYY-MM-DD range for report queries.
+ * - IST (+05:30) calendar days (India) and plain UTC calendar days are merged
+ *   (wider [start,end]) so expenses stored either way still match "This month".
+ * - Invalid dates return null.
+ */
+function parseQueryDateRangeInclusive(startDateStr, endDateStr) {
+  if (!startDateStr || !endDateStr) return null;
+  const s = String(startDateStr).trim();
+  const e = String(endDateStr).trim();
+  const iso = /^\d{4}-\d{2}-\d{2}$/;
+  if (iso.test(s) && iso.test(e)) {
+    const istStart = new Date(`${s}T00:00:00.000+05:30`);
+    const istEnd = new Date(`${e}T23:59:59.999+05:30`);
+    const utcStart = new Date(`${s}T00:00:00.000Z`);
+    const utcEnd = new Date(`${e}T23:59:59.999Z`);
+    if (Number.isNaN(istStart.getTime()) || Number.isNaN(istEnd.getTime())) {
+      return null;
+    }
+    const startMs = Math.min(istStart.getTime(), utcStart.getTime());
+    const endMs = Math.max(istEnd.getTime(), utcEnd.getTime());
+    return {
+      start: new Date(startMs),
+      end: new Date(endMs)
+    };
+  }
+  const start = new Date(s);
+  const end = new Date(e);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
+  return { start, end };
+}
+
+/**
+ * Match if expense falls in period by bill date OR submission date (backdated entries).
+ */
+function buildDateRangeFilter(range) {
+  if (!range?.start || !range?.end) return {};
+  return {
+    $or: [
+      { expenseDate: { $gte: range.start, $lte: range.end } },
+      { submissionDate: { $gte: range.start, $lte: range.end } }
+    ]
+  };
+}
+
+/** Site id for L1 when user.site may be populated or raw ObjectId */
+function getUserSiteId(user) {
+  if (!user?.site) return null;
+  return user.site._id || user.site;
+}
+
 // @desc    Get expense summary report
 // @route   GET /api/reports/expense-summary
 // @access  Private (L2, L3 approvers only)
@@ -25,24 +76,26 @@ router.get('/expense-summary', protect, checkPermission('canViewReports'), async
   
   // Build date filter
   let dateFilter = {};
-  if (startDate && endDate) {
-    dateFilter = {
-      expenseDate: {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate)
-      }
-    };
-  } else {
-    // Default to current month
+  const applyCurrentMonthFallback = () => {
     const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    dateFilter = {
-      expenseDate: {
-        $gte: monthStart,
-        $lte: monthEnd
-      }
-    };
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const startStr = `${y}-${m}-01`;
+    const endStr = `${y}-${m}-${String(lastDay).padStart(2, '0')}`;
+    const range = parseQueryDateRangeInclusive(startStr, endStr);
+    dateFilter = range ? buildDateRangeFilter(range) : {};
+  };
+
+  if (startDate && endDate) {
+    const range = parseQueryDateRangeInclusive(startDate, endDate);
+    if (range) {
+      dateFilter = buildDateRangeFilter(range);
+    } else {
+      applyCurrentMonthFallback();
+    }
+  } else {
+    applyCurrentMonthFallback();
   }
 
   // Build match filter
@@ -54,7 +107,8 @@ router.get('/expense-summary', protect, checkPermission('canViewReports'), async
 
   // Apply role-based filtering
   if (userRole === 'l1_approver') {
-    matchFilter.site = req.user.site?._id; // L1 approver: only their site
+    const sid = getUserSiteId(req.user);
+    if (sid) matchFilter.site = sid;
   } else if (userRole === 'l2_approver') {
     // L2 approver: all sites (no site filter)
     if (site) {
@@ -65,12 +119,14 @@ router.get('/expense-summary', protect, checkPermission('canViewReports'), async
     if (site) {
       matchFilter.site = site; // Allow filtering by specific site if requested
     }
+  } else if (userRole === 'submitter') {
+    matchFilter.submittedBy = req.user._id;
   }
 
   // Apply additional filters
   if (category) matchFilter.category = category;
   if (status) matchFilter.status = status;
-  if (submitter) matchFilter.submittedBy = submitter;
+  if (submitter && userRole !== 'submitter') matchFilter.submittedBy = submitter;
 
   // Get current period summary data
   const summary = await Expense.aggregate([
@@ -120,32 +176,46 @@ router.get('/expense-summary', protect, checkPermission('canViewReports'), async
   // Calculate previous period for trend comparison
   let previousDateFilter = {};
   if (startDate && endDate) {
-    const startDateObj = new Date(startDate);
-    const endDateObj = new Date(endDate);
-    const periodDays = Math.ceil((endDateObj - startDateObj) / (1000 * 60 * 60 * 24));
-    
-    const previousStartDate = new Date(startDateObj);
-    previousStartDate.setDate(previousStartDate.getDate() - periodDays);
-    const previousEndDate = new Date(startDateObj);
-    previousEndDate.setDate(previousEndDate.getDate() - 1);
-    
-    previousDateFilter = {
-      expenseDate: {
-        $gte: previousStartDate,
-        $lte: previousEndDate
-      }
-    };
+    const range = parseQueryDateRangeInclusive(startDate, endDate);
+    if (range) {
+      const startDateObj = range.start;
+      const endDateObj = range.end;
+      const periodDays = Math.max(
+        1,
+        Math.ceil((endDateObj - startDateObj) / (1000 * 60 * 60 * 24))
+      );
+
+      const previousStartDate = new Date(startDateObj);
+      previousStartDate.setDate(previousStartDate.getDate() - periodDays);
+      previousStartDate.setHours(0, 0, 0, 0);
+      const previousEndDate = new Date(startDateObj);
+      previousEndDate.setDate(previousEndDate.getDate() - 1);
+      previousEndDate.setHours(23, 59, 59, 999);
+
+      previousDateFilter = buildDateRangeFilter({
+        start: previousStartDate,
+        end: previousEndDate
+      });
+    } else {
+      const now = new Date();
+      const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const previousMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+      previousMonthEnd.setHours(23, 59, 59, 999);
+      previousDateFilter = buildDateRangeFilter({
+        start: previousMonthStart,
+        end: previousMonthEnd
+      });
+    }
   } else {
     // Default to previous month
     const now = new Date();
     const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const previousMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-    previousDateFilter = {
-      expenseDate: {
-        $gte: previousMonthStart,
-        $lte: previousMonthEnd
-      }
-    };
+    previousMonthEnd.setHours(23, 59, 59, 999);
+    previousDateFilter = buildDateRangeFilter({
+      start: previousMonthStart,
+      end: previousMonthEnd
+    });
   }
 
   // Build previous period match filter
@@ -157,7 +227,8 @@ router.get('/expense-summary', protect, checkPermission('canViewReports'), async
 
   // Apply role-based filtering for previous period
   if (userRole === 'l1_approver') {
-    previousMatchFilter.site = req.user.site?._id; // L1 approver: only their site
+    const sid = getUserSiteId(req.user);
+    if (sid) previousMatchFilter.site = sid;
   } else if (userRole === 'l2_approver') {
     // L2 approver: all sites (no site filter)
     if (site) {
@@ -168,12 +239,14 @@ router.get('/expense-summary', protect, checkPermission('canViewReports'), async
     if (site) {
       previousMatchFilter.site = site; // Allow filtering by specific site if requested
     }
+  } else if (userRole === 'submitter') {
+    previousMatchFilter.submittedBy = req.user._id;
   }
 
   // Apply additional filters for previous period
   if (category) previousMatchFilter.category = category;
   if (status) previousMatchFilter.status = status;
-  if (submitter) previousMatchFilter.submittedBy = submitter;
+  if (submitter && userRole !== 'submitter') previousMatchFilter.submittedBy = submitter;
 
   // Get previous period summary data
   const previousSummary = await Expense.aggregate([
@@ -357,17 +430,18 @@ router.get('/expense-details', protect, checkPermission('canViewReports'), async
     isDeleted: false
   };
 
-  // Date filter
+  // Date filter (expense date OR submission date in range)
   if (startDate && endDate) {
-    matchFilter.expenseDate = {
-      $gte: new Date(startDate),
-      $lte: new Date(endDate)
-    };
+    const range = parseQueryDateRangeInclusive(startDate, endDate);
+    if (range) {
+      Object.assign(matchFilter, buildDateRangeFilter(range));
+    }
   }
 
   // Role-based filtering
   if (userRole === 'l1_approver') {
-    matchFilter.site = req.user.site?._id; // L1 approver: only their site
+    const sid = getUserSiteId(req.user);
+    if (sid) matchFilter.site = sid;
   } else if (userRole === 'l2_approver') {
     // L2 approver: all sites (no site filter)
     if (site) {
@@ -378,12 +452,14 @@ router.get('/expense-details', protect, checkPermission('canViewReports'), async
     if (site) {
       matchFilter.site = site; // Allow filtering by specific site if requested
     }
+  } else if (userRole === 'submitter') {
+    matchFilter.submittedBy = req.user._id;
   }
 
   // Additional filters
   if (category) matchFilter.category = category;
   if (status) matchFilter.status = status;
-  if (submitter) matchFilter.submittedBy = submitter;
+  if (submitter && userRole !== 'submitter') matchFilter.submittedBy = submitter;
 
   // Get detailed expenses
   const expenses = await Expense.find(matchFilter)
@@ -548,17 +624,19 @@ router.get('/vehicle-km', protect, checkPermission('canViewReports'), asyncHandl
   // Build date filter
   let dateFilter = {};
   if (startDate && endDate) {
-    dateFilter = {
-      expenseDate: {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate)
-      }
-    };
+    const range = parseQueryDateRangeInclusive(startDate, endDate);
+    if (range) {
+      dateFilter = buildDateRangeFilter(range);
+    }
   } else {
-    // Default to current month
     const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    dateFilter = { expenseDate: { $gte: monthStart } };
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const startStr = `${y}-${m}-01`;
+    const endStr = `${y}-${m}-${String(lastDay).padStart(2, '0')}`;
+    const range = parseQueryDateRangeInclusive(startStr, endStr);
+    dateFilter = range ? buildDateRangeFilter(range) : {};
   }
 
   // Build match filter
@@ -571,7 +649,8 @@ router.get('/vehicle-km', protect, checkPermission('canViewReports'), asyncHandl
 
   // Role-based filtering
   if (userRole === 'l1_approver') {
-    matchFilter.site = req.user.site?._id; // L1 approver: only their site
+    const sid = getUserSiteId(req.user);
+    if (sid) matchFilter.site = sid;
   } else if (userRole === 'l2_approver') {
     // L2 approver: all sites (no site filter)
     if (site) {
@@ -582,6 +661,8 @@ router.get('/vehicle-km', protect, checkPermission('canViewReports'), asyncHandl
     if (site) {
       matchFilter.site = site; // Allow filtering by specific site if requested
     }
+  } else if (userRole === 'submitter') {
+    matchFilter.submittedBy = req.user._id;
   }
 
   if (vehicleNumber) {
@@ -683,18 +764,23 @@ router.get('/approval-analytics', protect, authorize('l3_approver', 'finance'), 
   // Build date filter
   let dateFilter = {};
   if (startDate && endDate) {
-    dateFilter = {
-      'approvalHistory.date': {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate)
-      }
-    };
+    const range = parseQueryDateRangeInclusive(startDate, endDate);
+    if (range) {
+      dateFilter = {
+        'approvalHistory.date': {
+          $gte: range.start,
+          $lte: range.end
+        }
+      };
+    }
   } else {
     // Default to current month
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    monthEnd.setHours(23, 59, 59, 999);
     dateFilter = {
-      'approvalHistory.date': { $gte: monthStart }
+      'approvalHistory.date': { $gte: monthStart, $lte: monthEnd }
     };
   }
 

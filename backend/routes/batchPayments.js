@@ -110,6 +110,7 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
 
         notifications.push({
           userId: expense.submittedBy._id,
+          expenseId: expense._id,
           email: expense.submittedBy.email,
           phone: expense.submittedBy.phone,
           expenseNumber: expense.expenseNumber,
@@ -164,7 +165,9 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
     const io = req.app.get('io');
     for (const notification of notifications) {
       io.to(`user-${notification.userId}`).emit('expense_payment_processed', {
+        expenseId: notification.expenseId,
         expenseNumber: notification.expenseNumber,
+        submittedById: notification.userId,
         amount: notification.amount,
         paymentDate: new Date(),
         processedBy: req.user.name,
@@ -472,6 +475,7 @@ router.post('/verify-and-process', protect, authorize('finance', 'l3_approver'),
         // Prepare notification for submitter
         notifications.push({
           userId: expense.submittedBy._id,
+          expenseId: expense._id,
           email: expense.submittedBy.email,
           phone: expense.submittedBy.phone,
           expenseNumber: expense.expenseNumber,
@@ -530,7 +534,9 @@ router.post('/verify-and-process', protect, authorize('finance', 'l3_approver'),
     // Notify all affected users
     for (const notification of notifications) {
       io.to(`user-${notification.userId}`).emit('expense_payment_processed', {
+        expenseId: notification.expenseId,
         expenseNumber: notification.expenseNumber,
+        submittedById: notification.userId,
         amount: notification.amount,
         paymentDate: new Date(),
         processedBy: req.user.name,

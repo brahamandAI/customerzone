@@ -79,10 +79,12 @@ router.post('/verify-utr', protect, authorize('l3_approver', 'finance'), async (
 
     // Emit socket event for real-time updates
     const io = req.app.get('io');
+    const submitterId = expense.submittedBy?._id ?? expense.submittedBy;
     const socketData = {
       expenseId: expense._id,
       expenseNumber: expense.expenseNumber,
       status: 'payment_processed',
+      submittedById: submitterId,
       paymentAmount: expense.paymentAmount,
       paymentDate: expense.paymentDate,
       processedBy: req.user.name,
@@ -90,7 +92,7 @@ router.post('/verify-utr', protect, authorize('l3_approver', 'finance'), async (
     };
 
     io.to('role-l3_approver').emit('expense_payment_processed', socketData);
-    io.to(`user-${expense.submittedBy._id}`).emit('expense_payment_processed', socketData);
+    io.to(`user-${submitterId}`).emit('expense_payment_processed', socketData);
     io.emit('dashboard-update', socketData);
 
     res.json({
@@ -297,10 +299,12 @@ router.post('/verify', protect, async (req, res) => {
 
     // Emit socket event for real-time updates
     const io = req.app.get('io');
+    const submitterId = expense.submittedBy?._id ?? expense.submittedBy;
     const socketData = {
       expenseId: expense._id,
       expenseNumber: expense.expenseNumber,
       status: 'payment_processed',
+      submittedById: submitterId,
       paymentAmount: expense.paymentAmount,
       paymentDate: expense.paymentDate,
       processedBy: req.user.name,
@@ -308,7 +312,7 @@ router.post('/verify', protect, async (req, res) => {
     };
 
     io.to('role-l3_approver').emit('expense_payment_processed', socketData);
-    io.to(`user-${expense.submittedBy}`).emit('expense_payment_processed', socketData);
+    io.to(`user-${submitterId}`).emit('expense_payment_processed', socketData);
 
     res.json({
       success: true,

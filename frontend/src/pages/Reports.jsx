@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Typography, Paper, Grid, Card, CardContent, Button, Fade, Zoom, FormControl, InputLabel, Select, MenuItem, TextField, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Alert } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -6,7 +6,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import TableChartIcon from '@mui/icons-material/TableChart';
-import { reportAPI } from '../services/api';
+import { reportAPI, siteAPI } from '../services/api';
 import { useTheme } from '../context/ThemeContext';
 import { useUserPreferences } from '../context/UserPreferencesContext';
 import * as XLSX from 'xlsx';
@@ -26,6 +26,33 @@ const Reports = () => {
   const [summaryData, setSummaryData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [sites, setSites] = useState([]);
+
+  /** Calendar date in local timezone (avoid toISOString() shifting month for IST etc.) */
+  const toLocalYMD = useCallback((d) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await siteAPI.getAll();
+        if (cancelled) return;
+        if (res.data?.success && Array.isArray(res.data.data)) {
+          setSites(res.data.data);
+        }
+      } catch (e) {
+        console.warn('Reports: could not load sites', e);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Function to validate date range
   const validateDateRange = () => {
@@ -53,11 +80,12 @@ const Reports = () => {
     return { valid: true };
   };
 
-  // Function to get date range based on selected period
+  // Function to get date range based on selected period (local calendar dates)
   const getDateRange = () => {
     const now = new Date();
-    let start, end;
-    
+    let start;
+    let end;
+
     switch (selectedPeriod) {
       case 'week':
         start = new Date(now);
@@ -78,22 +106,19 @@ const Reports = () => {
         break;
       case 'custom':
         if (startDate && endDate) {
-          start = new Date(startDate);
-          end = new Date(endDate);
-        } else {
-          // Fallback to current month
-          start = new Date(now.getFullYear(), now.getMonth(), 1);
-          end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+          return { startDate, endDate };
         }
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+        end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
         break;
       default:
         start = new Date(now.getFullYear(), now.getMonth(), 1);
         end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
     }
-    
+
     return {
-      startDate: start.toISOString().split('T')[0],
-      endDate: end.toISOString().split('T')[0]
+      startDate: toLocalYMD(start),
+      endDate: toLocalYMD(end)
     };
   };
 
@@ -211,7 +236,7 @@ const Reports = () => {
       }
     }
     fetchReports();
-  }, [selectedPeriod, selectedSite, startDate, endDate, useCustomRange]);
+  }, [selectedPeriod, selectedSite, startDate, endDate, useCustomRange, toLocalYMD]);
 
   const handleExportExcel = async () => {
     try {
@@ -451,7 +476,7 @@ const Reports = () => {
                   </>
                 )}
                 
-                <FormControl sx={{ minWidth: 150 }}>
+                <FormControl sx={{ minWidth: 200 }}>
                   <InputLabel>Site</InputLabel>
                   <Select
                     value={selectedSite}
@@ -459,9 +484,12 @@ const Reports = () => {
                     onChange={(e) => setSelectedSite(e.target.value)}
                   >
                     <MenuItem value="all">All Sites</MenuItem>
-                    <MenuItem value="site1">Site A</MenuItem>
-                    <MenuItem value="site2">Site B</MenuItem>
-                    <MenuItem value="site3">Site C</MenuItem>
+                    {sites.map((s) => (
+                      <MenuItem key={s._id} value={s._id}>
+                        {s.name}
+                        {s.code ? ` (${s.code})` : ''}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>

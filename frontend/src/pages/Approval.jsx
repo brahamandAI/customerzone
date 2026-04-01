@@ -563,17 +563,12 @@ const Approval = () => {
     }
   };
 
-  const handlePaymentSuccess = (paymentData) => {
-    // Show success message
-    setSnackbarMessage('Payment processed successfully! Expense marked as paid.');
-    setSnackbarSeverity('success');
-    setSnackbarOpen(true);
-    
+  const handlePaymentSuccess = () => {
     // Update local state - remove the processed expense from the list
     setApprovals(approvals.filter(approval => approval.id !== selectedExpenseForPayment.id));
     setPaymentModalOpen(false);
     setSelectedExpenseForPayment(null);
-    
+
     // Refresh data to update statistics
     fetchData();
   };

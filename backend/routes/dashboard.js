@@ -121,6 +121,33 @@ router.get('/overview', protect, authorize('submitter', 'l1_approver', 'l2_appro
   
   dashboardData.pendingApprovalsCount = pendingApprovalsCount;
 
+  // Super Admin (L3): pipeline visibility — expenses this user approved at L3 vs finance payment
+  if (userRole === 'l3_approver') {
+    const l3ApprovedByMe = {
+      approvalHistory: {
+        $elemMatch: {
+          approver: userId,
+          level: 3,
+          action: 'approved'
+        }
+      },
+      isActive: true,
+      isDeleted: false
+    };
+    const [pendingFinance, paymentsCompleted] = await Promise.all([
+      Expense.countDocuments({
+        status: 'approved_l3',
+        ...l3ApprovedByMe
+      }),
+      Expense.countDocuments({
+        status: { $in: ['payment_processed', 'reimbursed'] },
+        ...l3ApprovedByMe
+      })
+    ]);
+    dashboardData.superAdminAwaitingFinanceCount = pendingFinance;
+    dashboardData.superAdminPaymentsCompletedCount = paymentsCompleted;
+  }
+
   // Role-specific data
   if (userRole === 'submitter') {
     // Recent expenses
