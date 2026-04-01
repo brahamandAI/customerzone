@@ -33,6 +33,29 @@ import { useTheme } from '../context/ThemeContext';
 import { useUserPreferences } from '../context/UserPreferencesContext';
 import { expenseAPI } from '../services/api';
 
+/** Calendar days since this L3 user last approved at level 3 (→ Finance queue). */
+function getDaysPendingFinance(exp, approverUserId) {
+  if (!exp || !approverUserId) return null;
+  const uid = String(approverUserId);
+  const hist = Array.isArray(exp.approvalHistory) ? exp.approvalHistory : [];
+  const entries = hist.filter(
+    (h) =>
+      h &&
+      Number(h.level) === 3 &&
+      h.action === 'approved' &&
+      String(h.approver?._id || h.approver) === uid
+  );
+  if (!entries.length) return null;
+  let latest = 0;
+  for (const h of entries) {
+    const t = new Date(h.date || h.timestamp || 0).getTime();
+    if (!Number.isNaN(t) && t > latest) latest = t;
+  }
+  if (!latest) return null;
+  const msPerDay = 86400000;
+  return Math.max(0, Math.floor((Date.now() - latest) / msPerDay));
+}
+
 const SLUG_CONFIG = {
   'awaiting-finance': {
     title: 'Awaiting Finance Payment',
@@ -316,7 +339,7 @@ const SuperAdminFinancePipelinePage = () => {
                     stickyHeader
                     size="medium"
                     sx={{
-                      minWidth: 960,
+                      minWidth: slug === 'awaiting-finance' ? 1040 : 960,
                       borderCollapse: 'separate',
                       borderSpacing: 0,
                       '& .MuiTableCell-root': {
@@ -333,6 +356,11 @@ const SuperAdminFinancePipelinePage = () => {
                         <TableCell sx={{ ...headCellSx }}>Site</TableCell>
                         <TableCell sx={{ ...headCellSx }}>Submitted by</TableCell>
                         <TableCell sx={{ ...headCellSx }}>Status</TableCell>
+                        {slug === 'awaiting-finance' && (
+                          <TableCell sx={{ ...headCellSx, textAlign: 'right' }}>
+                            Days pending
+                          </TableCell>
+                        )}
                         <TableCell sx={{ ...headCellSx }}>Expense date</TableCell>
                         {slug === 'payments-completed' && (
                           <TableCell sx={{ ...headCellSx }}>Payment date</TableCell>
@@ -343,7 +371,7 @@ const SuperAdminFinancePipelinePage = () => {
                       {filtered.length === 0 ? (
                         <TableRow>
                           <TableCell
-                            colSpan={slug === 'payments-completed' ? 8 : 7}
+                            colSpan={8}
                             align="center"
                             sx={{ ...bodyCellSx, py: 8, border: 'none' }}
                           >
@@ -423,6 +451,34 @@ const SuperAdminFinancePipelinePage = () => {
                                 }}
                               />
                             </TableCell>
+                            {slug === 'awaiting-finance' && (
+                              <TableCell
+                                align="right"
+                                sx={{
+                                  ...bodyCellSx,
+                                  fontVariantNumeric: 'tabular-nums',
+                                  whiteSpace: 'nowrap'
+                                }}
+                              >
+                                {(() => {
+                                  const d = getDaysPendingFinance(exp, user?._id);
+                                  if (d === null) return '—';
+                                  const label =
+                                    d === 0 ? 'Today' : d === 1 ? '1 day' : `${d} days`;
+                                  const sev =
+                                    d >= 14 ? 'error' : d >= 7 ? 'warning' : 'default';
+                                  return (
+                                    <Chip
+                                      size="small"
+                                      label={label}
+                                      color={sev === 'default' ? 'default' : sev}
+                                      variant={d >= 7 ? 'filled' : 'outlined'}
+                                      sx={{ fontWeight: 700 }}
+                                    />
+                                  );
+                                })()}
+                              </TableCell>
+                            )}
                             <TableCell sx={{ ...bodyCellSx, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
                               {exp.expenseDate
                                 ? formatDate(new Date(exp.expenseDate))
