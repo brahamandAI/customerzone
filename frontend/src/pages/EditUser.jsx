@@ -198,10 +198,13 @@ const EditUser = () => {
     }
   };
 
-  const handleSwitchChange = (name) => (event) => {
-    setFormData(prev => ({
+  // MUI Switch calls onChange(event, checked); use `checked` so label-clicks always apply
+  // (event.target can be wrong when the label forwards the click).
+  const handleSwitchChange = (name) => (event, checked) => {
+    const next = typeof checked === 'boolean' ? checked : Boolean(event?.target?.checked);
+    setFormData((prev) => ({
       ...prev,
-      [name]: event.target.checked
+      [name]: next
     }));
   };
 
@@ -277,8 +280,11 @@ const EditUser = () => {
       maxWidth: 1200, 
       mx: 'auto', 
       p: 3,
+      pb: 12,
       background: darkMode ? '#1a1a1a' : '#f5f5f5',
-      minHeight: '100vh'
+      minHeight: '100vh',
+      position: 'relative',
+      zIndex: 1
     }}>
       <Paper elevation={3} sx={{ 
         p: 3, 
@@ -592,77 +598,77 @@ const EditUser = () => {
             <Typography variant="h6" color="primary" gutterBottom sx={{ color: darkMode ? '#4fc3f7' : 'primary.main' }}>
               User Permissions
             </Typography>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} sx={{ position: 'relative', zIndex: 2 }}>
               <Grid item xs={12} sm={4}>
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={formData.canCreateExpenses}
+                      checked={Boolean(formData.canCreateExpenses)}
                       onChange={handleSwitchChange('canCreateExpenses')}
                     />
                   }
                   label="Can Create Expenses"
-                  sx={{ color: darkMode ? '#e0e0e0' : '#333333' }}
+                  sx={{ color: darkMode ? '#e0e0e0' : '#333333', m: 0, alignItems: 'center' }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={formData.canApproveExpenses}
+                      checked={Boolean(formData.canApproveExpenses)}
                       onChange={handleSwitchChange('canApproveExpenses')}
                     />
                   }
                   label="Can Approve Expenses"
-                  sx={{ color: darkMode ? '#e0e0e0' : '#333333' }}
+                  sx={{ color: darkMode ? '#e0e0e0' : '#333333', m: 0, alignItems: 'center' }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={formData.canManageUsers}
+                      checked={Boolean(formData.canManageUsers)}
                       onChange={handleSwitchChange('canManageUsers')}
                     />
                   }
                   label="Can Manage Users"
-                  sx={{ color: darkMode ? '#e0e0e0' : '#333333' }}
+                  sx={{ color: darkMode ? '#e0e0e0' : '#333333', m: 0, alignItems: 'center' }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={formData.canManageSites}
+                      checked={Boolean(formData.canManageSites)}
                       onChange={handleSwitchChange('canManageSites')}
                     />
                   }
                   label="Can Manage Sites"
-                  sx={{ color: darkMode ? '#e0e0e0' : '#333333' }}
+                  sx={{ color: darkMode ? '#e0e0e0' : '#333333', m: 0, alignItems: 'center' }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={formData.canViewReports}
+                      checked={Boolean(formData.canViewReports)}
                       onChange={handleSwitchChange('canViewReports')}
                     />
                   }
                   label="Can View Reports"
-                  sx={{ color: darkMode ? '#e0e0e0' : '#333333' }}
+                  sx={{ color: darkMode ? '#e0e0e0' : '#333333', m: 0, alignItems: 'center' }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={formData.canManageBudgets}
+                      checked={Boolean(formData.canManageBudgets)}
                       onChange={handleSwitchChange('canManageBudgets')}
                     />
                   }
                   label="Can Manage Budgets"
-                  sx={{ color: darkMode ? '#e0e0e0' : '#333333' }}
+                  sx={{ color: darkMode ? '#e0e0e0' : '#333333', m: 0, alignItems: 'center' }}
             />
           </Grid>
             </Grid>

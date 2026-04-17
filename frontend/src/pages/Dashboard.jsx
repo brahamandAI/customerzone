@@ -20,6 +20,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { canUserSubmitExpense } from '../utils/expensePermissions';
 import { useSocket } from '../context/SocketContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
@@ -386,8 +387,8 @@ const Dashboard = () => {
     
     const actions = [];
 
-    // Submit Expense for submitter
-    if (isSubmitter) {
+    // Submit Expense: submitters always; L1/L2/L3 when canCreateExpenses is not false (admin toggle)
+    if (canUserSubmitExpense(user)) {
       actions.push({
         title: t('submitExpense'),
         description: t('createNewExpenseReport'),

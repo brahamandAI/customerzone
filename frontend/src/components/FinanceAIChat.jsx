@@ -43,10 +43,14 @@ import {
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useLocation } from 'react-router-dom';
 
 const FinanceAIChat = () => {
   const { user } = useAuth();
   const { darkMode } = useTheme();
+  const { pathname } = useLocation();
+  /** Keep FAB above long forms (e.g. Edit User permissions) so it does not steal clicks */
+  const fabBottom = pathname.startsWith('/edit-user') ? 88 : 16;
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -326,7 +330,7 @@ const FinanceAIChat = () => {
         onClick={() => setIsOpen(true)}
         sx={{
           position: 'fixed',
-          bottom: 16,
+          bottom: fabBottom,
           right: 16,
           bgcolor: '#667eea',
           '&:hover': { bgcolor: '#5a6fd8' }

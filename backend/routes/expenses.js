@@ -1,4 +1,20 @@
 const express = require('express');
+
+/** Block expense creation when admin turned off canCreateExpenses (L1/L2 only). Submitters always allowed. */
+function assertCanCreateExpense(req, res) {
+  const r = req.user?.role;
+  if (r === 'submitter') return true;
+  if (['l1_approver', 'l2_approver'].includes(r)) {
+    if (req.user.permissions && req.user.permissions.canCreateExpenses === false) {
+      res.status(403).json({
+        success: false,
+        message: 'You do not have permission to create expenses. Ask your administrator to enable "Can Create Expenses".'
+      });
+      return false;
+    }
+  }
+  return true;
+}
 const router = express.Router();
 const path = require('path');
 const fs = require('fs');
@@ -145,7 +161,8 @@ const reserveExpenseNumber = async (expenseNumber, userId) => {
 };
 
 // Get next sequential expense number
-router.get('/next-number', protect, authorize('submitter', 'l1_approver', 'l2_approver', 'l3_approver'), async (req, res) => {
+router.get('/next-number', protect, authorize('submitter', 'l1_approver', 'l2_approver'), async (req, res) => {
+  if (!assertCanCreateExpense(req, res)) return;
   try {
     const nextExpenseNumber = await generateSequentialExpenseNumber();
     
@@ -190,7 +207,8 @@ router.get('/next-number', protect, authorize('submitter', 'l1_approver', 'l2_ap
 });
 
 // File upload route
-router.post('/upload', protect, authorize('submitter', 'l1_approver', 'l2_approver', 'l3_approver'), uploadExpenseFile.single('file'), async (req, res) => {
+router.post('/upload', protect, authorize('submitter', 'l1_approver', 'l2_approver'), uploadExpenseFile.single('file'), async (req, res) => {
+  if (!assertCanCreateExpense(req, res)) return;
   try {
     if (!req.file) {
       return res.status(400).json({
@@ -239,7 +257,8 @@ router.post('/upload', protect, authorize('submitter', 'l1_approver', 'l2_approv
 });
 
 // Create new expense
-router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approver', 'l3_approver'), async (req, res) => {
+router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approver'), async (req, res) => {
+  if (!assertCanCreateExpense(req, res)) return;
   try {
     const {
       expenseNumber,

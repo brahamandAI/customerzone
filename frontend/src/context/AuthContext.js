@@ -129,7 +129,7 @@ export const AuthProvider = ({ children }) => {
         try {
           const response = await authAPI.getProfile();
           if (response.data.success) {
-            const userData = response.data.data;
+            const userData = response.data.user;
             
             // Only preserve profile picture from current user state if backend doesn't have one
             if (user.profilePicture && !userData.profilePicture) {

@@ -11,6 +11,7 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { useNavigate } from 'react-router-dom';
 import { expenseAPI, siteAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { canUserSubmitExpense } from '../utils/expensePermissions';
 import { useTheme } from '../context/ThemeContext';
 import { useUserPreferences } from '../context/UserPreferencesContext';
 import AttachmentViewer from '../components/AttachmentViewer';
@@ -149,6 +150,12 @@ const ExpenseForm = () => {
 
     fetchNextExpenseNumber();
   }, []);
+
+  useEffect(() => {
+    if (user && !canUserSubmitExpense(user)) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
 
   // Fetch sites based on user role
   useEffect(() => {

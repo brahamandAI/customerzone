@@ -15,6 +15,7 @@ import { useAuth } from '../context/AuthContext';
 import NotificationBell from './NotificationBell';
 import { useTheme } from '@mui/material/styles';
 import { config } from '../config';
+import { canUserSubmitExpense } from '../utils/expensePermissions';
 
 const NavBar = () => {
   const { user, logout, getUserRole, hasPermission, getRoleDisplayName, updateUser } = useAuth();
@@ -56,7 +57,7 @@ const NavBar = () => {
   // Role-based navigation items
   const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: <DashboardIcon />, show: true },
-    { label: 'Submit Expense', path: '/submit-expense', icon: <ReceiptIcon />, show: user && ['submitter', 'SUBMITTER'].includes(user?.role) },
+    { label: 'Submit Expense', path: '/submit-expense', icon: <ReceiptIcon />, show: user && canUserSubmitExpense(user) },
     { label: 'Reports', path: '/reports', icon: <ReceiptIcon />, show: user && !['submitter', 'SUBMITTER'].includes(user?.role) },
     // Show Approvals for L1, L2, and L3 approvers (but not submitters)
     { label: (user?.role?.toLowerCase() === 'finance') ? 'Payment Processing' : 'Approvals', path: '/approval', icon: <ApprovalIcon />, show: user && !['submitter', 'SUBMITTER'].includes(user?.role) },
