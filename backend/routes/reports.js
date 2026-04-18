@@ -4,6 +4,7 @@ const { protect, authorize, checkPermission } = require('../middleware/auth');
 const User = require('../models/User');
 const Site = require('../models/Site');
 const Expense = require('../models/Expense');
+const { getAssignedSiteObjectIds, expenseSiteMatchForApprover, siteIdAllowedForUser } = require('../utils/userSiteAccess');
 
 const router = express.Router();
 
@@ -50,12 +51,6 @@ function buildDateRangeFilter(range) {
       { submissionDate: { $gte: range.start, $lte: range.end } }
     ]
   };
-}
-
-/** Site id for L1 when user.site may be populated or raw ObjectId */
-function getUserSiteId(user) {
-  if (!user?.site) return null;
-  return user.site._id || user.site;
 }
 
 // @desc    Get expense summary report
@@ -106,14 +101,10 @@ router.get('/expense-summary', protect, checkPermission('canViewReports'), async
   };
 
   // Apply role-based filtering
-  if (userRole === 'l1_approver') {
-    const sid = getUserSiteId(req.user);
-    if (sid) matchFilter.site = sid;
-  } else if (userRole === 'l2_approver') {
-    // L2 approver: all sites (no site filter)
-    if (site) {
-      matchFilter.site = site; // Allow filtering by specific site if requested
-    }
+  if (userRole === 'l1_approver' || userRole === 'l2_approver') {
+    const em = expenseSiteMatchForApprover(req.user);
+    if (em) Object.assign(matchFilter, em);
+    if (site && siteIdAllowedForUser(req.user, site)) matchFilter.site = site;
   } else if (userRole === 'l3_approver' || userRole === 'finance') {
     // L3 approver and Finance: all sites
     if (site) {
@@ -226,14 +217,10 @@ router.get('/expense-summary', protect, checkPermission('canViewReports'), async
   };
 
   // Apply role-based filtering for previous period
-  if (userRole === 'l1_approver') {
-    const sid = getUserSiteId(req.user);
-    if (sid) previousMatchFilter.site = sid;
-  } else if (userRole === 'l2_approver') {
-    // L2 approver: all sites (no site filter)
-    if (site) {
-      previousMatchFilter.site = site; // Allow filtering by specific site if requested
-    }
+  if (userRole === 'l1_approver' || userRole === 'l2_approver') {
+    const em = expenseSiteMatchForApprover(req.user);
+    if (em) Object.assign(previousMatchFilter, em);
+    if (site && siteIdAllowedForUser(req.user, site)) previousMatchFilter.site = site;
   } else if (userRole === 'l3_approver' || userRole === 'finance') {
     // L3 approver and Finance: all sites
     if (site) {
@@ -439,18 +426,13 @@ router.get('/expense-details', protect, checkPermission('canViewReports'), async
   }
 
   // Role-based filtering
-  if (userRole === 'l1_approver') {
-    const sid = getUserSiteId(req.user);
-    if (sid) matchFilter.site = sid;
-  } else if (userRole === 'l2_approver') {
-    // L2 approver: all sites (no site filter)
-    if (site) {
-      matchFilter.site = site; // Allow filtering by specific site if requested
-    }
+  if (userRole === 'l1_approver' || userRole === 'l2_approver') {
+    const em = expenseSiteMatchForApprover(req.user);
+    if (em) Object.assign(matchFilter, em);
+    if (site && siteIdAllowedForUser(req.user, site)) matchFilter.site = site;
   } else if (userRole === 'l3_approver' || userRole === 'finance') {
-    // L3 approver and Finance: all sites
     if (site) {
-      matchFilter.site = site; // Allow filtering by specific site if requested
+      matchFilter.site = site;
     }
   } else if (userRole === 'submitter') {
     matchFilter.submittedBy = req.user._id;
@@ -529,7 +511,14 @@ router.get('/budget-utilization', protect, checkPermission('canViewReports'), as
       sitesToAnalyze = await Site.find({ isActive: true });
     }
   } else {
-    sitesToAnalyze = await Site.find({ _id: req.user.site?._id, isActive: true });
+    const ids = getAssignedSiteObjectIds(req.user);
+    if (site) {
+      sitesToAnalyze = ids.some((id) => id.toString() === String(site))
+        ? await Site.find({ _id: site, isActive: true })
+        : [];
+    } else {
+      sitesToAnalyze = ids.length ? await Site.find({ _id: { $in: ids }, isActive: true }) : [];
+    }
   }
 
   const budgetReport = await Promise.all(sitesToAnalyze.map(async (siteData) => {
@@ -648,18 +637,13 @@ router.get('/vehicle-km', protect, checkPermission('canViewReports'), asyncHandl
   };
 
   // Role-based filtering
-  if (userRole === 'l1_approver') {
-    const sid = getUserSiteId(req.user);
-    if (sid) matchFilter.site = sid;
-  } else if (userRole === 'l2_approver') {
-    // L2 approver: all sites (no site filter)
-    if (site) {
-      matchFilter.site = site; // Allow filtering by specific site if requested
-    }
+  if (userRole === 'l1_approver' || userRole === 'l2_approver') {
+    const em = expenseSiteMatchForApprover(req.user);
+    if (em) Object.assign(matchFilter, em);
+    if (site && siteIdAllowedForUser(req.user, site)) matchFilter.site = site;
   } else if (userRole === 'l3_approver' || userRole === 'finance') {
-    // L3 approver and Finance: all sites
     if (site) {
-      matchFilter.site = site; // Allow filtering by specific site if requested
+      matchFilter.site = site;
     }
   } else if (userRole === 'submitter') {
     matchFilter.submittedBy = req.user._id;

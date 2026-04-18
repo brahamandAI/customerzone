@@ -8,6 +8,27 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+/** Resolve site ObjectIds from `site` (code) and/or `sites` (codes) for create/update */
+async function resolveSiteAssignment(body, roleLower) {
+  let codes = [];
+  if (roleLower === 'l1_approver' || roleLower === 'l2_approver') {
+    if (Array.isArray(body.sites) && body.sites.length) {
+      codes = body.sites.map(String).filter(Boolean);
+    } else if (body.site) {
+      codes = [String(body.site)];
+    }
+  } else if (roleLower !== 'l3_approver' && roleLower !== 'finance') {
+    if (body.site) codes = [String(body.site)];
+  }
+  const siteObjectIds = [];
+  for (const code of codes) {
+    const s = await Site.findOne({ code });
+    if (!s) return { error: `Site not found for code: ${code}` };
+    siteObjectIds.push(s._id);
+  }
+  return { siteObjectIds };
+}
+
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -135,7 +156,8 @@ router.post('/create', protect, authorize('l3_approver', 'finance'), async (req,
       employeeId,
       department,
       role,
-      site, // Changed from assignedSites to site
+      site,
+      sites,
       initialPassword,
       // Notification preferences
       emailNotifications,
@@ -180,18 +202,21 @@ router.post('/create', protect, authorize('l3_approver', 'finance'), async (req,
       });
     }
 
-    // Find site by code if provided
-    let siteId = undefined;
-    if (site) {
-      const foundSite = await Site.findOne({ code: site });
-      if (!foundSite) {
-        return res.status(400).json({
-          success: false,
-          message: 'Site not found with the provided code'
-        });
-      }
-      siteId = foundSite._id;
+    const roleLower = role.toLowerCase();
+    const resolvedSites = await resolveSiteAssignment({ site, sites }, roleLower);
+    if (resolvedSites.error) {
+      return res.status(400).json({ success: false, message: resolvedSites.error });
     }
+    const { siteObjectIds } = resolvedSites;
+    if (['submitter', 'l1_approver', 'l2_approver'].includes(roleLower) && siteObjectIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'At least one site is required for this role'
+      });
+    }
+
+    const siteId = siteObjectIds[0];
+    const sitesForApprover = (roleLower === 'l1_approver' || roleLower === 'l2_approver') ? siteObjectIds : [];
 
     // Create new user
     const newUser = new User({
@@ -200,9 +225,10 @@ router.post('/create', protect, authorize('l3_approver', 'finance'), async (req,
       password: initialPassword, // Let the User model handle password hashing
       employeeId,
       department,
-      role: role.toLowerCase(), // Convert to lowercase to match Mongoose enum
+      role: roleLower,
       phone: phoneNumber,
       site: siteId,
+      sites: sitesForApprover,
       address: {
         street: streetAddress,
         city,
@@ -241,8 +267,11 @@ router.post('/create', protect, authorize('l3_approver', 'finance'), async (req,
     await newUser.save();
 
     // Remove password from response
-    const userResponse = newUser.toObject();
-    delete userResponse.password;
+    const userResponse = await User.findById(newUser._id)
+      .select('-password')
+      .populate('site', 'name code')
+      .populate('sites', 'name code')
+      .lean();
 
     res.status(201).json({
       success: true,
@@ -285,6 +314,7 @@ router.get('/all', protect, authorize('l2_approver', 'l3_approver', 'finance'), 
   try {
     const users = await User.find({ isActive: true })
       .populate('site', 'name code')
+      .populate('sites', 'name code')
       .select('-password')
       .sort({ createdAt: -1 });
 
@@ -388,7 +418,8 @@ router.get('/:userId', protect, async (req, res) => {
 
     const user = await User.findById(userId)
       .select('-password')
-      .populate('site', 'name code');
+      .populate('site', 'name code')
+      .populate('sites', 'name code');
 
     if (!user) {
       return res.status(404).json({
@@ -426,6 +457,8 @@ router.put('/:userId', protect, async (req, res) => {
       email,
       employeeId,
       address,
+      site,
+      sites,
       // Notification preferences
       emailNotifications,
       pushNotifications,
@@ -466,9 +499,34 @@ router.put('/:userId', protect, async (req, res) => {
     if (address) user.address = { ...user.address, ...address };
     if (bankDetails) user.bankDetails = { ...user.bankDetails, ...bankDetails };
 
-    // Update role (only for admin users)
-    if (role && (req.user.role === 'l3_approver' || req.user.role === 'finance')) {
-      user.role = role;
+    // Update role and sites (only for admin users)
+    if (req.user.role === 'l3_approver' || req.user.role === 'finance') {
+      const targetRole = (role || user.role || '').toLowerCase();
+      if (role) user.role = role;
+
+      if (site !== undefined || sites !== undefined) {
+        const resolved = await resolveSiteAssignment({ site, sites }, targetRole);
+        if (resolved.error) {
+          return res.status(400).json({ success: false, message: resolved.error });
+        }
+        const { siteObjectIds } = resolved;
+        if (['submitter', 'l1_approver', 'l2_approver'].includes(targetRole) && siteObjectIds.length === 0) {
+          return res.status(400).json({
+            success: false,
+            message: 'At least one site is required for this role'
+          });
+        }
+        if (targetRole === 'l1_approver' || targetRole === 'l2_approver') {
+          user.sites = siteObjectIds;
+          user.site = siteObjectIds[0];
+        } else if (targetRole === 'submitter') {
+          user.site = siteObjectIds[0];
+          user.sites = [];
+        } else {
+          user.site = undefined;
+          user.sites = [];
+        }
+      }
     }
 
     // Update notification preferences
@@ -494,10 +552,15 @@ router.put('/:userId', protect, async (req, res) => {
 
     await user.save();
 
+    const updated = await User.findById(user._id)
+      .select('-password')
+      .populate('site', 'name code')
+      .populate('sites', 'name code');
+
     res.json({
       success: true,
       message: 'Profile updated successfully',
-      data: user
+      data: updated
     });
 
   } catch (error) {

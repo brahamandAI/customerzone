@@ -69,6 +69,11 @@ const userSchema = new mongoose.Schema({
       return this.role !== 'l3_approver' && this.role !== 'finance';
     }
   },
+  /** L1/L2 approvers only: multiple sites they manage (primary/fallback is `site`, synced from sites[0]) */
+  sites: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Site'
+  }],
   phone: {
     type: String,
     match: [
@@ -240,6 +245,7 @@ userSchema.virtual('roleDisplay').get(function() {
 userSchema.index({ email: 1 });
 userSchema.index({ employeeId: 1 });
 userSchema.index({ site: 1 });
+userSchema.index({ sites: 1 });
 userSchema.index({ role: 1 });
 userSchema.index({ isActive: 1 });
 
@@ -256,6 +262,22 @@ userSchema.pre('save', async function(next) {
   } catch (error) {
     next(error);
   }
+});
+
+// Sync primary site and sites[] for L1/L2 approvers
+userSchema.pre('save', function(next) {
+  const r = this.role;
+  if (r === 'l1_approver' || r === 'l2_approver') {
+    if (this.site && (!this.sites || this.sites.length === 0)) {
+      this.sites = [this.site];
+    }
+    if (Array.isArray(this.sites) && this.sites.length > 0) {
+      this.site = this.sites[0];
+    }
+  } else if (Array.isArray(this.sites) && this.sites.length) {
+    this.sites = [];
+  }
+  next();
 });
 
 // Pre-save middleware to set permissions based on role
@@ -401,10 +423,13 @@ userSchema.statics.getUsersByRole = function(role) {
 // Static method to get approvers for a site
 userSchema.statics.getApproversForSite = function(siteId) {
   return this.find({
-    site: siteId,
     role: { $in: ['l1_approver', 'l2_approver', 'l3_approver'] },
-    isActive: true
-  }).populate('site');
+    isActive: true,
+    $or: [
+      { site: siteId },
+      { sites: siteId }
+    ]
+  }).populate('site').populate('sites', 'name code');
 };
 
 module.exports = mongoose.model('User', userSchema); 

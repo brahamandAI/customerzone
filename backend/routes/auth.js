@@ -88,7 +88,8 @@ router.post('/register', [
   // Get user data without password
   const userData = await User.findById(user._id)
     .select('-password')
-    .populate('site', 'name code location.city');
+    .populate('site', 'name code location.city')
+    .populate('sites', 'name code');
 
   // Get Socket.io instance
   const io = req.app.get('io');
@@ -132,7 +133,9 @@ router.post('/login', [
   const { email, password } = req.body;
 
   // Find user by email and include password
-  const user = await User.findOne({ email }).select('+password').populate('site', 'name code location.city');
+  const user = await User.findOne({ email }).select('+password')
+    .populate('site', 'name code location.city')
+    .populate('sites', 'name code');
 
   // Print user email and hashed password if user found
   if (user) {
@@ -218,7 +221,8 @@ router.post('/login', [
   // Get user data without password
   const userData = await User.findById(user._id)
     .select('-password')
-    .populate('site', 'name code location.city');
+    .populate('site', 'name code location.city')
+    .populate('sites', 'name code');
 
   // Get Socket.io instance
   const io = req.app.get('io');
@@ -286,7 +290,8 @@ router.put('/profile-picture', protect, asyncHandler(async (req, res) => {
 
   const updatedUser = await User.findById(user._id)
     .select('-password')
-    .populate('site', 'name code location.city');
+    .populate('site', 'name code location.city')
+    .populate('sites', 'name code');
 
   res.json({
     success: true,
@@ -301,7 +306,8 @@ router.put('/profile-picture', protect, asyncHandler(async (req, res) => {
 router.get('/me', protect, asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id)
     .select('-password')
-    .populate('site', 'name code location.city vehicleKmLimit budget');
+    .populate('site', 'name code location.city vehicleKmLimit budget')
+    .populate('sites', 'name code location.city vehicleKmLimit budget');
 
   res.json({
     success: true,
@@ -366,7 +372,8 @@ router.put('/profile', protect, [
 
   const updatedUser = await User.findById(user._id)
     .select('-password')
-    .populate('site', 'name code location.city');
+    .populate('site', 'name code location.city')
+    .populate('sites', 'name code');
 
   res.json({
     success: true,
@@ -546,7 +553,8 @@ router.get('/verify-token', protect, asyncHandler(async (req, res) => {
 router.post('/refresh-token', protect, asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id)
     .select('-password')
-    .populate('site', 'name code location.city');
+    .populate('site', 'name code location.city')
+    .populate('sites', 'name code');
 
   // Generate new token
   const token = user.getSignedJwtToken();
@@ -585,7 +593,8 @@ router.post('/google', asyncHandler(async (req, res) => {
     // Get user data without password
     const userData = await User.findById(user._id)
       .select('-password')
-      .populate('site', 'name code location.city');
+      .populate('site', 'name code location.city')
+      .populate('sites', 'name code');
 
     // Get Socket.io instance
     const io = req.app.get('io');
@@ -647,7 +656,9 @@ router.post('/verify-otp', [
     return res.status(400).json({ success: false, errorCode: 'VALIDATION_ERROR', message: 'Invalid input' });
   }
   const { email, otp } = req.body;
-  const user = await User.findOne({ email }).populate('site', 'name code location.city');
+  const user = await User.findOne({ email })
+    .populate('site', 'name code location.city')
+    .populate('sites', 'name code');
   if (!user || !user.otpCode || !user.otpExpires || user.otpExpires < new Date() || user.otpCode !== otp) {
     return res.status(401).json({ success: false, errorCode: 'AUTH_REQUIRED', message: 'Invalid or expired OTP' });
   }

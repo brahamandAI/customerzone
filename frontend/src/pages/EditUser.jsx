@@ -9,6 +9,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  OutlinedInput,
+  Chip,
   Grid,
   Switch,
   FormControlLabel,
@@ -16,7 +18,7 @@ import {
   CircularProgress,
   Alert
 } from '@mui/material';
-import { userAPI } from '../services/api';
+import { userAPI, siteAPI } from '../services/api';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -37,6 +39,7 @@ const EditUser = () => {
     department: '',
     role: '',
     site: '',
+    sites: [],
     // Notification preferences
     emailNotifications: true,
     pushNotifications: true,
@@ -62,6 +65,13 @@ const EditUser = () => {
 
   const departments = ['Administration', 'Finance', 'Operations', 'HR', 'IT', 'Sales', 'Marketing'];
   const roles = ['submitter', 'l1_approver', 'l2_approver', 'l3_approver', 'finance'];
+  const [siteList, setSiteList] = useState([]);
+  /** MUI multi-Select keeps menu open by default; close after each pick for better UX */
+  const [sitesMenuOpen, setSitesMenuOpen] = useState(false);
+
+  useEffect(() => {
+    siteAPI.getAll().then((res) => setSiteList(res.data.data || [])).catch(() => setSiteList([]));
+  }, []);
 
   useEffect(() => {
     async function fetchUser() {
@@ -86,6 +96,12 @@ const EditUser = () => {
           department: user.department || '',
           role: user.role || '',
           site: user.site?.code || '',
+          sites:
+            Array.isArray(user.sites) && user.sites.length > 0
+              ? user.sites.map((s) => s.code)
+              : user.site?.code
+                ? [user.site.code]
+                : [],
           // Notification preferences
           emailNotifications: user.preferences?.notifications?.email ?? true,
           pushNotifications: user.preferences?.notifications?.push ?? true,
@@ -185,10 +201,13 @@ const EditUser = () => {
         };
       }
       
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         [name]: value,
-        ...newPermissions
+        ...newPermissions,
+        ...(value === 'l1_approver' || value === 'l2_approver'
+          ? { sites: prev.site ? [prev.site] : prev.sites || [] }
+          : { sites: [] })
       }));
     } else {
       setFormData(prev => ({
@@ -213,6 +232,21 @@ const EditUser = () => {
     setSaving(true);
     setError('');
     try {
+      if (
+        canEditUser &&
+        (formData.role === 'l1_approver' || formData.role === 'l2_approver') &&
+        (!formData.sites || formData.sites.length < 1)
+      ) {
+        setError('Select at least one site for L1 / L2 approver');
+        setSaving(false);
+        return;
+      }
+      if (canEditUser && formData.role === 'submitter' && !formData.site) {
+        setError('Select a site for this submitter');
+        setSaving(false);
+        return;
+      }
+
       const userData = {
         name: formData.fullName,
         email: formData.email,
@@ -244,6 +278,19 @@ const EditUser = () => {
         canViewReports: formData.canViewReports,
         canManageBudgets: formData.canManageBudgets
       };
+
+      if (canEditUser) {
+        if (formData.role === 'l1_approver' || formData.role === 'l2_approver') {
+          userData.sites = formData.sites;
+          userData.site = formData.sites[0];
+        } else if (formData.role === 'submitter') {
+          userData.site = formData.site;
+          userData.sites = [];
+        } else if (formData.role === 'l3_approver' || formData.role === 'finance') {
+          userData.site = undefined;
+          userData.sites = [];
+        }
+      }
 
       await userAPI.updateUser(userId, userData);
       navigate('/manage-users');
@@ -545,6 +592,111 @@ const EditUser = () => {
               </FormControl>
             </Grid>
           </Grid>
+
+          {canEditUser && formData.role === 'submitter' && (
+            <Grid container spacing={3} sx={{ mt: 0 }}>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl fullWidth required>
+                  <InputLabel sx={{ color: darkMode ? '#b0b0b0' : '#666666' }}>Site</InputLabel>
+                  <Select
+                    name="site"
+                    value={formData.site}
+                    onChange={handleChange}
+                    sx={{
+                      backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                      color: darkMode ? '#e0e0e0' : '#333333',
+                    }}
+                  >
+                    {siteList.map((s) => (
+                      <MenuItem key={s._id} value={s.code}>
+                        {s.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          )}
+
+          {canEditUser && (formData.role === 'l1_approver' || formData.role === 'l2_approver') && (
+            <Grid container spacing={3} sx={{ mt: 1 }}>
+              <Grid item xs={12} sm={8} md={6}>
+                <FormControl fullWidth required>
+                  <InputLabel sx={{ color: darkMode ? '#b0b0b0' : '#666666' }}>Sites</InputLabel>
+                  <Select
+                    multiple
+                    open={sitesMenuOpen}
+                    onOpen={() => setSitesMenuOpen(true)}
+                    onClose={() => setSitesMenuOpen(false)}
+                    value={formData.sites}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      const next = typeof v === 'string' ? v.split(',') : v;
+                      if (next.length === 0) return;
+                      setFormData((prev) => ({
+                        ...prev,
+                        sites: next,
+                        site: next[0] || ''
+                      }));
+                      setSitesMenuOpen(false);
+                    }}
+                    input={<OutlinedInput label="Sites" />}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((code) => {
+                          const s = siteList.find((x) => x.code === code);
+                          const canRemove = selected.length > 1;
+                          return (
+                            <Chip
+                              key={code}
+                              size="small"
+                              label={s?.name || code}
+                              onMouseDown={(e) => e.stopPropagation()}
+                              onDelete={
+                                canRemove
+                                  ? (e) => {
+                                      e.stopPropagation();
+                                      setFormData((prev) => {
+                                        if (prev.sites.length <= 1) return prev;
+                                        const next = prev.sites.filter((c) => c !== code);
+                                        return { ...prev, sites: next, site: next[0] || '' };
+                                      });
+                                    }
+                                  : undefined
+                              }
+                              sx={{
+                                '& .MuiChip-deleteIcon': {
+                                  opacity: 0,
+                                  transition: 'opacity 0.15s ease',
+                                },
+                                ...(canRemove
+                                  ? {
+                                      '&:hover .MuiChip-deleteIcon': {
+                                        opacity: 1,
+                                      },
+                                    }
+                                  : {}),
+                              }}
+                            />
+                          );
+                        })}
+                      </Box>
+                    )}
+                    sx={{
+                      backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                      color: darkMode ? '#e0e0e0' : '#333333',
+                    }}
+                  >
+                    {siteList.map((s) => (
+                      <MenuItem key={s._id} value={s.code}>
+                        {s.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          )}
         </Box>
 
         {/* Notification Preferences */}

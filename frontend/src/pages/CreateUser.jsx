@@ -8,6 +8,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  OutlinedInput,
+  Chip,
   Grid,
   Switch,
   FormControlLabel,
@@ -36,7 +38,8 @@ const CreateUser = () => {
     employeeId: '',
     department: 'Administration',
     role: 'SUBMITTER',
-    site: '', // Changed from assignedSites to site for single site selection
+    site: '',
+    sites: [],
     initialPassword: '',
     confirmPassword: '',
     // Notification preferences
@@ -65,6 +68,7 @@ const CreateUser = () => {
   const departments = ['Administration', 'Finance', 'Operations', 'HR', 'IT', 'Sales', 'Marketing'];
   const roles = ['SUBMITTER', 'L1_APPROVER', 'L2_APPROVER', 'L3_APPROVER', 'finance'];
   const [sites, setSites] = useState([]);
+  const [sitesMenuOpen, setSitesMenuOpen] = useState(false);
 
   useEffect(() => {
     siteAPI.getAll().then(res => {
@@ -143,10 +147,13 @@ const CreateUser = () => {
         };
       }
       
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         [name]: value,
-        ...newPermissions
+        ...newPermissions,
+        ...(value === 'L1_APPROVER' || value === 'L2_APPROVER'
+          ? { sites: prev.site ? [prev.site] : [] }
+          : { sites: [] })
       }));
     } else {
       setFormData(prev => ({
@@ -169,12 +176,18 @@ const CreateUser = () => {
     setError('');
 
     try {
-      // Get the site code from localStorage if available
       const siteCode = localStorage.getItem('selectedSiteCode') || formData.site;
-      
+      const isL1L2 = formData.role === 'L1_APPROVER' || formData.role === 'L2_APPROVER';
+      if (isL1L2 && (!formData.sites || formData.sites.length < 1)) {
+        setError('Select at least one site for L1 / L2 approver');
+        setLoading(false);
+        return;
+      }
+
       const userData = {
         ...formData,
-        site: siteCode, // Send the site code to backend
+        site: isL1L2 ? formData.sites[0] : siteCode,
+        sites: isL1L2 ? formData.sites : [],
         bankAccountNumber: formData.bankAccountNumber,
         bankIfscCode: formData.bankIfscCode,
         bankName: formData.bankName,
@@ -461,8 +474,8 @@ const CreateUser = () => {
                 </Select>
               </FormControl>
             </Grid>
-            {/* Site field - Only show for roles that need a site */}
-            {(formData.role === 'SUBMITTER' || formData.role === 'L1_APPROVER' || formData.role === 'L2_APPROVER') && (
+            {/* Site(s): single for submitter; multi for L1/L2 approvers */}
+            {formData.role === 'SUBMITTER' && (
               <Grid item xs={12} sm={6} md={4}>
                 <FormControl fullWidth>
                   <InputLabel sx={{ color: darkMode ? '#b0b0b0' : '#666666' }}>Site</InputLabel>
@@ -501,7 +514,98 @@ const CreateUser = () => {
                       },
                     }}
                   >
-                    {sites.map(site => (
+                    {sites.map((site) => (
+                      <MenuItem key={site._id} value={site.code}>
+                        {site.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            )}
+            {(formData.role === 'L1_APPROVER' || formData.role === 'L2_APPROVER') && (
+              <Grid item xs={12} sm={8} md={6}>
+                <FormControl fullWidth required>
+                  <InputLabel sx={{ color: darkMode ? '#b0b0b0' : '#666666' }}>Sites (multi-select)</InputLabel>
+                  <Select
+                    multiple
+                    open={sitesMenuOpen}
+                    onOpen={() => setSitesMenuOpen(true)}
+                    onClose={() => setSitesMenuOpen(false)}
+                    value={formData.sites}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      const next = typeof v === 'string' ? v.split(',') : v;
+                      if (next.length === 0) return;
+                      setFormData((prev) => ({
+                        ...prev,
+                        sites: next,
+                        site: next[0] || ''
+                      }));
+                      if (next[0]) localStorage.setItem('selectedSiteCode', next[0]);
+                      setSitesMenuOpen(false);
+                    }}
+                    input={<OutlinedInput label="Sites (multi-select)" />}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((code) => {
+                          const s = sites.find((x) => x.code === code);
+                          const canRemove = selected.length > 1;
+                          return (
+                            <Chip
+                              key={code}
+                              size="small"
+                              label={s?.name || code}
+                              onMouseDown={(e) => e.stopPropagation()}
+                              onDelete={
+                                canRemove
+                                  ? (e) => {
+                                      e.stopPropagation();
+                                      setFormData((prev) => {
+                                        if (prev.sites.length <= 1) return prev;
+                                        const next = prev.sites.filter((c) => c !== code);
+                                        const merged = { ...prev, sites: next, site: next[0] || '' };
+                                        if (next[0]) localStorage.setItem('selectedSiteCode', next[0]);
+                                        else localStorage.removeItem('selectedSiteCode');
+                                        return merged;
+                                      });
+                                    }
+                                  : undefined
+                              }
+                              sx={{
+                                '& .MuiChip-deleteIcon': {
+                                  opacity: 0,
+                                  transition: 'opacity 0.15s ease',
+                                },
+                                ...(canRemove
+                                  ? {
+                                      '&:hover .MuiChip-deleteIcon': {
+                                        opacity: 1,
+                                      },
+                                    }
+                                  : {}),
+                              }}
+                            />
+                          );
+                        })}
+                      </Box>
+                    )}
+                    sx={{
+                      backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                      color: darkMode ? '#e0e0e0' : '#333333',
+                    }}
+                    MenuProps={{
+                      PaperProps: {
+                        sx: {
+                          bgcolor: darkMode ? '#2a2a2a' : '#ffffff',
+                          '& .MuiMenuItem-root': {
+                            color: darkMode ? '#e0e0e0' : '#333333',
+                          },
+                        },
+                      },
+                    }}
+                  >
+                    {sites.map((site) => (
                       <MenuItem key={site._id} value={site.code}>
                         {site.name}
                       </MenuItem>

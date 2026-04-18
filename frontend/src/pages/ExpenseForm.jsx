@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { expenseAPI, siteAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { canUserSubmitExpense } from '../utils/expensePermissions';
+import { getUserAssignedSiteIds } from '../utils/userSites';
 import { useTheme } from '../context/ThemeContext';
 import { useUserPreferences } from '../context/UserPreferencesContext';
 import AttachmentViewer from '../components/AttachmentViewer';
@@ -164,38 +165,12 @@ const ExpenseForm = () => {
         const res = await siteAPI.getAll();
         let availableSites = res.data.data || [];
         
-        // Filter sites based on user role
+        // Filter sites based on user role (L1/L2 may have multiple assigned sites)
         if (user?.role === 'submitter' || user?.role === 'l1_approver' || user?.role === 'l2_approver') {
-          // Submitters, L1, and L2 approvers can only see their assigned site
-          if (user?.site) {
-            const userSite = user.site;
-            
-            // Handle both cases: userSite can be string, ObjectId, or populated site object
-            let userSiteId;
-            if (typeof userSite === 'string') {
-              userSiteId = userSite;
-            } else if (userSite && userSite._id) {
-              userSiteId = userSite._id.toString();
-            } else if (userSite && userSite.id) {
-              userSiteId = userSite.id.toString();
-            } else {
-              userSiteId = null;
-            }
-            
-            console.log('🔍 Filtering sites for user:', {
-              userSiteId,
-              userSiteType: typeof userSite,
-              totalSites: availableSites.length
-            });
-            
-            if (userSiteId) {
-              availableSites = availableSites.filter(site => site._id.toString() === userSiteId.toString());
-              console.log('✅ Filtered sites count:', availableSites.length);
-            } else {
-              availableSites = [];
-            }
+          const allowedIds = getUserAssignedSiteIds(user);
+          if (allowedIds.length) {
+            availableSites = availableSites.filter((s) => allowedIds.includes(s._id.toString()));
           } else {
-            // If user has no site assigned, show no sites
             availableSites = [];
           }
         }
@@ -203,40 +178,12 @@ const ExpenseForm = () => {
         
         setSites(availableSites);
         
-        // Auto-select user's site for submitters and L1/L2 approvers
-        if ((user?.role === 'submitter' || user?.role === 'l1_approver' || user?.role === 'l2_approver') && user?.site) {
-          const userSite = user.site;
-          
-          // Handle both cases: userSite can be string, ObjectId, or populated site object
-          let userSiteId;
-          if (typeof userSite === 'string') {
-            userSiteId = userSite;
-          } else if (userSite && userSite._id) {
-            userSiteId = userSite._id.toString();
-          } else if (userSite && userSite.id) {
-            userSiteId = userSite.id.toString();
-          } else {
-            userSiteId = null;
-          }
-          
-          console.log('🔍 Frontend site selection debug:', {
-            userSiteId,
-            userSiteType: typeof userSite,
-            availableSites: availableSites.map(site => ({ id: site._id, name: site.name }))
-          });
-          
-          if (userSiteId) {
-            const matchingSite = availableSites.find(site => site._id.toString() === userSiteId.toString());
-            if (matchingSite) {
-              console.log('✅ Found matching site:', matchingSite.name);
-            setFormData(prev => ({
-              ...prev,
-                siteId: matchingSite._id
-            }));
-            } else {
-              console.log('❌ No matching site found for userSiteId:', userSiteId);
-            }
-          }
+        // Auto-select primary site when only one assigned
+        if ((user?.role === 'submitter' || user?.role === 'l1_approver' || user?.role === 'l2_approver') && availableSites.length === 1) {
+          setFormData((prev) => ({
+            ...prev,
+            siteId: availableSites[0]._id
+          }));
         }
       } catch (error) {
         console.error('Error fetching sites:', error);
@@ -572,34 +519,15 @@ const ExpenseForm = () => {
       return;
     }
 
-    // Additional validation for site access
     if (user?.role === 'submitter' || user?.role === 'l1_approver' || user?.role === 'l2_approver') {
-      const userSite = user?.site;
-      
-      // Handle both cases: userSite can be string, ObjectId, or populated site object
-      let userSiteId;
-      if (typeof userSite === 'string') {
-        userSiteId = userSite;
-      } else if (userSite && userSite._id) {
-        userSiteId = userSite._id.toString();
-      } else if (userSite && userSite.id) {
-        userSiteId = userSite.id.toString();
-      } else {
+      const allowedIds = getUserAssignedSiteIds(user);
+      if (!allowedIds.length) {
         setError('No site assigned to user');
         setLoading(false);
         return;
       }
-      
-      console.log('🔍 Frontend site validation debug:', {
-        formDataSiteId: formData.siteId,
-        userSiteId: userSiteId,
-        formDataSiteIdType: typeof formData.siteId,
-        userSiteIdType: typeof userSiteId,
-        userSite: userSite
-      });
-      
-      if (formData.siteId && formData.siteId.toString() !== userSiteId.toString()) {
-        setError('You can only submit expenses for your assigned site');
+      if (formData.siteId && !allowedIds.includes(formData.siteId.toString())) {
+        setError('You can only submit expenses for a site assigned to you');
         setLoading(false);
         return;
       }
@@ -641,17 +569,7 @@ const ExpenseForm = () => {
         category: formData.category || 'Vehicle KM', // Default to Vehicle KM if not selected
         expenseDate: new Date().toISOString(),
         submittedById: user?._id || 'current-user-id', // Use current logged in user
-        siteId: formData.siteId || (() => {
-          const userSite = user?.site;
-          if (typeof userSite === 'string') {
-            return userSite;
-          } else if (userSite && userSite._id) {
-            return userSite._id.toString();
-          } else if (userSite && userSite.id) {
-            return userSite.id.toString();
-          }
-          return undefined;
-        })(), // Use selected site or user's site as fallback
+        siteId: formData.siteId || getUserAssignedSiteIds(user)[0] || undefined,
         department: user?.department || formData.department || "Operations",
         vehicleKm: {
           startKm: 0,
@@ -950,8 +868,10 @@ const ExpenseForm = () => {
                               display: 'block',
                               fontStyle: 'italic'
                             }}>
-                              {user?.site 
-                                ? 'You can only submit expenses for your assigned site'
+                              {getUserAssignedSiteIds(user).length
+                                ? (getUserAssignedSiteIds(user).length > 1
+                                    ? 'Choose which assigned site this expense belongs to.'
+                                    : 'You can only submit expenses for your assigned site.')
                                 : 'You need to be assigned to a site to submit expenses. Please contact your administrator.'
                               }
                             </Typography>
@@ -1367,10 +1287,10 @@ const ExpenseForm = () => {
                               background: 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)',
                               '&:hover': { background: 'linear-gradient(45deg, #5a6fd8 30%, #6a4190 90%)' }
                             }}
-                            disabled={loading || ((user?.role === 'submitter' || user?.role === 'l1_approver' || user?.role === 'l2_approver') && !user?.site)}
+                            disabled={loading || ((user?.role === 'submitter' || user?.role === 'l1_approver' || user?.role === 'l2_approver') && getUserAssignedSiteIds(user).length === 0)}
                           >
                             {loading ? <CircularProgress size={24} color="inherit" /> : 
-                              ((user?.role === 'submitter' || user?.role === 'l1_approver' || user?.role === 'l2_approver') && !user?.site) 
+                              ((user?.role === 'submitter' || user?.role === 'l1_approver' || user?.role === 'l2_approver') && getUserAssignedSiteIds(user).length === 0) 
                                 ? 'No Site Assigned' 
                                 : 'Submit for Approval'
                             }

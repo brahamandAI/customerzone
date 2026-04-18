@@ -27,6 +27,7 @@ const ApprovalHistory = require('../models/ApprovalHistory');
 const PendingApprover = require('../models/PendingApprovers');
 const Comment = require('../models/Comments');
 const fileStorage = require('../utils/fileStorage');
+const { siteIdAllowedForUser, expenseSiteMatchForApprover } = require('../utils/userSiteAccess');
 const emailService = require('../services/emailService');
 const smsService = require('../services/smsService');
 const policyService = require('../services/policy.service');
@@ -287,39 +288,13 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
       });
     }
 
-    // Validate site access for restricted roles
+    // Validate site access for restricted roles (L1/L2 may have multiple sites)
     const userRole = req.user.role;
     if (userRole === 'submitter' || userRole === 'l1_approver' || userRole === 'l2_approver') {
-      const userSite = req.user.site;
-      
-      // Handle both cases: userSite can be ObjectId or populated site object
-      let userSiteId;
-      if (typeof userSite === 'string' || (userSite && userSite._bsontype === 'ObjectID')) {
-        userSiteId = userSite.toString();
-      } else if (userSite && userSite._id) {
-        userSiteId = userSite._id.toString();
-      } else {
+      if (!siteIdAllowedForUser(req.user, siteId)) {
         return res.status(403).json({
           success: false,
-          message: 'No site assigned to user'
-        });
-      }
-      
-      const siteIdString = siteId.toString();
-      
-      console.log('🔍 Site validation debug:', {
-        userRole,
-        userSiteType: typeof userSite,
-        userSiteId: userSiteId,
-        siteId: siteId,
-        siteIdString: siteIdString,
-        match: userSiteId === siteIdString
-      });
-      
-      if (userSiteId !== siteIdString) {
-        return res.status(403).json({
-          success: false,
-          message: 'You can only submit expenses for your assigned site'
+          message: 'You can only submit expenses for a site assigned to you'
         });
       }
     }
@@ -462,8 +437,12 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
 
     await newExpense.save();
 
-    // Assign L1 approvers for the site
-    const l1Approvers = await User.find({ role: 'l1_approver', site: siteId, isActive: true });
+    // Assign L1 approvers for the site (legacy `site` or multi `sites`)
+    const l1Approvers = await User.find({
+      role: 'l1_approver',
+      isActive: true,
+      $or: [{ site: siteId }, { sites: siteId }]
+    });
     console.log('🧭 L1 assignment debug:', {
       expenseId: newExpense._id.toString(),
       siteId: siteId?.toString?.() || siteId,
@@ -576,11 +555,11 @@ router.get('/all', protect, async (req, res) => {
     if (user.role === 'submitter') {
       // Submitters can only see their own expenses
       query.submittedBy = user._id;
-    } else if (user.role === 'l1_approver') {
-      // L1 approvers can only see expenses from their site
-      query.site = user.site?._id;
+    } else if (user.role === 'l1_approver' || user.role === 'l2_approver') {
+      const em = expenseSiteMatchForApprover(user);
+      if (em) Object.assign(query, em);
     }
-    // L2 approvers, L3 approvers and Finance can see all expenses (no additional filtering)
+    // L3 approvers and Finance can see all expenses (no additional filtering)
 
     console.log('🔍 Expenses query for user role:', user.role, 'Query:', query);
 
@@ -1306,8 +1285,13 @@ router.put('/:expenseId/approve', protect, authorize('l1_approver', 'l2_approver
       if (levelNum === 1) {
         // Remove L1 PendingApprover for this expense and approver
         await PendingApprover.deleteMany({ expense: expenseId, level: 1, approver: approverId });
-        // Create L2 PendingApprover(s) - L2 approvers can see all sites
-        const l2Approvers = await User.find({ role: 'l2_approver', isActive: true });
+        // L2 approvers assigned to this expense's site (legacy `site` or multi `sites`)
+        const expenseSiteRef = updatedExpense.site?._id || updatedExpense.site;
+        const l2Approvers = await User.find({
+          role: 'l2_approver',
+          isActive: true,
+          $or: [{ site: expenseSiteRef }, { sites: expenseSiteRef }]
+        });
         for (const approver of l2Approvers) {
           await PendingApprover.create({
             level: 2,
