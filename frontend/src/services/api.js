@@ -78,7 +78,7 @@ export const authAPI = {
 
 // Expense API calls
 export const expenseAPI = {
-  create: (data) => api.post('/expenses/create', data),
+  create: (data) => api.post('/expenses/create', data, { timeout: 30000 }),
   upload: (file) => {
     const formData = new FormData();
     formData.append('file', file);

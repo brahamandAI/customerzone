@@ -127,18 +127,16 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
       }
     }
 
-    // Save batch payment record for history (only if something was actually paid)
-    if (processedExpenses.length > 0) {
-      const totalAmount = processedExpenses.reduce((sum, exp) => sum + exp.amount, 0);
-      await BatchPayment.create({
-        utrNumber: utr,
-        user: req.user._id,
-        expenseIds: processedExpenses.map(e => e.expenseId),
-        totalAmount,
-        expenseCount: processedExpenses.length,
-        paymentRemarks: paymentRemarks?.trim() || undefined
-      });
-    }
+    // Save batch payment record for history
+    const totalAmount = processedExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+    await BatchPayment.create({
+      utrNumber: utr,
+      user: req.user._id,
+      expenseIds: processedExpenses.map(e => e.expenseId),
+      totalAmount,
+      expenseCount: processedExpenses.length,
+      paymentRemarks: paymentRemarks?.trim() || undefined
+    });
 
     // Send notifications
     setImmediate(async () => {
@@ -497,19 +495,6 @@ router.post('/verify-and-process', protect, authorize('finance', 'l3_approver'),
 
     // Mark OTP as used
     await batchOTP.markAsUsed();
-
-    // Persist batch history (same as process-utr; OTP flow had no UTR so nothing was saved before)
-    if (processedExpenses.length > 0) {
-      const totalAmt = processedExpenses.reduce((sum, exp) => sum + exp.amount, 0);
-      await BatchPayment.create({
-        utrNumber: `OTP:${batchOTP._id}`,
-        user: req.user._id,
-        expenseIds: processedExpenses.map((e) => e.expenseId),
-        totalAmount: totalAmt,
-        expenseCount: processedExpenses.length,
-        paymentRemarks: paymentRemarks?.trim() || 'Batch payment (OTP verified)'
-      });
-    }
 
     console.log('✅ Batch payment processing completed:', {
       total: expenses.length,

@@ -490,50 +490,40 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
       timestamp: new Date()
     };
 
-    // Send email and SMS notifications to L1 approvers
-    console.log('📧 Sending notifications to L1 approvers...');
-    for (const approver of l1Approvers) {
-      try {
-        // Send email notification if enabled
-        if (approver.preferences?.notifications?.email) {
-          console.log(`📧 Sending email to: ${approver.email}`);
-          await emailService.sendExpenseNotification(approver, notificationData);
-        }
-
-        // Send SMS notification if enabled
-        if (approver.preferences?.notifications?.sms && approver.phone) {
-          console.log(`📱 Sending SMS to: ${approver.phone}`);
-          await smsService.sendExpenseNotification(approver.phone, notificationData);
-        }
-      } catch (error) {
-        console.error(`❌ Failed to send notification to ${approver.email}:`, error);
-      }
-    }
-
-    // Emit new expense notification to all approvers
+    // Emit Socket.IO events synchronously (fast, in-memory)
     io.to('role-l1_approver')
       .to('role-l2_approver')
       .to('role-l3_approver')
       .emit('new_expense_submitted', notificationData);
 
-    // Emit budget update event for real-time updates
     const budgetUpdateData = {
       siteId: populatedExpense.site._id,
       siteName: populatedExpense.site.name,
       expenseAmount: newExpense.amount,
       timestamp: new Date()
     };
-    
-    // Emit to budget alerts room
     io.to('budget-alerts').emit('expense-created', budgetUpdateData);
-    
     console.log('📊 Budget update emitted for new expense:', budgetUpdateData);
 
+    // Send response immediately — do not block on email/SMS
     res.status(201).json({
       success: true,
       message: 'Expense created successfully',
       data: populatedExpense
     });
+
+    // Fire-and-forget: send email/SMS notifications after response is sent
+    console.log('📧 Sending notifications to L1 approvers (background)...');
+    for (const approver of l1Approvers) {
+      if (approver.preferences?.notifications?.email) {
+        emailService.sendExpenseNotification(approver, notificationData)
+          .catch(err => console.error(`❌ Email failed for ${approver.email}:`, err.message));
+      }
+      if (approver.preferences?.notifications?.sms && approver.phone) {
+        smsService.sendExpenseNotification(approver.phone, notificationData)
+          .catch(err => console.error(`❌ SMS failed for ${approver.phone}:`, err.message));
+      }
+    }
 
   } catch (error) {
     console.error('Error creating expense:', error);

@@ -8,7 +8,7 @@ module.exports = function(app) {
       target: 'http://localhost:5001',
       changeOrigin: true,
       logLevel: 'error', // Reduce logging overhead
-      timeout: 10000, // 10 second timeout
+      timeout: 30000, // 30 second timeout
       onError: (err, req, res) => {
         // Handle proxy errors gracefully without blocking dev server
         console.error('Proxy error:', err.message);
