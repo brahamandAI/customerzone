@@ -31,7 +31,7 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
   const { formatCurrency } = useUserPreferences();
   const [selectedExpenses, setSelectedExpenses] = useState(new Set());
   const [error, setError] = useState('');
-  const [utrModalOpen, setUtrModalOpen] = useState(false);
+  const [cmsModalOpen, setCmsModalOpen] = useState(false);
 
   // Filter only eligible expenses (approved and not yet paid)
   const eligibleExpenses = expenses.filter(exp => 
@@ -71,7 +71,7 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
       return;
     }
     setError('');
-    setUtrModalOpen(true);
+    setCmsModalOpen(true);
   };
 
   const handleExportToExcel = () => {
@@ -114,7 +114,7 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
               Batch Payment Processing
             </Typography>
           <Typography variant="body2" color="text.secondary">
-            Select multiple expenses to process payment with UTR number
+            Select multiple expenses to process payment with CMS number
           </Typography>
           </Box>
           
@@ -282,7 +282,7 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
               <ol style={{ margin: 0, paddingLeft: 20 }}>
                 <li>Select the expenses you want to process</li>
                 <li>Click "Process Expenses" to open payment modal</li>
-                <li>Enter the UTR number from your bank transfer</li>
+                <li>Enter the CMS number from your bank transfer</li>
                 <li>Click Confirm Payment to process all selected expenses</li>
                 <li>All submitters will be notified automatically</li>
               </ol>
@@ -291,10 +291,10 @@ const BatchPaymentSelector = ({ expenses, onPaymentComplete }) => {
         </Box>
       </Paper>
 
-      {/* UTR Modal */}
+      {/* CMS Modal */}
       <BatchPaymentUtrModal
-        open={utrModalOpen}
-        onClose={() => setUtrModalOpen(false)}
+        open={cmsModalOpen}
+        onClose={() => setCmsModalOpen(false)}
         batchData={{
           expenseIds: Array.from(selectedExpenses),
           expenseCount: selectedCount,

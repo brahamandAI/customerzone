@@ -598,7 +598,8 @@ const PendingExpensesPage = () => {
                   {selectedExpense?.expenseNumber || 'Expense Details'}
                 </Typography>
                 <Typography variant="caption" color="textSecondary">
-                  {selectedExpense?.title}
+                  {selectedExpense?.clientId && `Client ID: ${selectedExpense.clientId}`}
+                  {selectedExpense?.clientName && ` | ${selectedExpense.clientName}`}
                 </Typography>
               </Box>
             </Box>

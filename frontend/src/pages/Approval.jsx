@@ -137,7 +137,8 @@ const Approval = () => {
             const transformedApproval = {
               id: expense.id || expense._id,
           expenseNumber: expense.expenseNumber,
-          title: expense.title,
+          clientId: expense.clientId,
+          clientName: expense.clientName,
           amount: expense.amount,
               site: typeof expense.site === 'object' ? (expense.site?.name || 'Unknown Site') : expense.site,
           category: expense.category,
@@ -160,12 +161,16 @@ const Approval = () => {
           modifiedAmount: expense.modifiedAmount,
           approvalComments: transformedApprovalHistory,
           policyFlags: expense.policyFlags || [],
-          riskScore: expense.riskScore || 0
+          riskScore: expense.riskScore || 0,
+          exportedToExcel: expense.exportedToExcel || false,
+          exportedAt: expense.exportedAt || null,
+          exportCount: expense.exportCount || 0,
+          selectedL1Approver: expense.selectedL1Approver || null
             };
             
             // Additional logging for Finance users
             if (userRole === 'FINANCE') {
-              console.log(`Finance - Transforming expense: ${expense.title}`);
+              console.log(`Finance - Transforming expense: ${expense.clientId}`);
               console.log(`   Original status: ${expense.status}`);
               console.log(`   Transformed status: ${transformedApproval.status}`);
               console.log(`   Transformed approvalLevel: ${transformedApproval.approvalLevel}`);
@@ -179,7 +184,8 @@ const Approval = () => {
             return {
               id: expense.id || expense._id,
               expenseNumber: expense.expenseNumber || 'Unknown',
-              title: expense.title || 'Unknown Title',
+              clientId: expense.clientId || 'Unknown',
+              clientName: expense.clientName || 'Unknown',
               amount: expense.amount || 0,
               site: 'Unknown Site',
               category: expense.category || 'Unknown',
@@ -195,7 +201,11 @@ const Approval = () => {
               modifiedAmount: null,
               approvalComments: [],
               policyFlags: [],
-              riskScore: 0
+              riskScore: 0,
+              exportedToExcel: false,
+              exportedAt: null,
+              exportCount: 0,
+              selectedL1Approver: null
             };
           }
         }); // No need to filter since we return safe fallback objects
@@ -207,7 +217,7 @@ const Approval = () => {
         if (userRole === 'FINANCE') {
           console.log('Finance - Final transformed approvals:');
           transformedApprovals.forEach((approval, index) => {
-            console.log(`${index + 1}. ${approval.title} (₹${approval.amount}) - Status: ${approval.status} - Level: ${approval.approvalLevel}`);
+            console.log(`${index + 1}. ${approval.clientId} (₹${approval.amount}) - Status: ${approval.status} - Level: ${approval.approvalLevel}`);
           });
         }
         
@@ -231,7 +241,8 @@ const Approval = () => {
         const transformed = (response.data.data || []).map(expense => ({
           id: expense.id || expense._id,
           expenseNumber: expense.expenseNumber,
-          title: expense.title,
+          clientId: expense.clientId,
+          clientName: expense.clientName,
           amount: expense.amount,
           site: typeof expense.site === 'object' ? expense.site?.name : expense.site,
           category: expense.category,
@@ -449,7 +460,8 @@ const Approval = () => {
               return {
                 id: expense.id || expense._id,
                 expenseNumber: expense.expenseNumber,
-                title: expense.title,
+                clientId: expense.clientId,
+                clientName: expense.clientName,
                 amount: expense.amount,
                 site: typeof expense.site === 'object' ? expense.site?.name : expense.site,
                 category: expense.category,
@@ -603,7 +615,7 @@ const Approval = () => {
       return next;
     });
   };
-  const handleExportSelectedToExcel = () => {
+  const handleExportSelectedToExcel = async () => {
     const toExport = approvals.filter(a => selectedForExport.has(a.id));
     if (toExport.length === 0) {
       setSnackbarMessage('Please select at least one expense to export');
@@ -619,6 +631,17 @@ const Approval = () => {
     }));
     const ok = exportExpensesToExcel(expenseShape, 'payment-processing-export');
     if (ok) {
+      const exportedIds = toExport.map(a => a.id);
+      const exportedAt = new Date().toISOString();
+      // Mark in backend
+      try { await expenseAPI.markExported(exportedIds); } catch (_) {}
+      // Update local state immediately so badge appears without reload
+      setApprovals(prev => prev.map(a =>
+        exportedIds.includes(a.id)
+          ? { ...a, exportedToExcel: true, exportedAt, exportCount: (a.exportCount || 0) + 1 }
+          : a
+      ));
+      setSelectedForExport(new Set());
       setSnackbarMessage(`Exported ${toExport.length} expense(s) to Excel successfully`);
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
@@ -686,7 +709,7 @@ const Approval = () => {
         return 'Regional/Operations Manager';
       case 'L2':
       case '2': 
-        return 'Admin';
+        return 'Central Expense Controller';
       case 'L3':
       case '3': 
         return 'Super Admin';
@@ -703,16 +726,26 @@ const Approval = () => {
     const userRole = getUserRole();
     const approvalLevel = approval.approvalLevel;
     
-    // Convert role to level number with correct case
-        const roleToLevel = {
+    const roleToLevel = {
       'L1_APPROVER': 'L1',
       'L2_APPROVER': 'L2',
       'L3_APPROVER': 'L3',
       'FINANCE': 'L4'
     };
-    
-    console.log('Checking approval:', { userRole, approvalLevel, canApprove: roleToLevel[userRole] === approvalLevel });
-    return roleToLevel[userRole] === approvalLevel;
+
+    const levelMatches = roleToLevel[userRole] === approvalLevel;
+    if (!levelMatches) return false;
+
+    // For L1 approvers: if a specific L1 was selected, only that user can approve
+    if (userRole === 'L1_APPROVER' && approval.selectedL1Approver) {
+      const selectedId = typeof approval.selectedL1Approver === 'object'
+        ? approval.selectedL1Approver._id || approval.selectedL1Approver
+        : approval.selectedL1Approver;
+      return String(selectedId) === String(user?._id);
+    }
+
+    console.log('Checking approval:', { userRole, approvalLevel, canApprove: levelMatches });
+    return levelMatches;
   };
 
   // Update the pending approvals count calculation
@@ -984,7 +1017,10 @@ const Approval = () => {
                       <Box sx={{ flex: 1 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
                           <Typography variant="h6" fontWeight={600}>
-                            {approval.title}
+                            {approval.clientId}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {approval.clientName}
                           </Typography>
                           <Chip 
                             label={approval.expenseNumber} 
@@ -1022,6 +1058,25 @@ const Approval = () => {
                               color="error"
                               variant="outlined"
                             />
+                          )}
+                          {approval.exportedToExcel && (
+                            <Tooltip
+                              title={`Exported to Excel${approval.exportedAt ? ` on ${new Date(approval.exportedAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}` : ''}${approval.exportCount > 1 ? ` (${approval.exportCount} times)` : ''}`}
+                              arrow
+                            >
+                              <Chip
+                                label={`✓ Exported${approval.exportCount > 1 ? ` ×${approval.exportCount}` : ''}`}
+                                size="small"
+                                sx={{
+                                  bgcolor: 'rgba(76,175,80,0.12)',
+                                  color: '#2e7d32',
+                                  fontWeight: 700,
+                                  borderColor: '#4caf50',
+                                  border: '1px solid',
+                                  fontSize: '0.7rem'
+                                }}
+                              />
+                            </Tooltip>
                           )}
                         </Box>
                         {approval.policyFlags && approval.policyFlags.length > 0 && (
@@ -1209,13 +1264,28 @@ const Approval = () => {
                         </Box>
                       ) : null}
                       
-                      {approval.status === 'pending' && !canApprove(approval) && (
-                        <Chip 
-                          label={`Waiting for ${getApprovalLevelName(approval.approvalLevel)}`}
-                          size="small"
-                          color="warning"
-                        />
-                      )}
+                      {approval.status === 'pending' && !canApprove(approval) && (() => {
+                        const isL1Role = getUserRole() === 'L1_APPROVER';
+                        const selectedId = approval.selectedL1Approver
+                          ? (typeof approval.selectedL1Approver === 'object'
+                              ? approval.selectedL1Approver._id || approval.selectedL1Approver
+                              : approval.selectedL1Approver)
+                          : null;
+                        const isNotAssigned = isL1Role && selectedId && String(selectedId) !== String(user?._id);
+                        return isNotAssigned ? (
+                          <Chip
+                            label="Not your assigned expense"
+                            size="small"
+                            sx={{ bgcolor: 'rgba(237,108,2,0.1)', color: '#ed6c02', fontWeight: 600, border: '1px solid #ed6c02' }}
+                          />
+                        ) : (
+                          <Chip
+                            label={`Waiting for ${getApprovalLevelName(approval.approvalLevel)}`}
+                            size="small"
+                            color="warning"
+                          />
+                        );
+                      })()}
                     </Box>
                   </ListItem>
                   {index < (listTab === 0 ? approvals : rejectedApprovals).length - 1 && <Divider />}
@@ -1232,8 +1302,8 @@ const Approval = () => {
         <DialogTitle>
           {selectedApproval && (
             (isL3Approver || isFinance)
-              ? `Payment: ${selectedApproval.title}`
-              : `Review Expense: ${selectedApproval.title}`
+              ? `Payment: ${selectedApproval.clientId} - ${selectedApproval.clientName}`
+              : `Review Expense: ${selectedApproval.clientId} - ${selectedApproval.clientName}`
           )}
         </DialogTitle>
         <DialogContent sx={{ p: 0 }}>
@@ -1286,19 +1356,51 @@ const Approval = () => {
                 {/* Expense Details */}
                 <Box sx={{ p: 2, bgcolor: 'rgba(0,0,0,0.05)', borderRadius: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography variant="h6" gutterBottom>Expense Details</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="h6">Expense Details</Typography>
+                      {selectedApproval?.exportedToExcel && (
+                        <Tooltip
+                          title={`Exported to Excel${selectedApproval.exportedAt ? ` on ${new Date(selectedApproval.exportedAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}` : ''}${selectedApproval.exportCount > 1 ? ` (${selectedApproval.exportCount} times)` : ''}`}
+                          arrow
+                        >
+                          <Chip
+                            label={`✓ Exported to Excel${selectedApproval.exportCount > 1 ? ` ×${selectedApproval.exportCount}` : ''}`}
+                            size="small"
+                            sx={{
+                              bgcolor: 'rgba(76,175,80,0.12)',
+                              color: '#2e7d32',
+                              fontWeight: 700,
+                              border: '1px solid #4caf50',
+                              fontSize: '0.72rem'
+                            }}
+                          />
+                        </Tooltip>
+                      )}
+                    </Box>
                     {isFinance && selectedApproval?.status !== 'rejected' && (
                       <Button
                         variant="outlined"
                         size="small"
                         startIcon={<DownloadIcon />}
                         onClick={async () => {
+                          const expId = selectedApproval?.id || selectedApproval?._id;
                           const ok = await exportSingleExpenseToExcel(
-                            selectedApproval?.id || selectedApproval?._id,
+                            expId,
                             expenseAPI,
                             setError
                           );
                           if (ok) {
+                            const exportedAt = new Date().toISOString();
+                            try { await expenseAPI.markExported([expId]); } catch (_) {}
+                            setApprovals(prev => prev.map(a =>
+                              (a.id === expId || a._id === expId)
+                                ? { ...a, exportedToExcel: true, exportedAt, exportCount: (a.exportCount || 0) + 1 }
+                                : a
+                            ));
+                            setSelectedApproval(prev => prev
+                              ? { ...prev, exportedToExcel: true, exportedAt, exportCount: (prev.exportCount || 0) + 1 }
+                              : prev
+                            );
                             setSnackbarMessage('Excel exported successfully');
                             setSnackbarSeverity('success');
                             setSnackbarOpen(true);
@@ -1488,24 +1590,48 @@ const Approval = () => {
             </>
           ) : (
             // L1, L2, and L3 (Super Admin) - Approve/Reject
-            <>
-              <Button 
-                onClick={() => selectedApproval && handleReject(selectedApproval.id)}
-                color="error"
-                variant="contained"
-                disabled={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount && !amountChangeReason}
-              >
-                Reject
-              </Button>
-              <Button 
-                onClick={() => selectedApproval && handleApprove(selectedApproval.id)}
-                color="success"
-                variant="contained"
-                disabled={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount && !amountChangeReason}
-              >
-                {selectedApproval?.approvalLevel === 'L4' ? 'Payment' : 'Approve & Forward'}
-              </Button>
-            </>
+            (() => {
+              // Check if this L1 approver is the assigned one
+              const isL1Role = getUserRole() === 'L1_APPROVER';
+              const hasSelectedApprover = selectedApproval?.selectedL1Approver;
+              const selectedId = hasSelectedApprover
+                ? (typeof selectedApproval.selectedL1Approver === 'object'
+                    ? selectedApproval.selectedL1Approver._id || selectedApproval.selectedL1Approver
+                    : selectedApproval.selectedL1Approver)
+                : null;
+              const isAssignedL1 = !isL1Role || !selectedId || String(selectedId) === String(user?._id);
+
+              if (!isAssignedL1) {
+                return (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 1 }}>
+                    <Typography variant="body2" sx={{ color: '#ed6c02', fontWeight: 600 }}>
+                      ⚠️ You are not the assigned approver for this expense
+                    </Typography>
+                  </Box>
+                );
+              }
+
+              return (
+                <>
+                  <Button
+                    onClick={() => selectedApproval && handleReject(selectedApproval.id)}
+                    color="error"
+                    variant="contained"
+                    disabled={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount && !amountChangeReason}
+                  >
+                    Reject
+                  </Button>
+                  <Button
+                    onClick={() => selectedApproval && handleApprove(selectedApproval.id)}
+                    color="success"
+                    variant="contained"
+                    disabled={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount && !amountChangeReason}
+                  >
+                    {selectedApproval?.approvalLevel === 'L4' ? 'Payment' : 'Approve & Forward'}
+                  </Button>
+                </>
+              );
+            })()
           )}
         </DialogActions>
       </Dialog>

@@ -106,6 +106,7 @@ export const expenseAPI = {
     responseType: 'blob',
     timeout: 120000 // 2 min for large files (up to 100MB)
   }),
+  markExported: (expenseIds) => api.post('/expenses/mark-exported', { expenseIds }),
 };
 
 // Dashboard API calls
@@ -125,6 +126,7 @@ export const userAPI = {
   updateUser: (id, data) => api.put(`/users/${id}`, data),
   deleteUser: (id) => api.delete(`/users/${id}`),
   changePassword: (id, data) => api.post(`/users/${id}/change-password`, data),
+  getL1ApproversBySite: (siteId) => api.get(`/users/l1-approvers/site/${siteId}`),
 };
 
 // Site API calls
@@ -144,7 +146,7 @@ export const siteAPI = {
 export const paymentAPI = {
   createOrder: (data) => api.post('/payments/create-order', data),
   verifyPayment: (data) => api.post('/payments/verify', data),
-  verifyUtrPayment: (data) => api.post('/payments/verify-utr', data), // UTR-based manual payment (Razorpay bypassed)
+  verifyCmsPayment: (data) => api.post('/payments/verify-cms', data), // CMS-based manual payment (Razorpay bypassed)
   getHistory: (params) => api.get('/payments/history', { params }),
   refundPayment: (data) => api.post('/payments/refund', data),
 };

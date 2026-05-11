@@ -155,7 +155,8 @@ const PaymentProcessedPage = () => {
     // Search filtering
     if (searchTerm) {
       timeFilteredPayments = timeFilteredPayments.filter(payment => 
-        payment.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        payment.clientId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        payment.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         payment.expenseNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         payment.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         payment.submittedBy?.name?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -682,7 +683,10 @@ const PaymentProcessedPage = () => {
                     <TableRow key={payment._id} hover>
                       <TableCell>
                         <Typography variant="body2" fontWeight={500} color={darkMode ? '#fff' : '#333'}>
-                          {payment.title}
+                          {payment.clientId}
+                        </Typography>
+                        <Typography variant="caption" color={darkMode ? '#b0b0b0' : '#666'}>
+                          {payment.clientName}
                         </Typography>
                         <Typography variant="caption" color={darkMode ? '#b0b0b0' : '#666'}>
                           {payment.expenseNumber}

@@ -126,7 +126,8 @@ export const exportToCSV = (data, filename, user) => {
       data.expenses.forEach(expense => {
         const row = [
           expense._id || '',
-          `"${(expense.title || '').replace(/"/g, '""')}"`,
+          `"${(expense.clientId || '').replace(/"/g, '""')}"`,
+          `"${(expense.clientName || '').replace(/"/g, '""')}"`,
           `"${(expense.description || '').replace(/"/g, '""')}"`,
           expense.amount || 0,
           expense.category || '',
@@ -239,4 +240,47 @@ export const createCSVExportHandler = (data, filename, user, setError) => {
       setError('Failed to export CSV data. Please try again.');
     }
   };
+};
+
+// Finance Report Export — format: clientid | clientname | Monthname | Miscellaneous Amount | Expense ID | Remarks
+export const exportFinanceReportToExcel = (expenses, filename = 'finance-report') => {
+  try {
+    const getMonthName = (dateStr) => {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      return d.toLocaleString('en-IN', { month: 'long', year: 'numeric' }).replace(' ', '-');
+    };
+
+    const headers = ['clientid', 'clientname', 'Monthname', 'Miscellaneous Amount', 'Expense ID', 'Remarks'];
+
+    const rows = expenses.map(exp => [
+      exp.clientId || '',
+      exp.clientName || '',
+      getMonthName(exp.expenseDate || exp.submissionDate),
+      exp.amount || 0,
+      exp.expenseNumber || exp.expenseId || exp._id || '',
+      exp.description || ''
+    ]);
+
+    const wsData = [headers, ...rows];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    // Column widths
+    ws['!cols'] = [
+      { wch: 12 }, // clientid
+      { wch: 28 }, // clientname
+      { wch: 16 }, // Monthname
+      { wch: 20 }, // Miscellaneous Amount
+      { wch: 14 }, // Expense ID
+      { wch: 50 }, // Remarks
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Finance Report');
+    XLSX.writeFile(wb, `${filename}-${new Date().toISOString().split('T')[0]}.xlsx`);
+    return true;
+  } catch (err) {
+    console.error('Finance report export failed:', err);
+    return false;
+  }
 };

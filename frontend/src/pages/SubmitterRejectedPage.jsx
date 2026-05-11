@@ -106,7 +106,8 @@ const SubmitterRejectedPage = () => {
     const q = searchTerm.toLowerCase();
     return rows.filter(
       (exp) =>
-        exp.title?.toLowerCase().includes(q) ||
+        exp.clientId?.toLowerCase().includes(q) ||
+        exp.clientName?.toLowerCase().includes(q) ||
         exp.expenseNumber?.toLowerCase().includes(q) ||
         exp.category?.toLowerCase().includes(q) ||
         getLastRejection(exp)?.comments?.toLowerCase().includes(q)
@@ -268,7 +269,10 @@ const SubmitterRejectedPage = () => {
                         <TableRow key={exp._id} hover>
                           <TableCell>
                             <Typography variant="body2" fontWeight={600} color={darkMode ? '#fff' : '#333'}>
-                              {exp.title}
+                              {exp.clientId}
+                            </Typography>
+                            <Typography variant="caption" color={darkMode ? '#b0b0b0' : '#666'}>
+                              {exp.clientName}
                             </Typography>
                             <Chip label={exp.expenseNumber} size="small" variant="outlined" sx={{ mt: 0.5 }} />
                           </TableCell>
@@ -362,9 +366,15 @@ const SubmitterRejectedPage = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="caption" color="text.secondary">
-                      Title
+                      Client ID
                     </Typography>
-                    <Typography variant="body1">{selected.title}</Typography>
+                    <Typography variant="body1">{selected.clientId}</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="caption" color="text.secondary">
+                      Client Name
+                    </Typography>
+                    <Typography variant="body1">{selected.clientName}</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="caption" color="text.secondary">

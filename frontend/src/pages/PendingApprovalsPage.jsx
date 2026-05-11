@@ -145,7 +145,8 @@ const PendingApprovalsPage = () => {
   // Filter and search approvals
   const filteredApprovals = approvals.filter(approval => {
     const matchesStatus = filterStatus === 'all' || approval.status === filterStatus;
-    const matchesSearch = approval.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = approval.clientId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         approval.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          approval.submittedBy?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          approval.expenseNumber?.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesSearch;
@@ -493,7 +494,10 @@ const PendingApprovalsPage = () => {
                       <TableCell>
                         <Box>
                           <Typography variant="body2" fontWeight={500} color={darkMode ? '#fff' : '#333'}>
-                            {approval.title}
+                            {approval.clientId}
+                          </Typography>
+                          <Typography variant="caption" color={darkMode ? '#b0b0b0' : '#666'}>
+                            {approval.clientName}
                           </Typography>
                           <Typography variant="caption" color={darkMode ? '#b0b0b0' : '#666'}>
                             {approval.expenseNumber}
@@ -613,7 +617,7 @@ const PendingApprovalsPage = () => {
           }}
         >
           <DialogTitle sx={{ color: darkMode ? '#fff' : '#333' }}>
-            Review Expense: {selectedApproval?.title}
+            Review Expense: {selectedApproval?.clientId} - {selectedApproval?.clientName}
           </DialogTitle>
           <DialogContent>
             {selectedApproval && (

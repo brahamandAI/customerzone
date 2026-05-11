@@ -184,7 +184,7 @@ export const AuthProvider = ({ children }) => {
     const roleNames = {
       'submitter': 'Expense Submitter',
       'l1_approver': 'Regional Manager',
-      'l2_approver': 'Admin',
+      'l2_approver': 'Central Expense Controller',
       'l3_approver': 'Super Admin',
       'finance': 'Finance'
     };

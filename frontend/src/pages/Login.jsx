@@ -709,8 +709,8 @@ const Login = () => {
                             <BusinessIcon />
                           </Avatar>
                           <Box>
-                            <Typography variant="body1" sx={{ color: darkMode ? '#ffffff' : '#333333' }}>Level 2 Approver</Typography>
-                            <Typography variant="caption" sx={{ color: darkMode ? '#b0b0b0' : '#666666' }}>Admin</Typography>
+                            <Typography variant="body1" sx={{ color: darkMode ? '#ffffff' : '#333333' }}>Central Expense Controller</Typography>
+                            <Typography variant="caption" sx={{ color: darkMode ? '#b0b0b0' : '#666666' }}>Level 2 Approver</Typography>
                           </Box>
                         </Box>
                       </MenuItem>
@@ -1177,7 +1177,7 @@ const Login = () => {
                   
                   <Box sx={{ p: 1, bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontWeight: 600, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.8rem' } }}>
-                      🏢 Level 2 Approver (Admin)
+                      🏢 Central Expense Controller
                     </Typography>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.8rem' } }}>
                       📧 l2approver@rakshaksecuritas.com

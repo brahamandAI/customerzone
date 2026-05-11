@@ -25,13 +25,13 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
   const { formatCurrency } = useUserPreferences();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [utrNumber, setUtrNumber] = useState('');
+  const [cmsNumber, setCmsNumber] = useState('');
   const [paymentDone, setPaymentDone] = useState(false);
   const successPayloadRef = useRef(null);
 
   useEffect(() => {
     if (!open) {
-      setUtrNumber('');
+      setCmsNumber('');
       setError(null);
       setPaymentDone(false);
       successPayloadRef.current = null;
@@ -42,7 +42,7 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
     const payload = successPayloadRef.current;
     successPayloadRef.current = null;
     setPaymentDone(false);
-    setUtrNumber('');
+    setCmsNumber('');
     setError(null);
     if (payload && onPaymentSuccess) {
       onPaymentSuccess(payload);
@@ -56,7 +56,7 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
       finishSuccessAndClose();
       return;
     }
-    setUtrNumber('');
+    setCmsNumber('');
     setError(null);
     onClose();
   };
@@ -66,8 +66,8 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
       setError('Expense ID is missing');
       return;
     }
-    if (!utrNumber || utrNumber.trim().length === 0) {
-      setError('Please enter UTR number');
+    if (!cmsNumber || cmsNumber.trim().length === 0) {
+      setError('Please enter CMS number');
       return;
     }
 
@@ -75,9 +75,9 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
     setError(null);
 
     try {
-      const response = await paymentAPI.verifyUtrPayment({
+      const response = await paymentAPI.verifyCmsPayment({
         expenseId: expense.id || expense._id,
-        utrNumber: utrNumber.trim()
+        cmsNumber: cmsNumber.trim()
       });
 
       if (response.data.success) {
@@ -87,7 +87,7 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
         setError(response.data.message || 'Payment failed');
       }
     } catch (err) {
-      console.error('UTR payment error:', err);
+      console.error('CMS payment error:', err);
       setError(err.response?.data?.message || 'Failed to process payment. Please try again.');
     } finally {
       setLoading(false);
@@ -154,10 +154,18 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="body2" color="text.secondary">
-                      Title:
+                      Client ID:
                     </Typography>
                     <Typography variant="body2" fontWeight={600}>
-                      {expense?.title}
+                      {expense?.clientId}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Client Name:
+                    </Typography>
+                    <Typography variant="body2" fontWeight={600}>
+                      {expense?.clientName}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -207,17 +215,17 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
 
               <Box sx={{ mb: 3 }}>
                 <Typography variant="h6" gutterBottom>
-                  Enter UTR Number
+                  Enter CMS Number
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  Enter the UTR/Reference number from your bank transfer
+                  Enter the CMS/Reference number from your bank transfer
                 </Typography>
                 <TextField
                   fullWidth
-                  label="UTR Number"
+                  label="CMS Number"
                   placeholder="e.g. 1234567890123456"
-                  value={utrNumber}
-                  onChange={(e) => setUtrNumber(e.target.value)}
+                  value={cmsNumber}
+                  onChange={(e) => setCmsNumber(e.target.value)}
                   variant="outlined"
                   size="medium"
                   disabled={loading}
@@ -239,7 +247,7 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
             <Button
               onClick={handleSubmitPayment}
               variant="contained"
-              disabled={loading || !utrNumber?.trim()}
+              disabled={loading || !cmsNumber?.trim()}
               sx={{
                 background: 'linear-gradient(45deg, #008080 30%, #20B2AA 90%)',
                 color: 'white',
@@ -266,7 +274,7 @@ const PaymentModal = ({ open, onClose, expense, onPaymentSuccess }) => {
             variant="single"
             amountFormatted={amountForSuccess}
             expenseNumber={expense?.expenseNumber ?? expense?.expense_number}
-            utr={utrNumber.trim()}
+            utr={cmsNumber.trim()}
             processedAt={payment?.processedAt || payment?.paymentDate}
             onDone={finishSuccessAndClose}
             doneLabel="Done"

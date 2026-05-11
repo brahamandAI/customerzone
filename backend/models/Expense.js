@@ -9,11 +9,17 @@ const expenseSchema = new mongoose.Schema({
     trim: true,
     maxlength: [50, 'Expense number cannot be more than 50 characters']
   },
-  title: {
+  clientId: {
     type: String,
-    required: [true, 'Please add expense title'],
+    required: [true, 'Please add client ID'],
     trim: true,
-    maxlength: [200, 'Title cannot be more than 200 characters']
+    maxlength: [200, 'Client ID cannot be more than 200 characters']
+  },
+  clientName: {
+    type: String,
+    required: [true, 'Please add client name'],
+    trim: true,
+    maxlength: [200, 'Client name cannot be more than 200 characters']
   },
   description: {
     type: String,
@@ -76,6 +82,13 @@ const expenseSchema = new mongoose.Schema({
     default: null
   },
   
+  // Selected L1 Approver (chosen by submitter at submission time)
+  selectedL1Approver: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    default: null
+  },
+
   // User and Site Information
   submittedBy: {
     type: mongoose.Schema.ObjectId,
@@ -292,7 +305,7 @@ const expenseSchema = new mongoose.Schema({
     vpa: String,
     email: String,
     contact: String,
-    utrNumber: String,        // For manual bank transfer (Razorpay bypassed)
+    cmsNumber: String,        // For manual bank transfer (Razorpay bypassed)
     processedAt: Date,
     batchPayment: Boolean     // True if processed via batch payment
   },
@@ -307,6 +320,25 @@ const expenseSchema = new mongoose.Schema({
     }
   },
   
+  // Excel Export Tracking
+  exportedToExcel: {
+    type: Boolean,
+    default: false
+  },
+  exportedAt: {
+    type: Date,
+    default: null
+  },
+  exportedBy: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  exportCount: {
+    type: Number,
+    default: 0
+  },
+
   // Approval History
   approvalHistory: [{
     level: {

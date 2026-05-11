@@ -140,7 +140,8 @@ const reserveExpenseNumber = async (expenseNumber, userId) => {
     // Create a temporary reservation (expires in 30 minutes)
     const reservation = new Expense({
       expenseNumber: expenseNumber,
-      title: 'TEMP_RESERVATION',
+      clientId: 'TEMP_RESERVATION',
+      clientName: 'TEMP_RESERVATION',
       description: 'Temporary reservation',
       amount: 0,
       category: 'Miscellaneous',
@@ -263,7 +264,8 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
   try {
     const {
       expenseNumber,
-      title,
+      clientId,
+      clientName,
       description,
       amount,
       currency,
@@ -277,11 +279,12 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
       travel,
       accommodation,
       attachments,
-      location
+      location,
+      selectedL1Approver
     } = req.body;
 
     // Validate required fields
-    if (!expenseNumber || !title || !amount || !category || !expenseDate || !submittedById || !siteId || !department) {
+    if (!expenseNumber || !clientId || !clientName || !amount || !category || !expenseDate || !submittedById || !siteId || !department) {
       return res.status(400).json({ 
         success: false, 
         message: 'All required fields must be provided' 
@@ -316,7 +319,8 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
     // Create new expense with Mongoose
     const newExpense = new Expense({
         expenseNumber,
-        title,
+        clientId,
+        clientName,
         description,
         amount: parseFloat(amount),
         currency: currency || 'INR',
@@ -327,6 +331,7 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
       submittedBy: submittedById,
       site: siteId,
         department,
+        selectedL1Approver: selectedL1Approver || null,
         vehicleKm: vehicleKm ? {
           startKm: vehicleKm.startKm,
           endKm: vehicleKm.endKm,
@@ -413,7 +418,7 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
       const normalizedKey = policyService.computeNormalizedKey({
         amount: newExpense.amount,
         date: newExpense.expenseDate,
-        vendor: newExpense.title
+        vendor: newExpense.clientId
       });
 
       newExpense.receiptHash = receiptHash;
@@ -478,7 +483,8 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
     const notificationData = {
       expenseId: newExpense._id,
       expenseNumber: newExpense.expenseNumber,
-      title: newExpense.title,
+      clientId: newExpense.clientId,
+      clientName: newExpense.clientName,
       submitter: populatedExpense.submittedBy.name,
       submitterEmail: populatedExpense.submittedBy.email,
       site: populatedExpense.site.name,
@@ -512,9 +518,13 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
       data: populatedExpense
     });
 
-    // Fire-and-forget: send email/SMS notifications after response is sent
-    console.log('📧 Sending notifications to L1 approvers (background)...');
-    for (const approver of l1Approvers) {
+    // Fire-and-forget: send email/SMS only to the selected L1 approver (if chosen), else all L1 approvers
+    const notifyApprovers = selectedL1Approver
+      ? l1Approvers.filter(a => a._id.toString() === selectedL1Approver.toString())
+      : l1Approvers;
+
+    console.log(`📧 Sending notifications to ${notifyApprovers.length} L1 approver(s) (background)...`);
+    for (const approver of notifyApprovers) {
       if (approver.preferences?.notifications?.email) {
         emailService.sendExpenseNotification(approver, notificationData)
           .catch(err => console.error(`❌ Email failed for ${approver.email}:`, err.message));
@@ -554,7 +564,7 @@ router.get('/all', protect, async (req, res) => {
     console.log('🔍 Expenses query for user role:', user.role, 'Query:', query);
 
     const expenses = await Expense.find(query)
-      .select('expenseNumber title amount category expenseDate submittedBy site status policyFlags riskScore approvalHistory')
+      .select('expenseNumber clientId clientName amount category expenseDate submittedBy site status policyFlags riskScore approvalHistory exportedToExcel exportedAt exportedBy exportCount selectedL1Approver')
       .populate('submittedBy', 'name email department bankDetails')
       .populate('site', 'name code fullAddress budgetUtilization remainingBudget budgetStatus isOperating')
       .populate('approvalHistory.approver', 'name email role')
@@ -1088,7 +1098,8 @@ router.put('/:expenseId/approve', protect, authorize('l1_approver', 'l2_approver
       // Prepare expense data for notifications
       const expenseNotificationData = {
         expenseNumber: updatedExpense.expenseNumber,
-        title: updatedExpense.title,
+        clientId: updatedExpense.clientId,
+        clientName: updatedExpense.clientName,
         amount: modifiedAmount || updatedExpense.amount,
         category: updatedExpense.category,
         site: updatedExpense.site.name,
@@ -1120,7 +1131,8 @@ router.put('/:expenseId/approve', protect, authorize('l1_approver', 'l2_approver
     const notificationData = {
       expenseId: updatedExpense._id,
       expenseNumber: updatedExpense.expenseNumber,
-      title: updatedExpense.title,
+      clientId: updatedExpense.clientId,
+      clientName: updatedExpense.clientName,
       amount: updatedExpense.amount,
       status: updatedExpense.status,
       submitter: updatedExpense.submittedBy.name,
@@ -1294,7 +1306,8 @@ router.put('/:expenseId/approve', protect, authorize('l1_approver', 'l2_approver
         try {
           const notifyData = {
             expenseNumber: updatedExpense.expenseNumber,
-            title: updatedExpense.title,
+            clientId: updatedExpense.clientId,
+            clientName: updatedExpense.clientName,
             submitter: updatedExpense.submittedBy?.name,
             submitterEmail: updatedExpense.submittedBy?.email,
             site: updatedExpense.site?.name,
@@ -1333,7 +1346,8 @@ router.put('/:expenseId/approve', protect, authorize('l1_approver', 'l2_approver
         try {
           const notifyData = {
             expenseNumber: updatedExpense.expenseNumber,
-            title: updatedExpense.title,
+            clientId: updatedExpense.clientId,
+            clientName: updatedExpense.clientName,
             submitter: updatedExpense.submittedBy?.name,
             submitterEmail: updatedExpense.submittedBy?.email,
             site: updatedExpense.site?.name,
@@ -1372,7 +1386,8 @@ router.put('/:expenseId/approve', protect, authorize('l1_approver', 'l2_approver
         try {
           const notifyData = {
             expenseNumber: updatedExpense.expenseNumber,
-            title: updatedExpense.title,
+            clientId: updatedExpense.clientId,
+            clientName: updatedExpense.clientName,
             submitter: updatedExpense.submittedBy?.name,
             submitterEmail: updatedExpense.submittedBy?.email,
             site: updatedExpense.site?.name,
@@ -1454,4 +1469,44 @@ router.put('/:expenseId/approve', protect, authorize('l1_approver', 'l2_approver
   }
 });
 
-module.exports = router; 
+// Mark expenses as exported to Excel
+router.post('/mark-exported', protect, authorize('finance', 'l3_approver'), async (req, res) => {
+  try {
+    const { expenseIds } = req.body;
+
+    if (!expenseIds || !Array.isArray(expenseIds) || expenseIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide at least one expense ID'
+      });
+    }
+
+    const now = new Date();
+
+    await Expense.updateMany(
+      { _id: { $in: expenseIds } },
+      {
+        $set: {
+          exportedToExcel: true,
+          exportedAt: now,
+          exportedBy: req.user._id
+        },
+        $inc: { exportCount: 1 }
+      }
+    );
+
+    return res.json({
+      success: true,
+      message: `${expenseIds.length} expense(s) marked as exported`,
+      exportedAt: now
+    });
+  } catch (error) {
+    console.error('Error marking expenses as exported:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to mark expenses as exported'
+    });
+  }
+});
+
+module.exports = router;

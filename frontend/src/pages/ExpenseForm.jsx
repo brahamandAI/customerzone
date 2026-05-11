@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { useNavigate } from 'react-router-dom';
-import { expenseAPI, siteAPI } from '../services/api';
+import { expenseAPI, siteAPI, userAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { canUserSubmitExpense } from '../utils/expensePermissions';
 import { getUserAssignedSiteIds } from '../utils/userSites';
@@ -70,7 +70,8 @@ const ExpenseForm = () => {
   // formData state - moved here to follow Rules of Hooks
   const [formData, setFormData] = useState({
     expenseNumber: generateExpenseNumber(),
-    title: '',
+    clientId: '',
+    clientName: '',
     description: '',
     amount: '',
     currency: 'INR',
@@ -114,8 +115,12 @@ const ExpenseForm = () => {
       ifscCode: '',
       bankName: '',
       accountHolderName: ''
-    }
+    },
+    selectedL1Approver: ''
   });
+
+  const [l1Approvers, setL1Approvers] = useState([]);
+  const [l1ApproversLoading, setL1ApproversLoading] = useState(false);
 
   // ALL useEffect hooks must be here before conditional logic
   // Fetch next expense number from backend
@@ -151,6 +156,19 @@ const ExpenseForm = () => {
 
     fetchNextExpenseNumber();
   }, []);
+
+  // Fetch L1 approvers for the submitter's site
+  useEffect(() => {
+    const siteId = user?.site?._id || user?.site;
+    if (!siteId) return;
+    setL1ApproversLoading(true);
+    userAPI.getL1ApproversBySite(siteId)
+      .then(res => {
+        if (res.data.success) setL1Approvers(res.data.data || []);
+      })
+      .catch(() => {})
+      .finally(() => setL1ApproversLoading(false));
+  }, [user]);
 
   useEffect(() => {
     if (user && !canUserSubmitExpense(user)) {
@@ -279,7 +297,7 @@ const ExpenseForm = () => {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       // Only save if there's some data entered
-      if (formData.title || formData.amount || formData.description) {
+      if (formData.clientId || formData.amount || formData.description) {
         saveDraft('expense_form', formData);
       }
     }, 2000); // Save after 2 seconds of no changes
@@ -306,7 +324,8 @@ const ExpenseForm = () => {
     
     setFormData(prev => ({
       ...prev,
-      title: extractedData.title || prev.title,
+      clientId: extractedData.clientId || prev.clientId,
+      clientName: extractedData.clientName || prev.clientName,
       amount: extractedData.amount ? extractedData.amount.toString() : prev.amount,
       category: extractedData.category || prev.category,
       siteId: extractedData.siteId || prev.siteId,
@@ -506,8 +525,13 @@ const ExpenseForm = () => {
     setSuccess('');
     
     // Validate required fields
-    if (!formData.title || !formData.amount || !formData.category) {
-      setError('Please fill in all required fields: Title, Amount, and Category');
+    if (!formData.clientId || !formData.clientName || !formData.amount || !formData.category) {
+      setError('Please fill in all required fields: Client ID, Client Name, Amount, and Category');
+      setLoading(false);
+      return;
+    }
+    if (l1Approvers.length > 0 && !formData.selectedL1Approver) {
+      setError('Please select an L1 Approver for this expense');
       setLoading(false);
       return;
     }
@@ -562,7 +586,8 @@ const ExpenseForm = () => {
       // Prepare expense data using current user info
       const expenseData = {
         expenseNumber: formData.expenseNumber, // Use the sequential number from backend
-        title: formData.title,
+        clientId: formData.clientId,
+        clientName: formData.clientName,
         description: formData.description || `Vehicle KM expense for ${formData.vehicleKm?.vehicleNumber || 'N/A'}`,
         amount: parseFloat(formData.amount || 0),
         currency: 'INR',
@@ -571,6 +596,7 @@ const ExpenseForm = () => {
         submittedById: user?._id || 'current-user-id', // Use current logged in user
         siteId: formData.siteId || getUserAssignedSiteIds(user)[0] || undefined,
         department: user?.department || formData.department || "Operations",
+        selectedL1Approver: formData.selectedL1Approver || undefined,
         vehicleKm: {
           startKm: 0,
           endKm: parseFloat(formData.vehicleKm?.totalKm || 0),
@@ -761,11 +787,51 @@ const ExpenseForm = () => {
                         <TextField
                           fullWidth
                           required
-                          label="Expense Title"
-                          value={formData.title}
-                          onChange={handleInputChange('title')}
-                          placeholder="Enter expense title"
-                          helperText="Enter a descriptive title for this expense"
+                          label="Client ID"
+                          value={formData.clientId}
+                          onChange={handleInputChange('clientId')}
+                          placeholder="Enter client ID"
+                          helperText="Enter the client ID for this expense"
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                              color: darkMode ? '#e0e0e0' : '#333333',
+                              borderRadius: 2,
+                              '& fieldset': {
+                                borderColor: darkMode ? '#333333' : '#e0e0e0',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: darkMode ? '#4fc3f7' : '#667eea',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: darkMode ? '#4fc3f7' : '#667eea',
+                              },
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: darkMode ? '#b0b0b0' : '#666666',
+                              '&.Mui-focused': {
+                                color: darkMode ? '#4fc3f7' : '#667eea',
+                              },
+                            },
+                            '& .MuiInputBase-input': {
+                              color: darkMode ? '#e0e0e0' : '#333333',
+                            },
+                            '& .MuiFormHelperText-root': {
+                              color: darkMode ? '#b0b0b0' : '#666666',
+                            },
+                          }}
+                        />
+                      </Grid>
+
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          required
+                          label="Client Name"
+                          value={formData.clientName}
+                          onChange={handleInputChange('clientName')}
+                          placeholder="Enter client name"
+                          helperText="Enter the name of the client"
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
@@ -878,7 +944,51 @@ const ExpenseForm = () => {
                           )}
                         </FormControl>
                       </Grid>
-                      
+
+                      {/* L1 Approver Dropdown — only shown when L1 approvers exist for this site */}
+                      {l1Approvers.length > 0 && (
+                        <Grid item xs={12} md={6}>
+                          <FormControl fullWidth required>
+                            <Select
+                              value={formData.selectedL1Approver || ''}
+                              onChange={handleInputChange('selectedL1Approver')}
+                              displayEmpty
+                              disabled={l1ApproversLoading}
+                              sx={{
+                                backgroundColor: darkMode ? '#2a2a2a' : '#ffffff',
+                                color: darkMode ? '#e0e0e0' : '#333333',
+                                borderRadius: 2,
+                                '& fieldset': { borderColor: darkMode ? '#333333' : '#e0e0e0' },
+                                '&:hover fieldset': { borderColor: darkMode ? '#4fc3f7' : '#667eea' },
+                                '&.Mui-focused fieldset': { borderColor: darkMode ? '#4fc3f7' : '#667eea' }
+                              }}
+                              renderValue={(selected) => {
+                                if (!selected) return <em style={{ color: darkMode ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.38)' }}>Select L1 Approver *</em>;
+                                const found = l1Approvers.find(a => a._id === selected);
+                                return found ? found.name : selected;
+                              }}
+                              MenuProps={{ PaperProps: { sx: { bgcolor: darkMode ? '#2a2a2a' : '#fff' } } }}
+                            >
+                              <MenuItem value="" disabled><em>Select L1 Approver *</em></MenuItem>
+                              {l1Approvers.map(approver => (
+                                <MenuItem key={approver._id} value={approver._id}
+                                  sx={{ color: darkMode ? '#e0e0e0' : '#333333' }}>
+                                  <Box>
+                                    <Typography variant="body2" fontWeight={500}>{approver.name}</Typography>
+                                    {approver.department && (
+                                      <Typography variant="caption" color="text.secondary">{approver.department}</Typography>
+                                    )}
+                                  </Box>
+                                </MenuItem>
+                              ))}
+                            </Select>
+                            <Typography variant="caption" sx={{ color: darkMode ? '#888' : '#666', mt: 0.5, display: 'block', fontStyle: 'italic' }}>
+                              Select the approver responsible for reviewing this expense
+                            </Typography>
+                          </FormControl>
+                        </Grid>
+                      )}
+
                       <Grid item xs={12} md={6}>
                         <FormControl fullWidth>
                           <Select

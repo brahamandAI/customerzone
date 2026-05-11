@@ -270,7 +270,7 @@ const FinancePaymentSuccessScreen = ({
               }}
             >
               <Typography variant="body2" color="text.secondary" sx={{ flexShrink: 0 }}>
-                UTR / Ref.
+                CMS / Ref.
               </Typography>
               <Typography
                 variant="body2"

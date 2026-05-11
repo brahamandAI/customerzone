@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const batchPaymentSchema = new mongoose.Schema({
-  utrNumber: {
+  cmsNumber: {
     type: String,
     required: true,
     trim: true

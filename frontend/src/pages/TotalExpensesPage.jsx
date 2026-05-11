@@ -218,7 +218,8 @@ const TotalExpensesPage = () => {
     // Search filtering
     if (searchTerm) {
       timeFilteredExpenses = timeFilteredExpenses.filter(exp => 
-        exp.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        exp.clientId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        exp.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         exp.expenseNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         exp.category?.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -847,7 +848,10 @@ const TotalExpensesPage = () => {
                     <TableRow key={expense._id} hover>
                       <TableCell>
                         <Typography variant="body2" fontWeight={500} color={darkMode ? '#fff' : '#333'}>
-                          {expense.title}
+                          {expense.clientId}
+                        </Typography>
+                        <Typography variant="caption" color={darkMode ? '#b0b0b0' : '#666'}>
+                          {expense.clientName}
                         </Typography>
                         <Typography variant="caption" color={darkMode ? '#b0b0b0' : '#666'}>
                           {expense.expenseNumber}

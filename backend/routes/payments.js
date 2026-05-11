@@ -5,12 +5,12 @@ const razorpayService = require('../services/razorpay.service');
 const Expense = require('../models/Expense');
 const User = require('../models/User');
 
-// @desc    Verify UTR payment (manual bank transfer - Razorpay bypassed)
-// @route   POST /api/payments/verify-utr
+// @desc    Verify CMS payment (manual bank transfer - Razorpay bypassed)
+// @route   POST /api/payments/verify-cms
 // @access  Private (Finance/L3 only)
-router.post('/verify-utr', protect, authorize('l3_approver', 'finance'), async (req, res) => {
+router.post('/verify-cms', protect, authorize('l3_approver', 'finance'), async (req, res) => {
   try {
-    const { expenseId, utrNumber } = req.body;
+    const { expenseId, cmsNumber } = req.body;
 
     if (!expenseId) {
       return res.status(400).json({
@@ -19,10 +19,10 @@ router.post('/verify-utr', protect, authorize('l3_approver', 'finance'), async (
       });
     }
 
-    if (!utrNumber || String(utrNumber).trim().length === 0) {
+    if (!cmsNumber || String(cmsNumber).trim().length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'UTR number is required'
+        message: 'CMS number is required'
       });
     }
 
@@ -51,7 +51,7 @@ router.post('/verify-utr', protect, authorize('l3_approver', 'finance'), async (
     expense.paymentDate = new Date();
     expense.paymentProcessedBy = req.user.id;
     expense.paymentDetails = {
-      utrNumber: String(utrNumber).trim(),
+      cmsNumber: String(cmsNumber).trim(),
       paymentMethod: 'manual_bank_transfer',
       processedAt: new Date()
     };
@@ -65,7 +65,7 @@ router.post('/verify-utr', protect, authorize('l3_approver', 'finance'), async (
       approver: req.user.id,
       action: 'payment_processed',
       level: 3,
-      comments: `Payment processed via bank transfer. UTR: ${utrNumber}`,
+      comments: `Payment processed via bank transfer. CMS: ${cmsNumber}`,
       paymentAmount: expense.paymentAmount,
       paymentDate: expense.paymentDate
     });
@@ -99,17 +99,17 @@ router.post('/verify-utr', protect, authorize('l3_approver', 'finance'), async (
       success: true,
       message: 'Payment is done',
       payment: {
-        id: utrNumber,
+        id: cmsNumber,
         amount: expense.paymentAmount,
         status: 'payment_processed',
         method: 'manual_bank_transfer',
-        utrNumber: utrNumber,
+        cmsNumber: cmsNumber,
         processedAt: expense.paymentDate
       }
     });
 
   } catch (error) {
-    console.error('Error verifying UTR payment:', error);
+    console.error('Error verifying CMS payment:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to process payment'

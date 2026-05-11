@@ -466,8 +466,11 @@ const CreateUser = () => {
                 >
                   {roles.map(role => (
                     <MenuItem key={role} value={role}>
-                      {role === 'L3_APPROVER' ? 'Super Admin' : 
-                       role === 'finance' ? 'Finance' : 
+                      {role === 'L3_APPROVER' || role === 'l3_approver' ? 'Super Admin' : 
+                       role === 'L2_APPROVER' || role === 'l2_approver' ? 'Central Expense Controller' :
+                       role === 'L1_APPROVER' || role === 'l1_approver' ? 'Regional Manager' :
+                       role === 'finance' ? 'Finance' :
+                       role === 'submitter' ? 'Expense Submitter' :
                        role.replace('_', ' ')}
                     </MenuItem>
                   ))}

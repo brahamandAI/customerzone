@@ -10,6 +10,7 @@ import { reportAPI, siteAPI } from '../services/api';
 import { useTheme } from '../context/ThemeContext';
 import { useUserPreferences } from '../context/UserPreferencesContext';
 import * as XLSX from 'xlsx';
+import { exportFinanceReportToExcel } from '../utils/exportUtils';
 
 const Reports = () => {
   const { darkMode } = useTheme();
@@ -273,30 +274,33 @@ const Reports = () => {
         XLSX.utils.book_append_sheet(workbook, summaryWorksheet, 'Summary');
       }
 
-      // Export Detailed Expense Data
+      // Export Detailed Expense Data — Finance format
       if (expenseData && expenseData.length > 0) {
+        const getMonthName = (dateStr) => {
+          if (!dateStr) return '';
+          const d = new Date(dateStr);
+          return d.toLocaleString('en-IN', { month: 'long', year: 'numeric' }).replace(' ', '-');
+        };
+
         const expenseSheet = [
-          ['Detailed Expense Report'],
-          [''],
-          ['Expense ID', 'Title', 'Amount', 'Category', 'Status', 'Submitter', 'Site', 'Date', 'Submission Date', 'Description']
+          ['clientid', 'clientname', 'Monthname', 'Miscellaneous Amount', 'Expense ID', 'Remarks']
         ];
 
         expenseData.forEach(expense => {
           expenseSheet.push([
-            expense.expenseId || expense._id,
-            expense.title || '',
-            formatCurrency(expense.amount || 0),
-            expense.category || '',
-            expense.status || '',
-            expense.submittedBy?.name || '',
-            expense.site?.name || '',
-            expense.expenseDate ? new Date(expense.expenseDate).toLocaleDateString() : '',
-            expense.submissionDate ? new Date(expense.submissionDate).toLocaleDateString() : '',
+            expense.clientId || '',
+            expense.clientName || '',
+            getMonthName(expense.expenseDate || expense.submissionDate),
+            expense.amount || 0,
+            expense.expenseNumber || expense.expenseId || expense._id || '',
             expense.description || ''
           ]);
         });
 
         const expenseWorksheet = XLSX.utils.aoa_to_sheet(expenseSheet);
+        expenseWorksheet['!cols'] = [
+          { wch: 12 }, { wch: 28 }, { wch: 16 }, { wch: 20 }, { wch: 14 }, { wch: 50 }
+        ];
         XLSX.utils.book_append_sheet(workbook, expenseWorksheet, 'Expenses');
       }
 
@@ -690,7 +694,8 @@ const Reports = () => {
                           <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.category}</TableCell>
                           <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.site?.code || 'N/A'}</TableCell>
                           <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.site?.name || 'N/A'}</TableCell>
-                          <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.description || row.title}</TableCell>
+                          <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.clientId || ''}</TableCell>
+                          <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.clientName || ''}</TableCell>
                           <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{formatCurrency(row.amount)}</TableCell>
                           <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.submittedBy?.name || 'N/A'}</TableCell>
                           <TableCell sx={{ color: darkMode ? '#ffffff' : '#000000' }}>{row.expenseDate ? new Date(row.expenseDate).toLocaleDateString() : 'N/A'}</TableCell>

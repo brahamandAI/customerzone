@@ -30,7 +30,7 @@ const BatchPaymentUtrModal = ({ open, onClose, batchData, onSuccess }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { formatCurrency } = useUserPreferences();
-  const [utrNumber, setUtrNumber] = useState('');
+  const [cmsNumber, setCmsNumber] = useState('');
   const [paymentRemarks, setPaymentRemarks] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -38,7 +38,7 @@ const BatchPaymentUtrModal = ({ open, onClose, batchData, onSuccess }) => {
   const [processingResults, setProcessingResults] = useState(null);
 
   const resetAndClose = () => {
-    setUtrNumber('');
+    setCmsNumber('');
     setPaymentRemarks('');
     setError('');
     setSuccess(false);
@@ -64,8 +64,8 @@ const BatchPaymentUtrModal = ({ open, onClose, batchData, onSuccess }) => {
   };
 
   const handleProcessPayment = async () => {
-    if (!utrNumber || utrNumber.trim().length === 0) {
-      setError('Please enter UTR number');
+    if (!cmsNumber || cmsNumber.trim().length === 0) {
+      setError('Please enter CMS number');
       return;
     }
 
@@ -75,10 +75,10 @@ const BatchPaymentUtrModal = ({ open, onClose, batchData, onSuccess }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/batch-payments/process-utr`,
+        `${process.env.REACT_APP_API_URL}/batch-payments/process-cms`,
         {
           expenseIds: batchData?.expenseIds || [],
-          utrNumber: utrNumber.trim(),
+          cmsNumber: cmsNumber.trim(),
           paymentRemarks: paymentRemarks.trim() || undefined
         },
         {
@@ -171,11 +171,11 @@ const BatchPaymentUtrModal = ({ open, onClose, batchData, onSuccess }) => {
 
             <TextField
               fullWidth
-              label="Enter UTR Number"
+              label="Enter CMS Number"
               placeholder="e.g. 123456789012 or HDFC0R2402171234"
-              value={utrNumber}
+              value={cmsNumber}
               onChange={(e) => {
-                setUtrNumber(e.target.value);
+                setCmsNumber(e.target.value);
                 setError('');
               }}
               disabled={loading}
@@ -200,7 +200,7 @@ const BatchPaymentUtrModal = ({ open, onClose, batchData, onSuccess }) => {
             </Button>
             <Button
               onClick={handleProcessPayment}
-              disabled={loading || !utrNumber?.trim()}
+              disabled={loading || !cmsNumber?.trim()}
               variant="contained"
               startIcon={loading ? <CircularProgress size={20} /> : <CheckCircleIcon />}
               sx={{
@@ -225,7 +225,7 @@ const BatchPaymentUtrModal = ({ open, onClose, batchData, onSuccess }) => {
                     .filter(Boolean)
                 : []
             }
-            utr={processingResults?.utrNumber || utrNumber.trim()}
+            utr={processingResults?.cmsNumber || cmsNumber.trim()}
             processedAt={new Date()}
             onDone={finishSuccess}
             doneLabel="Done"

@@ -223,7 +223,8 @@ const AIExpenseAssistant = ({ onExpenseDataExtracted, user, sites }) => {
            `${newExtractedData.priority ? `⚡ Priority: ${newExtractedData.priority}\n` : ''}` +
            `${newExtractedData.paymentMethod ? `💳 Payment Method: ${newExtractedData.paymentMethod}\n` : ''}` +
            `${newExtractedData.vendor ? `🏪 Vendor: ${newExtractedData.vendor}\n` : ''}` +
-           `${newExtractedData.title && newExtractedData.title !== input.substring(0, 50) ? `📝 Title: ${newExtractedData.title}\n` : ''}` +
+           `${newExtractedData.clientId ? `🪪 Client ID: ${newExtractedData.clientId}\n` : ''}` +
+           `${newExtractedData.clientName ? `👤 Client Name: ${newExtractedData.clientName}\n` : ''}` +
            `${newExtractedData.description && newExtractedData.description !== input ? `📄 Description: ${newExtractedData.description}\n` : ''}` +
            `🎯 Confidence: ${confidenceText} (${newExtractedData.confidence}%)\n\n` +
            `Would you like me to fill the form with this data?\n\n` +
@@ -462,8 +463,11 @@ const AIExpenseAssistant = ({ onExpenseDataExtracted, user, sites }) => {
                   {extractedData.vendor && (
                     <Typography variant="body2">🏪 Vendor: {extractedData.vendor}</Typography>
                   )}
-                  {extractedData.title && extractedData.title !== inputText.substring(0, 50) && (
-                    <Typography variant="body2">📝 Title: {extractedData.title}</Typography>
+                  {extractedData.clientId && (
+                    <Typography variant="body2">🪪 Client ID: {extractedData.clientId}</Typography>
+                  )}
+                  {extractedData.clientName && (
+                    <Typography variant="body2">👤 Client Name: {extractedData.clientName}</Typography>
                   )}
                   {extractedData.description && extractedData.description !== inputText && (
                     <Typography variant="body2">📄 Description: {extractedData.description}</Typography>

@@ -10,12 +10,12 @@ const ApprovalHistory = require('../models/ApprovalHistory');
 const emailService = require('../services/emailService');
 const smsService = require('../services/smsService');
 
-// @desc    Process batch payment with UTR (no OTP)
-// @route   POST /api/batch-payments/process-utr
+// @desc    Process batch payment with CMS (no OTP)
+// @route   POST /api/batch-payments/process-cms
 // @access  Private (Finance & L3 Approver only)
-router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async (req, res) => {
+router.post('/process-cms', protect, authorize('finance', 'l3_approver'), async (req, res) => {
   try {
-    const { expenseIds, utrNumber, paymentRemarks } = req.body;
+    const { expenseIds, cmsNumber, paymentRemarks } = req.body;
 
     if (!expenseIds || !Array.isArray(expenseIds) || expenseIds.length === 0) {
       return res.status(400).json({
@@ -24,10 +24,10 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
       });
     }
 
-    if (!utrNumber || String(utrNumber).trim().length === 0) {
+    if (!cmsNumber || String(cmsNumber).trim().length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'UTR number is required'
+        message: 'CMS number is required'
       });
     }
 
@@ -47,7 +47,7 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
     const processedExpenses = [];
     const failedExpenses = [];
     const notifications = [];
-    const utr = String(utrNumber).trim();
+    const cms = String(cmsNumber).trim();
 
     for (const expense of expenses) {
       try {
@@ -65,7 +65,7 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
         expense.paymentDate = new Date();
         expense.paymentProcessedBy = req.user._id;
         expense.paymentDetails = {
-          utrNumber: utr,
+          cmsNumber: cms,
           paymentMethod: 'manual_bank_transfer',
           processedAt: new Date(),
           batchPayment: true
@@ -74,7 +74,7 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
         if (paymentRemarks) {
           expense.comments.push({
             user: req.user._id,
-            text: `Batch Payment (UTR: ${utr}): ${paymentRemarks}`,
+            text: `Batch Payment (CMS: ${cms}): ${paymentRemarks}`,
             isInternal: true,
             date: new Date()
           });
@@ -87,7 +87,7 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
           approver: req.user._id,
           action: 'payment_processed',
           level: 4,
-          comments: `Batch payment via bank transfer. UTR: ${utr}`,
+          comments: `Batch payment via bank transfer. CMS: ${cms}`,
           paymentAmount: expense.amount,
           paymentDate: new Date(),
           ipAddress: req.ip,
@@ -130,7 +130,7 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
     // Save batch payment record for history
     const totalAmount = processedExpenses.reduce((sum, exp) => sum + exp.amount, 0);
     await BatchPayment.create({
-      utrNumber: utr,
+      cmsNumber: cms,
       user: req.user._id,
       expenseIds: processedExpenses.map(e => e.expenseId),
       totalAmount,
@@ -179,7 +179,7 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
       totalAmount,
       failedCount: failedExpenses.length,
       processedBy: req.user.name,
-      utrNumber: utr,
+      cmsNumber: cms,
       timestamp: new Date()
     });
     io.emit('dashboard-update', { type: 'batch_payment', count: processedExpenses.length, timestamp: new Date() });
@@ -193,12 +193,12 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
         totalProcessed: processedExpenses.length,
         totalFailed: failedExpenses.length,
         totalAmount,
-        utrNumber: utr
+        cmsNumber: cms
       }
     });
 
   } catch (error) {
-    console.error('❌ Error processing batch UTR payment:', error);
+    console.error('❌ Error processing batch CMS payment:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to process batch payment',
@@ -207,7 +207,7 @@ router.post('/process-utr', protect, authorize('finance', 'l3_approver'), async 
   }
 });
 
-// @desc    Generate OTP for batch payment processing (DEPRECATED - use process-utr instead)
+// @desc    Generate OTP for batch payment processing (DEPRECATED - use process-cms instead)
 // @route   POST /api/batch-payments/generate-otp
 // @access  Private (Finance & L3 Approver only)
 router.post('/generate-otp', protect, authorize('finance', 'l3_approver'), async (req, res) => {
@@ -582,7 +582,7 @@ router.post('/verify-and-process', protect, authorize('finance', 'l3_approver'),
   }
 });
 
-// @desc    Get batch payment history (UTR-based)
+// @desc    Get batch payment history (CMS-based)
 // @route   GET /api/batch-payments/history
 // @access  Private (Finance & L3 Approver only)
 router.get('/history', protect, authorize('finance', 'l3_approver'), async (req, res) => {
@@ -602,7 +602,7 @@ router.get('/history', protect, authorize('finance', 'l3_approver'), async (req,
       data: {
         batchPayments: batchPayments.map(bp => ({
           _id: bp._id,
-          utrNumber: bp.utrNumber,
+          cmsNumber: bp.cmsNumber,
           expenseCount: bp.expenseCount,
           totalAmount: bp.totalAmount,
           paymentRemarks: bp.paymentRemarks,

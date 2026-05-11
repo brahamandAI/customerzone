@@ -36,12 +36,13 @@ class EmailService {
     }
 
     try {
+      const approverRoleLabel = this.getRoleDisplayName(approver.role);
       const mailOptions = {
         from: `"${process.env.EMAIL_FROM_NAME || 'Rakshak Expense System'}" <${process.env.EMAIL_FROM || process.env.SMTP_EMAIL}>`,
         to: approver.email,
         subject: `🔔 New Expense Approval Required - ${expenseData.expenseNumber}`,
-        html: this.generateExpenseNotificationHTML(expenseData),
-        text: this.generateExpenseNotificationText(expenseData)
+        html: this.generateExpenseNotificationHTML(expenseData, approverRoleLabel),
+        text: this.generateExpenseNotificationText(expenseData, approverRoleLabel)
       };
 
       const result = await this.transporter.sendMail(mailOptions);
@@ -199,7 +200,7 @@ If you did not request this, please ignore this email.
     `;
   }
 
-  generateExpenseNotificationHTML(expenseData) {
+  generateExpenseNotificationHTML(expenseData, approverRoleLabel = '') {
     return `
       <!DOCTYPE html>
       <html>
@@ -222,13 +223,14 @@ If you did not request this, please ignore this email.
             <h1>🔔 New Expense Approval Required</h1>
           </div>
           <div class="content">
-            <p>Hello,</p>
+            <p>Hello${approverRoleLabel ? `, <strong>${approverRoleLabel}</strong>` : ''},</p>
             <p>A new expense has been submitted and requires your approval.</p>
             
             <div class="expense-details">
               <h3>Expense Details:</h3>
               <p><strong>Expense Number:</strong> ${expenseData.expenseNumber}</p>
-              <p><strong>Title:</strong> ${expenseData.title}</p>
+              <p><strong>Client ID:</strong> ${expenseData.clientId || ''}</p>
+              <p><strong>Client Name:</strong> ${expenseData.clientName || ''}</p>
               <p><strong>Submitter:</strong> ${expenseData.submitter}</p>
               <p><strong>Amount:</strong> ₹${expenseData.amount}</p>
               <p><strong>Category:</strong> ${expenseData.category}</p>
@@ -255,15 +257,17 @@ If you did not request this, please ignore this email.
     `;
   }
 
-  generateExpenseNotificationText(expenseData) {
+  generateExpenseNotificationText(expenseData, approverRoleLabel = '') {
     return `
 New Expense Approval Required
 
+Hello${approverRoleLabel ? `, ${approverRoleLabel}` : ''},
 A new expense has been submitted and requires your approval.
 
 Expense Details:
 - Expense Number: ${expenseData.expenseNumber}
-- Title: ${expenseData.title}
+- Client ID: ${expenseData.clientId || ''}
+- Client Name: ${expenseData.clientName || ''}
 - Submitter: ${expenseData.submitter}
 - Amount: ₹${expenseData.amount}
 - Category: ${expenseData.category}
@@ -311,7 +315,8 @@ Please do not reply to this email.
             <div class="expense-details">
               <h3>Expense Details:</h3>
               <p><strong>Expense Number:</strong> ${expenseData.expenseNumber}</p>
-              <p><strong>Title:</strong> ${expenseData.title}</p>
+              <p><strong>Client ID:</strong> ${expenseData.clientId || ''}</p>
+              <p><strong>Client Name:</strong> ${expenseData.clientName || ''}</p>
               <p><strong>Amount:</strong> ₹${expenseData.amount}</p>
               <p><strong>Category:</strong> ${expenseData.category}</p>
               <p><strong>Site:</strong> ${expenseData.site}</p>
@@ -339,7 +344,8 @@ Your expense has been ${action} by ${approverName}.
 
 Expense Details:
 - Expense Number: ${expenseData.expenseNumber}
-- Title: ${expenseData.title}
+- Client ID: ${expenseData.clientId || ''}
+- Client Name: ${expenseData.clientName || ''}
 - Amount: ₹${expenseData.amount}
 - Category: ${expenseData.category}
 - Site: ${expenseData.site}
@@ -727,6 +733,17 @@ Rakshak Securitas
 ---
 © ${new Date().getFullYear()} Rakshak Securitas. All rights reserved.
     `;
+  }
+
+  getRoleDisplayName(role) {
+    const roleNames = {
+      'submitter': 'Expense Submitter',
+      'l1_approver': 'Regional Manager',
+      'l2_approver': 'Central Expense Controller',
+      'l3_approver': 'Super Admin',
+      'finance': 'Finance'
+    };
+    return roleNames[role] || role;
   }
 
   async testConnection() {

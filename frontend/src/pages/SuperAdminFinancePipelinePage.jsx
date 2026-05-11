@@ -120,14 +120,15 @@ const SuperAdminFinancePipelinePage = () => {
     const q = search.toLowerCase();
     return rows.filter((exp) => {
       const num = (exp.expenseNumber || '').toLowerCase();
-      const title = (exp.title || '').toLowerCase();
+      const clientId = (exp.clientId || '').toLowerCase();
+      const clientName = (exp.clientName || '').toLowerCase();
       const sub = typeof exp.submittedBy === 'object'
         ? (exp.submittedBy?.name || '').toLowerCase()
         : String(exp.submittedBy || '').toLowerCase();
       const site = typeof exp.site === 'object'
         ? (exp.site?.name || '').toLowerCase()
         : String(exp.site || '').toLowerCase();
-      return num.includes(q) || title.includes(q) || sub.includes(q) || site.includes(q);
+      return num.includes(q) || clientId.includes(q) || clientName.includes(q) || sub.includes(q) || site.includes(q);
     });
   }, [rows, search]);
 
@@ -395,10 +396,13 @@ const SuperAdminFinancePipelinePage = () => {
                               {exp.expenseNumber}
                             </TableCell>
                             <TableCell sx={bodyCellSx}>
-                              <Tooltip title={exp.description ? `${exp.title}\n\n${exp.description}` : exp.title || ''}>
+                              <Tooltip title={exp.description ? `${exp.clientId} - ${exp.clientName}\n\n${exp.description}` : `${exp.clientId} - ${exp.clientName}` || ''}>
                                 <Box>
                                   <Typography variant="body2" fontWeight={600} sx={{ lineHeight: 1.35, mb: 0.25 }}>
-                                    {exp.title}
+                                    {exp.clientId}
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.35 }}>
+                                    {exp.clientName}
                                   </Typography>
                                   {exp.description && (
                                     <Typography

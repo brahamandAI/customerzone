@@ -696,6 +696,36 @@ router.put('/:userId/deactivate', protect, authorize('l3_approver', 'finance'), 
 });
 
 // Get users by role
+// Get L1 approvers for a specific site (used by submitter in expense form)
+router.get('/l1-approvers/site/:siteId', protect, async (req, res) => {
+  try {
+    const { siteId } = req.params;
+
+    const approvers = await User.find({
+      role: 'l1_approver',
+      isActive: true,
+      $or: [
+        { site: siteId },
+        { sites: siteId }
+      ]
+    })
+    .select('name email employeeId department')
+    .sort({ name: 'asc' });
+
+    res.json({
+      success: true,
+      data: approvers
+    });
+  } catch (error) {
+    console.error('Error fetching L1 approvers for site:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch L1 approvers',
+      error: error.message
+    });
+  }
+});
+
 router.get('/role/:role', protect, authorize('l3_approver', 'finance'), async (req, res) => {
   try {
     const { role } = req.params;

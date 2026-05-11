@@ -131,7 +131,8 @@ const AllSitesApproval = () => {
           return {
             id: expense.id || expense._id,
             expenseNumber: expense.expenseNumber,
-            title: expense.title,
+            clientId: expense.clientId,
+            clientName: expense.clientName,
             amount: expense.amount,
             site: expense.site?.name || 'Unknown Site',
             siteId: expense.site?._id || expense.site,
@@ -555,7 +556,7 @@ const AllSitesApproval = () => {
                                   {expense.expenseNumber}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                  {expense.title}
+                                  {expense.clientId} {expense.clientName && `| ${expense.clientName}`}
                                 </Typography>
                               </Box>
                             </Box>
@@ -656,8 +657,12 @@ const AllSitesApproval = () => {
             <Box sx={{ mt: 2 }}>
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
-                  <Typography variant="subtitle2" color="text.secondary">Title</Typography>
-                  <Typography variant="body1">{selectedExpense.title}</Typography>
+                  <Typography variant="subtitle2" color="text.secondary">Client ID</Typography>
+                  <Typography variant="body1">{selectedExpense.clientId}</Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="subtitle2" color="text.secondary">Client Name</Typography>
+                  <Typography variant="body1">{selectedExpense.clientName}</Typography>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Typography variant="subtitle2" color="text.secondary">Amount</Typography>
