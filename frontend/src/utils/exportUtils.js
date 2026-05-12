@@ -251,7 +251,7 @@ export const exportFinanceReportToExcel = (expenses, filename = 'finance-report'
       return d.toLocaleString('en-IN', { month: 'long', year: 'numeric' }).replace(' ', '-');
     };
 
-    const headers = ['clientid', 'clientname', 'Monthname', 'Miscellaneous Amount', 'Expense ID', 'Remarks'];
+    const headers = ['clientid', 'clientname', 'Month', 'Amount', 'Voucher', 'Remarks'];
 
     const rows = expenses.map(exp => [
       exp.clientId || '',

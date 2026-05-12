@@ -555,7 +555,16 @@ router.get('/all', protect, async (req, res) => {
     if (user.role === 'submitter') {
       // Submitters can only see their own expenses
       query.submittedBy = user._id;
-    } else if (user.role === 'l1_approver' || user.role === 'l2_approver') {
+    } else if (user.role === 'l1_approver') {
+      const em = expenseSiteMatchForApprover(user);
+      if (em) Object.assign(query, em);
+      // Only show expenses assigned to this L1 approver; unassigned ones visible to all (backward compat)
+      query.$or = [
+        { selectedL1Approver: user._id },
+        { selectedL1Approver: null },
+        { selectedL1Approver: { $exists: false } }
+      ];
+    } else if (user.role === 'l2_approver') {
       const em = expenseSiteMatchForApprover(user);
       if (em) Object.assign(query, em);
     }

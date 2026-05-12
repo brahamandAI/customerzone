@@ -734,17 +734,6 @@ const Approval = () => {
     };
 
     const levelMatches = roleToLevel[userRole] === approvalLevel;
-    if (!levelMatches) return false;
-
-    // For L1 approvers: if a specific L1 was selected, only that user can approve
-    if (userRole === 'L1_APPROVER' && approval.selectedL1Approver) {
-      const selectedId = typeof approval.selectedL1Approver === 'object'
-        ? approval.selectedL1Approver._id || approval.selectedL1Approver
-        : approval.selectedL1Approver;
-      return String(selectedId) === String(user?._id);
-    }
-
-    console.log('Checking approval:', { userRole, approvalLevel, canApprove: levelMatches });
     return levelMatches;
   };
 
@@ -1264,28 +1253,13 @@ const Approval = () => {
                         </Box>
                       ) : null}
                       
-                      {approval.status === 'pending' && !canApprove(approval) && (() => {
-                        const isL1Role = getUserRole() === 'L1_APPROVER';
-                        const selectedId = approval.selectedL1Approver
-                          ? (typeof approval.selectedL1Approver === 'object'
-                              ? approval.selectedL1Approver._id || approval.selectedL1Approver
-                              : approval.selectedL1Approver)
-                          : null;
-                        const isNotAssigned = isL1Role && selectedId && String(selectedId) !== String(user?._id);
-                        return isNotAssigned ? (
-                          <Chip
-                            label="Not your assigned expense"
-                            size="small"
-                            sx={{ bgcolor: 'rgba(237,108,2,0.1)', color: '#ed6c02', fontWeight: 600, border: '1px solid #ed6c02' }}
-                          />
-                        ) : (
-                          <Chip
-                            label={`Waiting for ${getApprovalLevelName(approval.approvalLevel)}`}
-                            size="small"
-                            color="warning"
-                          />
-                        );
-                      })()}
+                      {approval.status === 'pending' && !canApprove(approval) && (
+                        <Chip
+                          label={`Waiting for ${getApprovalLevelName(approval.approvalLevel)}`}
+                          size="small"
+                          color="warning"
+                        />
+                      )}
                     </Box>
                   </ListItem>
                   {index < (listTab === 0 ? approvals : rejectedApprovals).length - 1 && <Divider />}
@@ -1590,48 +1564,24 @@ const Approval = () => {
             </>
           ) : (
             // L1, L2, and L3 (Super Admin) - Approve/Reject
-            (() => {
-              // Check if this L1 approver is the assigned one
-              const isL1Role = getUserRole() === 'L1_APPROVER';
-              const hasSelectedApprover = selectedApproval?.selectedL1Approver;
-              const selectedId = hasSelectedApprover
-                ? (typeof selectedApproval.selectedL1Approver === 'object'
-                    ? selectedApproval.selectedL1Approver._id || selectedApproval.selectedL1Approver
-                    : selectedApproval.selectedL1Approver)
-                : null;
-              const isAssignedL1 = !isL1Role || !selectedId || String(selectedId) === String(user?._id);
-
-              if (!isAssignedL1) {
-                return (
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 1 }}>
-                    <Typography variant="body2" sx={{ color: '#ed6c02', fontWeight: 600 }}>
-                      ⚠️ You are not the assigned approver for this expense
-                    </Typography>
-                  </Box>
-                );
-              }
-
-              return (
-                <>
-                  <Button
-                    onClick={() => selectedApproval && handleReject(selectedApproval.id)}
-                    color="error"
-                    variant="contained"
-                    disabled={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount && !amountChangeReason}
-                  >
-                    Reject
-                  </Button>
-                  <Button
-                    onClick={() => selectedApproval && handleApprove(selectedApproval.id)}
-                    color="success"
-                    variant="contained"
-                    disabled={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount && !amountChangeReason}
-                  >
-                    {selectedApproval?.approvalLevel === 'L4' ? 'Payment' : 'Approve & Forward'}
-                  </Button>
-                </>
-              );
-            })()
+            <>
+              <Button
+                onClick={() => selectedApproval && handleReject(selectedApproval.id)}
+                color="error"
+                variant="contained"
+                disabled={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount && !amountChangeReason}
+              >
+                Reject
+              </Button>
+              <Button
+                onClick={() => selectedApproval && handleApprove(selectedApproval.id)}
+                color="success"
+                variant="contained"
+                disabled={modifiedAmount && parseFloat(modifiedAmount) !== selectedApproval?.amount && !amountChangeReason}
+              >
+                {selectedApproval?.approvalLevel === 'L4' ? 'Payment' : 'Approve & Forward'}
+              </Button>
+            </>
           )}
         </DialogActions>
       </Dialog>

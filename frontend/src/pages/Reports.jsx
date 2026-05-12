@@ -283,7 +283,7 @@ const Reports = () => {
         };
 
         const expenseSheet = [
-          ['clientid', 'clientname', 'Monthname', 'Miscellaneous Amount', 'Expense ID', 'Remarks']
+          ['clientid', 'clientname', 'Month', 'Amount', 'Voucher', 'Remarks']
         ];
 
         expenseData.forEach(expense => {
