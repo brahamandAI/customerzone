@@ -935,8 +935,25 @@ const Approval = () => {
           </Grid>
 
           {/* Pending / Rejected Tabs */}
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-            <Tabs value={listTab} onChange={(e, v) => { setListTab(v); if (v === 1) setSelectedForExport(new Set()); }} sx={{ px: 0 }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'rgba(255,255,255,0.3)', mb: 2 }}>
+            <Tabs
+              value={listTab}
+              onChange={(e, v) => { setListTab(v); if (v === 1) setSelectedForExport(new Set()); }}
+              sx={{
+                px: 0,
+                '& .MuiTab-root': {
+                  color: 'rgba(255,255,255,0.85)',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                },
+                '& .MuiTab-root.Mui-selected': {
+                  color: '#ffffff',
+                },
+                '& .MuiTabs-indicator': {
+                  backgroundColor: '#ffffff',
+                },
+              }}
+            >
               <Tab label={`${isFinance ? 'Pending Payments' : 'Pending Approvals'} (${approvals.length})`} />
               <Tab label={`Rejected By Me (${rejectedApprovals.length})`} />
             </Tabs>

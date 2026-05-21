@@ -1210,7 +1210,7 @@ const Login = () => {
             <Paper elevation={24} sx={{ 
               flex: 1,
               background: 'linear-gradient(135deg, #008080 0%, #20B2AA 100%)',
-              color: 'white',
+              color: '#ffffff',
               display: { xs: 'none', md: 'flex' },
               flexDirection: 'column',
               justifyContent: 'center',
@@ -1219,6 +1219,9 @@ const Login = () => {
               position: 'relative',
               overflow: 'hidden',
               minHeight: { xs: 'auto', md: '600px' },
+              '& .MuiTypography-root': {
+                color: '#ffffff',
+              },
               '&::before': {
                 content: '""',
                 position: 'absolute',
@@ -1272,7 +1275,7 @@ const Login = () => {
               {/* Company Name */}
               <Typography variant="h2" fontWeight={900} gutterBottom sx={{
                 textAlign: 'center',
-                textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+                color: '#000000',
                 mb: 2,
                 fontSize: { xs: '1.8rem', sm: '2.2rem', md: '3.5rem' }
               }}>
@@ -1283,7 +1286,7 @@ const Login = () => {
               <Typography variant="h5" sx={{ 
                 mb: 3, 
                 textAlign: 'center',
-                opacity: 0.9,
+                color: 'rgba(255,255,255,0.95)',
                 fontWeight: 600,
                 fontSize: { xs: '1rem', sm: '1.2rem', md: '1.6rem' }
               }}>
@@ -1294,7 +1297,7 @@ const Login = () => {
               <Typography variant="body1" sx={{ 
                 textAlign: 'center',
                 mb: 4,
-                opacity: 0.8,
+                color: 'rgba(255,255,255,0.95)',
                 maxWidth: 400,
                 lineHeight: 1.6,
                 fontSize: { xs: '0.9rem', sm: '1rem', md: '1rem' },
@@ -1314,7 +1317,7 @@ const Login = () => {
                     bgcolor: 'white',
                     opacity: 0.8
                   }} />
-                  <Typography variant="body2" sx={{ opacity: 0.9, fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
+                  <Typography variant="body2" sx={{ color: '#ffffff', fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
                     Multi-level approval workflow
                   </Typography>
                 </Box>
@@ -1326,7 +1329,7 @@ const Login = () => {
                     bgcolor: 'white',
                     opacity: 0.8
                   }} />
-                  <Typography variant="body2" sx={{ opacity: 0.9, fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
+                  <Typography variant="body2" sx={{ color: '#ffffff', fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
                     Real-time budget monitoring
                   </Typography>
                 </Box>
@@ -1338,7 +1341,7 @@ const Login = () => {
                     bgcolor: 'white',
                     opacity: 0.8
                   }} />
-                  <Typography variant="body2" sx={{ opacity: 0.9, fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
+                  <Typography variant="body2" sx={{ color: '#ffffff', fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
                     Advanced reporting & analytics
                   </Typography>
                 </Box>
@@ -1350,7 +1353,7 @@ const Login = () => {
                     bgcolor: 'white',
                     opacity: 0.8
                   }} />
-                  <Typography variant="body2" sx={{ opacity: 0.9, fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
+                  <Typography variant="body2" sx={{ color: '#ffffff', fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
                     Secure & compliant platform
                   </Typography>
                 </Box>
@@ -1365,28 +1368,28 @@ const Login = () => {
                 textAlign: 'center',
                 mx: { xs: 2, sm: 3, md: 0 }
               }}>
-                <Typography variant="body2" sx={{ opacity: 0.9, mb: 1, fontWeight: 600, fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
+                <Typography variant="body2" sx={{ color: '#000000', mb: 1, fontWeight: 600, fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
                   Rakshak Securitas
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, mb: 1, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' } }}>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.95)', mb: 1, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' } }}>
                   📧 info@rakshaksecuritas.com
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, mb: 1, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' } }}>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.95)', mb: 1, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' } }}>
                   📞 +91 98765 43210
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, mb: 2, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' } }}>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.95)', mb: 2, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' } }}>
                   🌐 www.rakshaksecuritas.com
                 </Typography>
                 
                 <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.3)' }} />
                 
-                <Typography variant="body2" sx={{ opacity: 0.9, mb: 1, fontWeight: 600, fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
+                <Typography variant="body2" sx={{ color: '#ffffff', mb: 1, fontWeight: 600, fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
                   Developed by ROBUSTRIX
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, mb: 1, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' } }}>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.95)', mb: 1, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' } }}>
                   📧 info@therobustrix.com
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' } }}>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.95)', fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' } }}>
                   📞 +91 9090020245
                 </Typography>
               </Box>
@@ -1399,17 +1402,17 @@ const Login = () => {
                 textAlign: 'center',
                 px: { xs: 2, sm: 3, md: 0 }
               }}>
-                <Typography variant="caption" sx={{ opacity: 0.7, fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.7rem' } }}>
+                <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.9)', fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.7rem' } }}>
                   © 2025 Rakshak Securitas. All rights reserved.
                 </Typography>
-                <Typography variant="caption" display="block" sx={{ opacity: 0.6, mt: 0.5, fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.7rem' } }}>
+                <Typography variant="caption" display="block" sx={{ color: 'rgba(255,255,255,0.85)', mt: 0.5, fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.7rem' } }}>
                   Crafted by ROBUSTRIX – Empowering seamless expense management.
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mt: 1, flexDirection: { xs: 'column', sm: 'row' } }}>
-                  <Typography variant="caption" sx={{ opacity: 0.6, fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.7rem' } }}>
+                  <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.85)', fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.7rem' } }}>
                     📧 info@therobustrix.com
                   </Typography>
-                  <Typography variant="caption" sx={{ opacity: 0.6, fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.7rem' } }}>
+                  <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.85)', fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.7rem' } }}>
                     📞 +91 9090020245
                   </Typography>
                 </Box>
