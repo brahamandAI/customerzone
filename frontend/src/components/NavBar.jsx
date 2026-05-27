@@ -82,11 +82,10 @@ const NavBar = () => {
               style={{
                 width: 40,
                 height: 40,
-                marginRight: 12,
-                filter: 'brightness(0) invert(1)'
+                marginRight: 12
               }}
             />
-            <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: 1 }}>
+            <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: 1, color: '#ffffff' }}>
               Rakshak Securitas
             </Typography>
           </Box>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Typography, Paper, Grid, Card, Fade, Zoom, Chip, Avatar, List, ListItem, ListItemIcon, ListItemText, Divider, LinearProgress, Button, IconButton } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
@@ -498,16 +497,6 @@ const Dashboard = () => {
       <Fade in timeout={1000}>
         <Box sx={{ position: 'relative', zIndex: 1, p: 4 }} className="dashboard-container">
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, flexWrap: 'wrap' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mr: 2, mb: { xs: 1, md: 0 } }}>
-              <img 
-                src="/rakshak-logo.png" 
-                alt="Rakshak Securitas Logo" 
-                style={{ height: '40px' }}
-              />
-              <Avatar sx={{ bgcolor: 'rgba(255,255,255,0.2)' }}>
-                <DashboardIcon />
-              </Avatar>
-            </Box>
             <Typography variant="h3" fontWeight={900} color="white" sx={{ 
               textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
               fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }
