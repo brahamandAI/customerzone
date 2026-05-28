@@ -20,6 +20,7 @@ import {
   FormHelperText
 } from '@mui/material';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useNavigate } from 'react-router-dom';
 import { userAPI } from '../services/api';
 import { siteAPI } from '../services/api';
@@ -36,7 +37,7 @@ const CreateUser = () => {
     email: '',
     phoneNumber: '',
     employeeId: '',
-    department: 'Administration',
+    department: '',
     role: 'SUBMITTER',
     site: '',
     sites: [],
@@ -65,7 +66,7 @@ const CreateUser = () => {
     bankAccountHolderName: ''
   });
 
-  const departments = ['Administration', 'Finance', 'Operations', 'HR', 'IT', 'Sales', 'Marketing'];
+  const [departments, setDepartments] = useState(['Administration', 'Finance', 'Operations', 'HR', 'IT', 'Sales', 'Marketing']);
   const roles = ['SUBMITTER', 'L1_APPROVER', 'L2_APPROVER', 'L3_APPROVER', 'finance'];
   const [sites, setSites] = useState([]);
   const [sitesMenuOpen, setSitesMenuOpen] = useState(false);
@@ -78,6 +79,39 @@ const CreateUser = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === 'department') {
+      if (value === '__ADD_NEW__') {
+        const newDepartment = window.prompt('Enter new department name:');
+        const trimmedDepartment = newDepartment?.trim();
+
+        if (!trimmedDepartment) {
+          return;
+        }
+
+        const exists = departments.some(
+          (dept) => dept.toLowerCase() === trimmedDepartment.toLowerCase()
+        );
+
+        if (!exists) {
+          setDepartments((prev) => [...prev, trimmedDepartment]);
+        }
+
+        setFormData((prev) => ({
+          ...prev,
+          department: exists
+            ? departments.find((dept) => dept.toLowerCase() === trimmedDepartment.toLowerCase()) || trimmedDepartment
+            : trimmedDepartment
+        }));
+        return;
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        department: value
+      }));
+      return;
+    }
     
     // If this is a site selection, store the site code in localStorage
     if (name === 'site') {
@@ -170,6 +204,18 @@ const CreateUser = () => {
     }));
   };
 
+  const handleDeleteDepartment = (departmentToRemove) => {
+    setDepartments((prev) =>
+      prev.filter((dept) => dept.toLowerCase() !== departmentToRemove.toLowerCase())
+    );
+
+    setFormData((prev) => ({
+      ...prev,
+      department:
+        prev.department.toLowerCase() === departmentToRemove.toLowerCase() ? '' : prev.department
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -178,6 +224,7 @@ const CreateUser = () => {
     try {
       const siteCode = localStorage.getItem('selectedSiteCode') || formData.site;
       const isL1L2 = formData.role === 'L1_APPROVER' || formData.role === 'L2_APPROVER';
+
       if (isL1L2 && (!formData.sites || formData.sites.length < 1)) {
         setError('Select at least one site for L1 / L2 approver');
         setLoading(false);
@@ -420,9 +467,47 @@ const CreateUser = () => {
                     },
                   }}
                 >
+                  <MenuItem value="" disabled>
+                    Select Department
+                  </MenuItem>
                   {departments.map(dept => (
-                    <MenuItem key={dept} value={dept}>{dept}</MenuItem>
+                    <MenuItem
+                      key={dept}
+                      value={dept}
+                      sx={{
+                        '& .dept-delete-btn': {
+                          opacity: 0,
+                        },
+                        '&:hover .dept-delete-btn': {
+                          opacity: 1,
+                        },
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                        <Typography variant="body2">{dept}</Typography>
+                        <IconButton
+                          className="dept-delete-btn"
+                          size="small"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDeleteDepartment(dept);
+                          }}
+                          sx={{
+                            color: darkMode ? '#ef9a9a' : '#d32f2f',
+                            transition: 'opacity 0.2s ease',
+                          }}
+                        >
+                          <DeleteOutlineIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    </MenuItem>
                   ))}
+                  <MenuItem value="__ADD_NEW__">+ Add New Department</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Login from './pages/Login';
+import Overview from './pages/Overview';
 import Dashboard from './pages/Dashboard';
 import ExpenseForm from './pages/ExpenseForm';
 import Approval from './pages/Approval';
@@ -76,12 +77,10 @@ function Layout() {
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
         
+        {/* Public Landing */}
+        <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Overview />} />
+
         {/* Protected Routes */}
-        <Route path="/" element={
-          <PrivateRoute>
-            <Navigate to="/dashboard" replace />
-          </PrivateRoute>
-        } />
         
         <Route path="/dashboard" element={
           <PrivateRoute>

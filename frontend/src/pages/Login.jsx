@@ -1128,7 +1128,7 @@ const Login = () => {
                 </Box>
               </Slide>
 
-              {/* Demo Credentials */}
+              {/* Approval Workflow */}
               <Box sx={{ 
                 mt: 4, 
                 p: { xs: 2, sm: 2.5, md: 3 }, 
@@ -1148,58 +1148,44 @@ const Login = () => {
                 }
               }}>
                 <Typography variant="body2" color="text.secondary" gutterBottom sx={{ fontWeight: 600, fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.9rem' } }}>
-                  🚀 Demo Credentials:
+                  🔄 Expense Workflow:
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <Box sx={{ p: 1, bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontWeight: 600, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.8rem' } }}>
-                      👤 Expense Submitter
+                      1. 👤 Expense Submitter
                     </Typography>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.8rem' } }}>
-                      📧 submitter@rakshaksecuritas.com
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.8rem' } }}>
-                      🔑 Password: submitter123
+                      Creates and submits expense request with bill details.
                     </Typography>
                   </Box>
                   
                   <Box sx={{ p: 1, bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontWeight: 600, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.8rem' } }}>
-                      🛡️ Level 1 Approver (Regional Manager)
+                      2. 🛡️ Level 1 Approver (Regional Manager)
                     </Typography>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.8rem' } }}>
-                      📧 l1approver@rakshaksecuritas.com
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.8rem' } }}>
-                      🔑 Password: l1approver123
+                      Reviews site-level expense and forwards or rejects.
                     </Typography>
                   </Box>
                   
                   <Box sx={{ p: 1, bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontWeight: 600, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.8rem' } }}>
-                      🏢 Central Expense Controller
+                      3. 🏢 Central Expense Controller
                     </Typography>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.8rem' } }}>
-                      📧 l2approver@rakshaksecuritas.com
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.8rem' } }}>
-                      🔑 Password: l2approver123
+                      Performs compliance and budget validation checks.
                     </Typography>
                   </Box>
                   
                   <Box sx={{ p: 1, bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontWeight: 600, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.8rem' } }}>
-                      💰 Level 3 Approver (Finance)
+                      4. 💰 Finance & Closure
                     </Typography>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.8rem' } }}>
-                      📧 l3approver@rakshaksecuritas.com
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.8rem' } }}>
-                      🔑 Password: l3approver123
+                      Final approval, payment processing, and status update.
                     </Typography>
                   </Box>
-                  
-
                 </Box>
               </Box>
             </Paper>
