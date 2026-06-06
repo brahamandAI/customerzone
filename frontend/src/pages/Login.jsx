@@ -1180,10 +1180,19 @@ const Login = () => {
                   
                   <Box sx={{ p: 1, bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontWeight: 600, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.8rem' } }}>
-                      4. 💰 Finance & Closure
+                      4. 👑 Super Admin (Level 3 Approver)
                     </Typography>
                     <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.8rem' } }}>
-                      Final approval, payment processing, and status update.
+                      Final approval authority, system oversight, and policy enforcement.
+                    </Typography>
+                  </Box>
+                  
+                  <Box sx={{ p: 1, bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}>
+                    <Typography variant="caption" color="text.secondary" display="block" sx={{ fontWeight: 600, fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.8rem' } }}>
+                      5. 💰 Finance & Closure
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.8rem' } }}>
+                      Payment processing, reimbursement, and status update.
                     </Typography>
                   </Box>
                 </Box>
