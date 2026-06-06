@@ -1398,7 +1398,7 @@ const Login = () => {
                 px: { xs: 2, sm: 3, md: 0 }
               }}>
                 <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.9)', fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.7rem' } }}>
-                  © 2025 Rakshak Securitas. All rights reserved.
+                  © 2026 Rakshak Securitas. All rights reserved.
                 </Typography>
                 <Typography variant="caption" display="block" sx={{ color: 'rgba(255,255,255,0.85)', mt: 0.5, fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.7rem' } }}>
                   Crafted by ROBUSTRIX – Empowering seamless expense management.
