@@ -963,7 +963,7 @@ const ExpenseForm = () => {
                             p: 2,
                           }}>
                             <Typography variant="body2" fontWeight={600} sx={{ mb: 1.5, color: darkMode ? '#a5d6a7' : '#2e7d32' }}>
-                              📋 Expense Kis Level Par Bhejein?
+                              📋 Approval Level?
                             </Typography>
                             <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
                               <Box
@@ -981,7 +981,7 @@ const ExpenseForm = () => {
                                 }}
                               >
                                 <Typography variant="body2" fontWeight={700} sx={{ color: routingOption === 'l1' ? '#1976d2' : (darkMode ? '#aaa' : '#555') }}>
-                                  🔵 L1 Approver ko bhejo
+                                  🔵 Send to L1 Approver
                                 </Typography>
                                 <Typography variant="caption" sx={{ color: darkMode ? '#888' : '#777' }}>
                                   Normal flow: L1 → L2 → L3 → Finance
@@ -1002,7 +1002,7 @@ const ExpenseForm = () => {
                                 }}
                               >
                                 <Typography variant="body2" fontWeight={700} sx={{ color: routingOption === 'l2' ? '#43a047' : (darkMode ? '#aaa' : '#555') }}>
-                                  🟢 L2 Approver ko directly bhejo
+                                  🟢 Submit to L2 Approver
                                 </Typography>
                                 <Typography variant="caption" sx={{ color: darkMode ? '#888' : '#777' }}>
                                   L1 skip: L2 → L3 → Finance
