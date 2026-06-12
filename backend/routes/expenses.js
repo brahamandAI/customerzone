@@ -280,7 +280,8 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
       accommodation,
       attachments,
       location,
-      selectedL1Approver
+      selectedL1Approver,
+      routingOption
     } = req.body;
 
     // Validate required fields
@@ -367,9 +368,10 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
           coordinates: [Number(location.lng), Number(location.lat)],
           accuracy: location.accuracy ? Number(location.accuracy) : undefined
         } : undefined,
-              status: 'submitted',
-        requiredApprovalLevel: 4, // Set to 4 for L1 -> L2 -> L3 -> Finance workflow
-        currentApprovalLevel: 0,
+              status: routingOption === 'l2' ? 'approved_l1' : 'submitted',
+        requiredApprovalLevel: 4,
+        currentApprovalLevel: routingOption === 'l2' ? 1 : 0,
+        routingOption: routingOption === 'l2' ? 'l2' : 'l1',
       isActive: true, // Mark as active for real expense
       reimbursement: {
         // If bankDetails is provided in req.body, use it; otherwise, fetch from user profile
@@ -442,34 +444,83 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
 
     await newExpense.save();
 
-    // Assign L1 approvers for the site (legacy `site` or multi `sites`)
-    const l1Approvers = await User.find({
-      role: 'l1_approver',
-      isActive: true,
-      $or: [{ site: siteId }, { sites: siteId }]
-    });
-    console.log('🧭 L1 assignment debug:', {
-      expenseId: newExpense._id.toString(),
-      siteId: siteId?.toString?.() || siteId,
-      l1Count: l1Approvers.length,
-      l1Ids: l1Approvers.map(a => a._id.toString())
-    });
-    let createdPA = 0;
-    for (const approver of l1Approvers) {
-      try {
-        await PendingApprover.create({
-          level: 1,
-          approver: approver._id,
-          expense: newExpense._id,
-          status: 'pending'
-        });
-        createdPA += 1;
-      } catch (e) {
-        console.warn('⚠️ PendingApprover create failed:', e.message);
+    let l1Approvers = [];
+    let notifyApproversForEmail = [];
+
+    if (routingOption === 'l2') {
+      // Direct L2 routing — skip L1, assign L2 approvers
+      console.log('🚀 Direct L2 routing selected — skipping L1 approvers');
+
+      // Record L1 bypass in approval history
+      newExpense.approvalHistory.push({
+        level: 1,
+        approver: newExpense.submittedBy,
+        action: 'bypassed',
+        comments: 'L1 approver bypassed — routed directly to L2 by submitter',
+        date: new Date()
+      });
+      await newExpense.save();
+
+      // Assign L2 approvers for this site
+      const l2Approvers = await User.find({
+        role: 'l2_approver',
+        isActive: true,
+        $or: [{ site: siteId }, { sites: siteId }]
+      });
+      console.log('🧭 Direct L2 assignment:', {
+        expenseId: newExpense._id.toString(),
+        siteId: siteId?.toString?.() || siteId,
+        l2Count: l2Approvers.length
+      });
+      let createdPA = 0;
+      for (const approver of l2Approvers) {
+        try {
+          await PendingApprover.create({
+            level: 2,
+            approver: approver._id,
+            expense: newExpense._id,
+            status: 'pending'
+          });
+          createdPA += 1;
+        } catch (e) {
+          console.warn('⚠️ PendingApprover (L2 direct) create failed:', e.message);
+        }
       }
+      console.log('🧭 L2 direct assignment result:', { createdPA });
+      notifyApproversForEmail = l2Approvers;
+    } else {
+      // Normal L1 routing
+      l1Approvers = await User.find({
+        role: 'l1_approver',
+        isActive: true,
+        $or: [{ site: siteId }, { sites: siteId }]
+      });
+      console.log('🧭 L1 assignment debug:', {
+        expenseId: newExpense._id.toString(),
+        siteId: siteId?.toString?.() || siteId,
+        l1Count: l1Approvers.length,
+        l1Ids: l1Approvers.map(a => a._id.toString())
+      });
+      let createdPA = 0;
+      for (const approver of l1Approvers) {
+        try {
+          await PendingApprover.create({
+            level: 1,
+            approver: approver._id,
+            expense: newExpense._id,
+            status: 'pending'
+          });
+          createdPA += 1;
+        } catch (e) {
+          console.warn('⚠️ PendingApprover create failed:', e.message);
+        }
+      }
+      const paCount = await PendingApprover.countDocuments({ expense: newExpense._id });
+      console.log('🧭 L1 assignment result:', { createdPA, paCount });
+      notifyApproversForEmail = selectedL1Approver
+        ? l1Approvers.filter(a => a._id.toString() === selectedL1Approver.toString())
+        : l1Approvers;
     }
-    const paCount = await PendingApprover.countDocuments({ expense: newExpense._id });
-    console.log('🧭 L1 assignment result:', { createdPA, paCount });
 
     // Populate the expense with user and site details
     const populatedExpense = await Expense.findById(newExpense._id)
@@ -518,13 +569,9 @@ router.post('/create', protect, authorize('submitter', 'l1_approver', 'l2_approv
       data: populatedExpense
     });
 
-    // Fire-and-forget: send email/SMS only to the selected L1 approver (if chosen), else all L1 approvers
-    const notifyApprovers = selectedL1Approver
-      ? l1Approvers.filter(a => a._id.toString() === selectedL1Approver.toString())
-      : l1Approvers;
-
-    console.log(`📧 Sending notifications to ${notifyApprovers.length} L1 approver(s) (background)...`);
-    for (const approver of notifyApprovers) {
+    // Fire-and-forget: notify the appropriate approvers (L1 for normal, L2 for direct routing)
+    console.log(`📧 Sending notifications to ${notifyApproversForEmail.length} approver(s) (background)...`);
+    for (const approver of notifyApproversForEmail) {
       if (approver.preferences?.notifications?.email) {
         emailService.sendExpenseNotification(approver, notificationData)
           .catch(err => console.error(`❌ Email failed for ${approver.email}:`, err.message));

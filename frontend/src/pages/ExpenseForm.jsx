@@ -121,6 +121,11 @@ const ExpenseForm = () => {
 
   const [l1Approvers, setL1Approvers] = useState([]);
   const [l1ApproversLoading, setL1ApproversLoading] = useState(false);
+  const [routingOption, setRoutingOption] = useState('l1'); // 'l1' = normal, 'l2' = direct to L2
+
+  // Check if the current user's site allows direct L2 routing (Sector-17 Dwarka)
+  const userSiteName = user?.site?.name || '';
+  const allowDirectL2Routing = userSiteName === 'Sector-17 Dwarka';
 
   // ALL useEffect hooks must be here before conditional logic
   // Fetch next expense number from backend
@@ -530,7 +535,7 @@ const ExpenseForm = () => {
       setLoading(false);
       return;
     }
-    if (l1Approvers.length > 0 && !formData.selectedL1Approver) {
+    if (l1Approvers.length > 0 && !formData.selectedL1Approver && routingOption !== 'l2') {
       setError('Please select an L1 Approver for this expense');
       setLoading(false);
       return;
@@ -596,7 +601,8 @@ const ExpenseForm = () => {
         submittedById: user?._id || 'current-user-id', // Use current logged in user
         siteId: formData.siteId || getUserAssignedSiteIds(user)[0] || undefined,
         department: user?.department || formData.department || "Operations",
-        selectedL1Approver: formData.selectedL1Approver || undefined,
+        selectedL1Approver: routingOption === 'l2' ? undefined : (formData.selectedL1Approver || undefined),
+        routingOption: routingOption,
         vehicleKm: {
           startKm: 0,
           endKm: parseFloat(formData.vehicleKm?.totalKm || 0),
@@ -945,8 +951,70 @@ const ExpenseForm = () => {
                         </FormControl>
                       </Grid>
 
-                      {/* L1 Approver Dropdown — only shown when L1 approvers exist for this site */}
-                      {l1Approvers.length > 0 && (
+                      {/* Direct L2 Routing Option — only for Sector-17 Dwarka submitters */}
+                      {allowDirectL2Routing && (
+                        <Grid item xs={12}>
+                          <Box sx={{
+                            background: darkMode
+                              ? 'linear-gradient(135deg, #1a2a1a 0%, #0d1f0d 100%)'
+                              : 'linear-gradient(135deg, #e8f5e9 0%, #f1f8f1 100%)',
+                            border: `1.5px solid ${routingOption === 'l2' ? '#43a047' : (darkMode ? '#333' : '#c8e6c9')}`,
+                            borderRadius: 2,
+                            p: 2,
+                          }}>
+                            <Typography variant="body2" fontWeight={600} sx={{ mb: 1.5, color: darkMode ? '#a5d6a7' : '#2e7d32' }}>
+                              📋 Expense Kis Level Par Bhejein?
+                            </Typography>
+                            <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+                              <Box
+                                onClick={() => setRoutingOption('l1')}
+                                sx={{
+                                  flex: 1, minWidth: 180,
+                                  p: 1.5, borderRadius: 2, cursor: 'pointer',
+                                  border: routingOption === 'l1'
+                                    ? '2px solid #1976d2'
+                                    : `1.5px solid ${darkMode ? '#444' : '#ddd'}`,
+                                  background: routingOption === 'l1'
+                                    ? (darkMode ? '#0d1f3c' : '#e3f2fd')
+                                    : (darkMode ? '#1a1a1a' : '#fff'),
+                                  transition: 'all 0.2s',
+                                }}
+                              >
+                                <Typography variant="body2" fontWeight={700} sx={{ color: routingOption === 'l1' ? '#1976d2' : (darkMode ? '#aaa' : '#555') }}>
+                                  🔵 L1 Approver ko bhejo
+                                </Typography>
+                                <Typography variant="caption" sx={{ color: darkMode ? '#888' : '#777' }}>
+                                  Normal flow: L1 → L2 → L3 → Finance
+                                </Typography>
+                              </Box>
+                              <Box
+                                onClick={() => setRoutingOption('l2')}
+                                sx={{
+                                  flex: 1, minWidth: 180,
+                                  p: 1.5, borderRadius: 2, cursor: 'pointer',
+                                  border: routingOption === 'l2'
+                                    ? '2px solid #43a047'
+                                    : `1.5px solid ${darkMode ? '#444' : '#ddd'}`,
+                                  background: routingOption === 'l2'
+                                    ? (darkMode ? '#0d2b0d' : '#e8f5e9')
+                                    : (darkMode ? '#1a1a1a' : '#fff'),
+                                  transition: 'all 0.2s',
+                                }}
+                              >
+                                <Typography variant="body2" fontWeight={700} sx={{ color: routingOption === 'l2' ? '#43a047' : (darkMode ? '#aaa' : '#555') }}>
+                                  🟢 L2 Approver ko directly bhejo
+                                </Typography>
+                                <Typography variant="caption" sx={{ color: darkMode ? '#888' : '#777' }}>
+                                  L1 skip: L2 → L3 → Finance
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </Box>
+                        </Grid>
+                      )}
+
+                      {/* L1 Approver Dropdown — hidden when routing directly to L2 */}
+                      {l1Approvers.length > 0 && routingOption !== 'l2' && (
                         <Grid item xs={12} md={6}>
                           <FormControl fullWidth required>
                             <Select

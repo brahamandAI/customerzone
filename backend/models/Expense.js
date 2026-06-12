@@ -282,6 +282,13 @@ const expenseSchema = new mongoose.Schema({
     min: 0,
     max: 4
   },
+
+  // Routing option — submitter can choose to route directly to L2 (skipping L1)
+  routingOption: {
+    type: String,
+    enum: ['l1', 'l2'],
+    default: 'l1'
+  },
   
   // Payment Information
   paymentAmount: {
@@ -352,7 +359,7 @@ const expenseSchema = new mongoose.Schema({
     },
     action: {
       type: String,
-      enum: ['approved', 'rejected', 'returned', 'payment_processed'],
+      enum: ['approved', 'rejected', 'returned', 'payment_processed', 'bypassed'],
       required: true
     },
     comments: {
